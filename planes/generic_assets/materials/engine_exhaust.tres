@@ -1,0 +1,24 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://cgateux8vxvk0"]
+
+[ext_resource type="Shader" path="res://planes/generic_assets/materials/fire.gdshader" id="1_nxx7p"]
+
+[sub_resource type="Gradient" id="1"]
+offsets = PackedFloat32Array(0.0946746, 0.248521, 0.43787, 0.715976, 0.852071)
+colors = PackedColorArray(0.988281, 0.0772095, 0.0772095, 0, 0.93191, 0.0940204, 0.138771, 0.0584179, 0.625, 0.185547, 0.473938, 0.376471, 0.972656, 0.144171, 0.0341949, 0.74902, 1, 0.960938, 0, 0.869974)
+
+[sub_resource type="GradientTexture2D" id="2"]
+gradient = SubResource("1")
+
+[sub_resource type="FastNoiseLite" id="3"]
+
+[sub_resource type="NoiseTexture2D" id="4"]
+seamless = true
+noise = SubResource("3")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_nxx7p")
+shader_parameter/distortion = 0.375
+shader_parameter/throttle = 0.867
+shader_parameter/noise = SubResource("4")
+shader_parameter/gradient = SubResource("2")

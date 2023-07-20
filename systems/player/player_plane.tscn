@@ -1,0 +1,318 @@
+[gd_scene load_steps=35 format=3 uid="uid://b4fh6oqi5n0v5"]
+
+[ext_resource type="Script" path="res://systems/player/player_plane.gd" id="1_0wycj"]
+[ext_resource type="Script" path="res://systems/player/aerodynamics_report.gd" id="2_g48uj"]
+[ext_resource type="Resource" path="res://systems/player/flight_models/canard_stol.tres" id="3_46wi1"]
+[ext_resource type="PackedScene" uid="uid://wmsntcnrj0ro" path="res://support/debug_drawer.tscn" id="4_kau8f"]
+[ext_resource type="ArrayMesh" uid="uid://dycnnu7tpb8f6" path="res://planes/nimitz/meshes/nimitz_Hull.res" id="5_kgxno"]
+[ext_resource type="Material" path="res://planes/generic_assets/materials/plane_finish.tres" id="6_2d45b"]
+[ext_resource type="Script" path="res://systems/player/ControlSurface.gd" id="7_3p0tw"]
+[ext_resource type="ArrayMesh" uid="uid://cwfr3exgx1jfv" path="res://planes/nimitz/meshes/nimitz_Elevon2.res" id="8_ka5gx"]
+[ext_resource type="ArrayMesh" uid="uid://bdix8wngw0nej" path="res://planes/nimitz/meshes/nimitz_Elevon1.res" id="9_k755l"]
+[ext_resource type="ArrayMesh" uid="uid://bckfbl2vs2ilw" path="res://planes/nimitz/meshes/nimitz_Plane004.res" id="10_ff4ug"]
+[ext_resource type="ArrayMesh" uid="uid://dd4phfpblji5e" path="res://planes/nimitz/meshes/nimitz_canard.res" id="11_03qdo"]
+[ext_resource type="Material" path="res://generic_assets/materials/basic.tres" id="12_olf1u"]
+[ext_resource type="ArrayMesh" uid="uid://bwqyyppv1qxd" path="res://planes/nimitz/meshes/nimitz_Engine.res" id="13_exvo4"]
+[ext_resource type="Material" uid="uid://cgateux8vxvk0" path="res://planes/generic_assets/materials/engine_exhaust.tres" id="14_cqb0t"]
+[ext_resource type="Script" path="res://planes/nimitz/engine_exhaust.gd" id="15_hb3qk"]
+[ext_resource type="AudioStream" uid="uid://bxo3gxwroj4q1" path="res://planes/generic_assets/audio/idle-f-22-jet-plane-33685.mp3" id="16_rd3nh"]
+[ext_resource type="AudioStream" uid="uid://b04bn3nf6wo1t" path="res://planes/generic_assets/audio/Bluezone_BC0284_soundwave_robot_metal_texture_011.wav" id="17_4t6ca"]
+[ext_resource type="PackedScene" uid="uid://cv1b3squia6np" path="res://systems/bullets/default_gun.tscn" id="18_kklaq"]
+[ext_resource type="Shader" path="res://systems/bullets/bullet_particles.gdshader" id="18_l7fhk"]
+[ext_resource type="Script" path="res://systems/bullets/hitbox.gd" id="20_i1elw"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_chpga"]
+resource_local_to_scene = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
+material = ExtResource("14_cqb0t")
+flip_faces = true
+top_radius = 0.4
+bottom_radius = 0.52
+height = 2.629
+
+[sub_resource type="SphereMesh" id="SphereMesh_7upgj"]
+material = ExtResource("14_cqb0t")
+flip_faces = true
+radius = 0.4
+
+[sub_resource type="GDScript" id="GDScript_fk8ck"]
+script/source = "@tool
+extends AudioStreamPlayer3D
+
+@export var max_volume_db: float
+@export var min_pitch: float
+@export var max_pitch: float
+
+@export_range(0, 1, 0.001) var strength: float = 0:
+	set(x):
+		var volume_linear = lerp(db_to_linear(-80), db_to_linear(max_volume_db), strength)
+		volume_db = linear_to_db(volume_linear)
+		pitch_scale = lerp(min_pitch, max_pitch, x)
+		_strength = x
+	get:
+		return _strength
+
+var _strength = 0
+
+@onready var input_manager = $\"/root/InputManager\"
+
+func _process(dt: float):
+	if not Engine.is_editor_hint():
+		strength = input_manager.get_throttle()
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bh2ka"]
+radius = 0.690842
+height = 10.9501
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ab3eo"]
+size = Vector3(2.63042, 1, 4.97663)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ccgy4"]
+resource_local_to_scene = true
+shader = ExtResource("18_l7fhk")
+shader_parameter/global_start_velocity = Vector3(0, 0, 1000)
+shader_parameter/include_centrifugal = false
+shader_parameter/include_coreolis = false
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6qpmx"]
+height = 3.12283
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_admk5"]
+size = Vector3(2.70266, 3.49704, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kebex"]
+radius = 0.584262
+height = 11.7898
+
+[sub_resource type="Curve" id="Curve_d3u1j"]
+max_value = 5.0
+_data = [Vector2(0, 0.0545454), 0.0, 11.2443, 0, 0, Vector2(1, 5), 0.61442, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1gcm6"]
+curve = SubResource("Curve_d3u1j")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_841kf"]
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+scale_curve = SubResource("CurveTexture_1gcm6")
+
+[sub_resource type="SphereMesh" id="SphereMesh_xo4sh"]
+radius = 0.2
+height = 0.4
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("flight_dynamics", "engine_transform", "gun")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("1_0wycj")
+thrust_to_weight = 1.5
+mass = 12000.0
+inertia_tensor = Basis(10000, 0, 0, 0, 15000, 0, 0, 0, 5000)
+flight_dynamics = NodePath("FlightDynamics")
+engine_transform = NodePath("ControlSurfaces/Engine")
+frozen = true
+pathtrace_color = Color(0.14902, 0.529412, 0.964706, 1)
+gun = NodePath("Gun")
+
+[node name="FlightDynamics" type="Node" parent="." node_paths=PackedStringArray("player_plane")]
+script = ExtResource("2_g48uj")
+use_control_multiplier = false
+player_plane = NodePath("..")
+fm = ExtResource("3_46wi1")
+aileron_limits_degrees = Vector2(-20, 20)
+
+[node name="DebugDrawer" parent="." instance=ExtResource("4_kau8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.124926, -8.10622)
+visible = false
+mesh = SubResource("ImmediateMesh_chpga")
+
+[node name="Visuals" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
+
+[node name="Hull" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.205368, 2.67356)
+mesh = ExtResource("5_kgxno")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("6_2d45b")
+
+[node name="ControlSurfaces" type="Node3D" parent="."]
+
+[node name="ElevonRR" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(0.997241, -0.063475, 0.0384925, 0.0635221, 0.99798, 0, -0.0384147, 0.00244512, 0.999259, -2.18847, 1.17852, -11.1206)
+script = ExtResource("7_3p0tw")
+control_matrix = Basis(0, 0, 0.3, 0, 0, 0, 0, 0, 0)
+
+[node name="ElevonRR" type="MeshInstance3D" parent="ControlSurfaces/ElevonRR"]
+transform = Transform3D(-0.997241, 0.0635221, -0.0384147, 0.063475, 0.99798, 0.00244512, -0.0384925, -3.24798e-10, 0.999259, -0.0632317, -0.00580728, -0.319118)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("8_ka5gx")
+skeleton = NodePath("../../ElevonLL/ElevonLL")
+
+[node name="ElevonR" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.434441, 1.28689, -11.0849)
+script = ExtResource("7_3p0tw")
+
+[node name="ElevonR" type="MeshInstance3D" parent="ControlSurfaces/ElevonR"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0723851, -0.0170055, -0.391558)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("9_k755l")
+skeleton = NodePath("../../ElevonLL/ElevonLL")
+
+[node name="ElevonL" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565368, 1.33612, -11.0849)
+script = ExtResource("7_3p0tw")
+
+[node name="ElevonL" type="MeshInstance3D" parent="ControlSurfaces/ElevonL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0104684, -0.0885163, -0.40028)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("9_k755l")
+skeleton = NodePath("../../..")
+
+[node name="ElevonLL" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(0.997291, 0.0627442, -0.0383878, -0.0627905, 0.998027, 0, 0.0383121, 0.00241039, 0.999263, 2.399, 1.13189, -11.0203)
+script = ExtResource("7_3p0tw")
+control_matrix = Basis(0, 0, -0.3, 0, 0, 0, 0, 0, 0)
+
+[node name="ElevonLL" type="MeshInstance3D" parent="ControlSurfaces/ElevonLL"]
+transform = Transform3D(0.997291, -0.0627905, 0.0383121, 0.0627442, 0.998027, 0.00241039, -0.0383878, 3.6136e-10, 0.999263, -0.109865, 0.00685668, -0.41984)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("8_ka5gx")
+skeleton = NodePath("../../..")
+
+[node name="Rudder" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(-4.15351e-08, -1, -1.36207e-08, 0.950212, -4.37114e-08, 0.311605, -0.311605, 0, 0.950212, 8.30332e-08, 2.27089, -11.1167)
+script = ExtResource("7_3p0tw")
+control_matrix = Basis(0.5, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[node name="Rudder" type="MeshInstance3D" parent="ControlSurfaces/Rudder"]
+transform = Transform3D(-0.987122, -8.46836e-08, -0.159967, 8.68906e-08, -1, -6.80105e-09, -0.159967, -2.06131e-08, 0.987122, 0.220538, -0.0388756, -0.307495)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("10_ff4ug")
+skeleton = NodePath("../../..")
+
+[node name="CanardL" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(-0.0480653, 0.337608, -0.940059, -1.86265e-09, 0.941147, 0.337999, 0.998844, 0.016246, -0.0452365, 0.669138, 0.712931, -3.07009)
+script = ExtResource("7_3p0tw")
+control_matrix = Basis(0, 0, 0, 0, 0, 0, 0, -0.3, 0)
+
+[node name="CanardL" type="MeshInstance3D" parent="ControlSurfaces/CanardL"]
+transform = Transform3D(-0.0480653, -2.79397e-09, 0.998844, 1.73191e-08, 1, 0, -0.998844, 4.19095e-08, -0.0480653, 0, -0.01, -0.026)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("11_03qdo")
+skeleton = NodePath("../../..")
+
+[node name="CanardR" type="Node3D" parent="ControlSurfaces"]
+transform = Transform3D(0.0480653, -0.336312, 0.940524, 0, 0.941612, 0.336701, 0.998844, 0.0161836, -0.0452588, -0.669, 0.712884, -3.0704)
+script = ExtResource("7_3p0tw")
+control_matrix = Basis(0, 0, 0, 0, 0, 0, 0, -0.3, 0)
+
+[node name="CanardR" type="MeshInstance3D" parent="ControlSurfaces/CanardR"]
+transform = Transform3D(-0.0480653, 0, 0.998844, 0, 1, 0, -0.998844, 0, -0.0480653, 0.150572, -0.010451, 0.0373621)
+material_override = ExtResource("6_2d45b")
+mesh = ExtResource("11_03qdo")
+skeleton = NodePath("../../..")
+
+[node name="Engine" type="MeshInstance3D" parent="ControlSurfaces"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 8.30332e-08, 0.671133, -10.5381)
+material_override = ExtResource("12_olf1u")
+mesh = ExtResource("13_exvo4")
+skeleton = NodePath("../..")
+script = ExtResource("7_3p0tw")
+control_matrix = Basis(0, -0.15, 0, 0, 0, 0, 0.15, 0, 0)
+
+[node name="Exhaust" type="MeshInstance3D" parent="ControlSurfaces/Engine"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.69271, 5.96046e-08)
+mesh = SubResource("CylinderMesh_b5fyy")
+script = ExtResource("15_hb3qk")
+material = ExtResource("14_cqb0t")
+
+[node name="Exhaust2" type="MeshInstance3D" parent="ControlSurfaces/Engine"]
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, -8.74228e-08, 1.80322e-14, -8.74228e-08, 1, 7.10543e-15, 0.651808, 5.96046e-08)
+mesh = SubResource("SphereMesh_7upgj")
+
+[node name="SFX" type="AudioStreamPlayer3D" parent="ControlSurfaces/Engine"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.1291, 5.96046e-08)
+stream = ExtResource("16_rd3nh")
+volume_db = -80.0
+autoplay = true
+bus = &"Engine"
+emission_angle_degrees = 29.8
+emission_angle_filter_attenuation_db = -15.0
+script = SubResource("GDScript_fk8ck")
+max_volume_db = 0.3
+min_pitch = 0.6
+max_pitch = 1.0
+strength = 1.0
+
+[node name="WingCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 8.29681e-08, 0.670579, -5.86972)
+shape = SubResource("CapsuleShape3D_bh2ka")
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.0161046, 1.13484, -8.01723)
+depth = 0.346
+polygon = PackedVector2Array(-3.70998, 2.03782, -0.953798, -3.3332, 1.07727, -3.30219, 3.69522, 1.93789, 3.71887, 2.95494, -3.73154, 2.97859)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.558145, -8.10488)
+shape = SubResource("BoxShape3D_ab3eo")
+
+[node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, -1, -4.37114e-08, -4.37114e-08, 4.37114e-08, -1, 0, 0.00564845, 1.13484, -8.01723)
+depth = 0.108
+polygon = PackedVector2Array(-0.227718, 0.628748, -2.02962, 3.11413, -2.02962, 3.99782, -0.131064, 3.56288)
+
+[node name="Crash" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
+stream = ExtResource("17_4t6ca")
+
+[node name="Gun" parent="." instance=ExtResource("18_kklaq")]
+process_material = SubResource("ShaderMaterial_ccgy4")
+
+[node name="Pilot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2546e-07, 1.28948, -3.46476)
+
+[node name="COG" type="Marker3D" parent="."]
+editor_description = "On ready, overwrites the c.g. of the rigidbody to be this location"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.671, -7.45)
+
+[node name="Hitbox" type="Area3D" parent="." groups=["Hitbox"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("20_i1elw")
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 2.07066e-07, 1.18428, 0)
+depth = 0.49
+polygon = PackedVector2Array(-0.685995, 4.50266, -1.38358, 5.00647, -1.85006, 7.0802, -3.84593, 9.87055, -3.88469, 11.4014, -0.900562, 11.8083, 1.09531, 11.8083, 3.86629, 11.4014, 3.84691, 9.9093, 1.9673, 7.0802, 1.28909, 4.94868, 0.785275, 4.42549)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, -1.82857e-07, 1.74662e-07, -1.82857e-07, -0.0458163, 0.99895, -1.74662e-07, -0.99895, -0.0458163, 2.165e-07, 1.23823, -4.11712)
+shape = SubResource("CapsuleShape3D_6qpmx")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, -1.82857e-07, 1.74662e-07, -1.82857e-07, -0.0458163, 0.99895, -1.74662e-07, -0.99895, -0.0458163, -0.00722357, 0.55979, -8.22395)
+shape = SubResource("BoxShape3D_admk5")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, -1.74846e-07, 1.74846e-07, -1.74846e-07, -4.37114e-08, 1, -1.74846e-07, -1, -4.37114e-08, 1.13059e-07, 0.646623, -5.77161)
+shape = SubResource("CapsuleShape3D_kebex")
+
+[node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="Hitbox"]
+transform = Transform3D(-4.37114e-08, 1.74846e-07, -1, 1.74846e-07, 1, 1.74846e-07, 1, -1.74846e-07, -4.37114e-08, 0.0301993, 1.49231, -11.0965)
+depth = 0.1
+polygon = PackedVector2Array(2.78762, -0.041394, -0.0869923, 1.70592, -1.0452, 1.71156, -0.628098, -0.0413934, -0.357546, -0.278127)
+
+[node name="HitExplosion" type="GPUParticles3D" parent="Hitbox"]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_841kf")
+draw_pass_1 = SubResource("SphereMesh_xo4sh")
+
+[connection signal="bullet_hit" from="Hitbox" to="." method="_on_bullet_hit"]

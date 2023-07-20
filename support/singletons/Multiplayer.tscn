@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://support/singletons/multiplayer.gd" id="1_0nne8"]
+
+[node name="Multiplayer" type="CanvasLayer"]
+process_mode = 3
+layer = 20
+script = ExtResource("1_0nne8")
+
+[node name="V" type="VBoxContainer" parent="."]
+offset_right = 237.0
+offset_bottom = 101.0
+
+[node name="Host" type="Button" parent="V"]
+layout_mode = 2
+text = "Host"
+
+[node name="OwnIP" type="Label" parent="V"]
+layout_mode = 2
+
+[node name="IP" type="LineEdit" parent="V"]
+layout_mode = 2
+text = "127.0.0.1"
+alignment = 2
+expand_to_text_length = true
+select_all_on_focus = true
+
+[node name="Connect" type="Button" parent="V"]
+layout_mode = 2
+text = "Connect"
+
+[connection signal="pressed" from="V/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="V/Connect" to="." method="_on_connect_pressed"]

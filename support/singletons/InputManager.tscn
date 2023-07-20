@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://duhvehj2h43rm"]
+
+[ext_resource type="Script" path="res://support/singletons/input_manager.gd" id="1_uwpc1"]
+[ext_resource type="Script" path="res://support/singletons/AskInput.gd" id="2_xr0sh"]
+
+[node name="InputManager" type="Node"]
+process_mode = 3
+script = ExtResource("1_uwpc1")
+test_local_multiplayer = false
+
+[node name="AskInput" type="AcceptDialog" parent="."]
+initial_position = 2
+title = "Configure Input devices"
+size = Vector2i(250, 250)
+dialog_text = "asdsadwadsadsa"
+dialog_hide_on_ok = false
+script = ExtResource("2_xr0sh")
+quick_select = true
+
+[node name="ControlHelp" type="CanvasLayer" parent="."]
+layer = 20
+visible = false
+
+[node name="PanelContainer" type="PanelContainer" parent="ControlHelp"]
+offset_left = 9.0
+offset_top = 87.0
+offset_right = 309.0
+offset_bottom = 471.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ControlHelp/PanelContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[img=32]res://ui/menu/GamepadButtons/Keyboard_Black_F1.png[/img]: Open and close this window
+[img=32]res://ui/menu/GamepadButtons/Keyboard_Black_F2.png[/img]: Toggle HUD
+[img=32]res://ui/menu/GamepadButtons/XboxOne_X.png[/img] + [img=32]res://ui/menu/GamepadButtons/XboxOne_Left_Stick.png[/img]: Adjust Thrust
+[img=32]res://ui/menu/GamepadButtons/XboxOne_Dpad_Right.png[/img]  + [img=32]res://ui/menu/GamepadButtons/XboxOne_Right_Stick.png[/img]: Move camera
+[img=32]res://ui/menu/GamepadButtons/XboxOne_Dpad_Right.png[/img]  + [img=32]res://ui/menu/GamepadButtons/XboxOne_X.png[/img]: Reset camera
+[img=32]res://ui/menu/GamepadButtons/XboxOne_RT.png[/img] / [img=32]res://ui/menu/GamepadButtons/XboxOne_LT.png[/img] : Yaw
+[img=32]res://ui/menu/GamepadButtons/XboxOne_RT.png[/img] + [img=32]res://ui/menu/GamepadButtons/XboxOne_LT.png[/img] : Airbrake
+[img=32]res://ui/menu/GamepadButtons/XboxOne_Left_Stick.png[/img] : Give walking direction
+[img=32] [img=32]res://ui/menu/GamepadButtons/XboxOne_Right_Stick.png[/img]: Pitch / Roll
+[img=32]res://ui/menu/GamepadButtons/XboxOne_RB.png[/img] : Step right leg
+[img=32]res://ui/menu/GamepadButtons/XboxOne_LB.png[/img] : Step left leg
+[img=32]res://ui/menu/GamepadButtons/XboxOne_Y.png[/img] : Step legs alternating"
+fit_content = true
+
+[connection signal="about_to_popup" from="AskInput" to="AskInput" method="_on_about_to_popup"]
+[connection signal="confirmed" from="AskInput" to="AskInput" method="_on_confirmed"]
+[connection signal="custom_action" from="AskInput" to="AskInput" method="_on_custom_action"]

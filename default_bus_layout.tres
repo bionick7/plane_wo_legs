@@ -1,0 +1,27 @@
+[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://cs266nyx4a386"]
+
+[sub_resource type="AudioEffectEQ" id="AudioEffectEQ_qmjva"]
+resource_name = "EQ"
+band_db/32_hz = -10.3
+band_db/100_hz = -3.2
+band_db/1000_hz = -12.1
+band_db/3200_hz = -30.1
+band_db/10000_hz = -30.6
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_7lt4n"]
+resource_name = "LowPassFilter"
+cutoff_hz = 1800.0
+resonance = 0.7
+
+[resource]
+bus/0/mute = true
+bus/1/name = &"Engine"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.862736
+bus/1/send = &"Master"
+bus/1/effect/0/effect = SubResource("AudioEffectEQ_qmjva")
+bus/1/effect/0/enabled = true
+bus/1/effect/1/effect = SubResource("AudioEffectLowPassFilter_7lt4n")
+bus/1/effect/1/enabled = true

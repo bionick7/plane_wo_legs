@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://environment/water/water.gdshader" id="1_fll66"]
+[ext_resource type="Texture2D" uid="uid://d0dbmnauegi5i" path="res://environment/water/wave_texture.tres" id="2_bysqa"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_fll66")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/uv_strech = 0.3
+shader_parameter/vel1 = Vector2(0, -4)
+shader_parameter/vel2 = Vector2(5, 3)
+shader_parameter/mixing_factor = 0.527
+shader_parameter/color = Color(0.372549, 0.490196, 0.537255, 1)
+shader_parameter/fresnel_color = Color(0.517647, 0.729412, 0.941176, 1)
+shader_parameter/roughness = 0.348
+shader_parameter/water_noise = ExtResource("2_bysqa")

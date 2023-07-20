@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://cx5g1coyfw0er"]
+
+[ext_resource type="Shader" path="res://environment/sky/post_processing.gdshader" id="1_itepv"]
+[ext_resource type="Script" path="res://support/PostProcessing.gd" id="2_qbd3c"]
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_t8207"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_at07l"]
+render_priority = -128
+shader = ExtResource("1_itepv")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/density_mult = 5.0
+shader_parameter/cloud_flatten = 4.0
+shader_parameter/scattering = -0.001
+shader_parameter/noise_weights = Quaternion(0, 0, 0, 0)
+shader_parameter/noise_weights_detail = Quaternion(0, 0, 0, 0)
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sky_color = Color(0.564706, 0.917647, 0.839216, 1)
+shader_parameter/cloude_texture_speed = 0.02
+shader_parameter/noise = SubResource("ImageTexture3D_t8207")
+
+[sub_resource type="QuadMesh" id="QuadMesh_kc3l7"]
+size = Vector2(2, 2)
+
+[node name="PostProcessing" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04308e-07, 0, -1.22819)
+material_override = SubResource("ShaderMaterial_at07l")
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_kc3l7")
+script = ExtResource("2_qbd3c")
+material = SubResource("ShaderMaterial_at07l")
+texture = SubResource("ImageTexture3D_t8207")

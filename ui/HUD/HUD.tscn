@@ -1,0 +1,319 @@
+[gd_scene load_steps=14 format=3 uid="uid://cb4b2bqavu4tg"]
+
+[ext_resource type="Script" path="res://ui/HUD/hud_root.gd" id="1_pbuuj"]
+[ext_resource type="Theme" uid="uid://bnnh0cyq1wd21" path="res://ui/display_theme.tres" id="2_fh4rm"]
+[ext_resource type="Script" path="res://ui/HUD/hudisplay.gd" id="5_lbus5"]
+[ext_resource type="Texture2D" uid="uid://s5x3xyb2lphp" path="res://ui/HUD/sprites/velocity.png" id="6_ojxyo"]
+[ext_resource type="Texture2D" uid="uid://3e6ymengdqw1" path="res://ui/HUD/sprites/header.png" id="7_245ij"]
+[ext_resource type="Texture2D" uid="uid://b17ubx5yj0f6y" path="res://ui/HUD/sprites/header_roll.png" id="8_pio4l"]
+[ext_resource type="Texture2D" uid="uid://cxbkyvvfyd6do" path="res://ui/HUD/sprites/pointer.png" id="9_6vlgd"]
+
+[sub_resource type="Shader" id="Shader_11go5"]
+code = "shader_type spatial;
+render_mode cull_front, unshaded,
+	depth_draw_always, depth_test_disabled;
+
+const float PI_HALFS = 3.1415923565 / 2.0;
+
+uniform sampler2D hud_texture;
+uniform vec4 color: source_color;
+
+varying vec2 coords;
+
+void vertex(){
+	vec3 v_norm = normalize(VERTEX);
+	float y = asin(dot(v_norm, vec3(0, 1, 0)));
+	float x = acos(dot(normalize(vec3(VERTEX.xz, 0)), vec3(1, 0 , 0)) * .999);
+	if (sign(VERTEX.z) > 0.0){
+		x = -x + PI_HALFS;
+	} else {
+		x -= PI_HALFS;
+	}
+
+	coords = vec2(x, y);
+}
+
+float get_band(vec2 uv, float width, float arg, bool vertical){
+	if (vertical)
+		return step(abs(uv.x - arg), width / cos(uv.y));
+	return step(abs(uv.y - arg), width / cos(uv.x));
+}
+
+void fragment(){
+	float mask = 0.0;
+	mask += step(abs(coords.y), .0005) * (1.0 - get_band(coords, .15, 0.0, true));			// horizon
+	mask += step(-cos(coords.y * 36.), -.9993) * get_band(coords, .02, .1, true);			// 10°
+	mask += step(-cos(coords.y * 36. + PI), -.9995) * get_band(coords, .006, .11, true);		// 5°
+	mask += step(-cos(coords.y * 360.), -.98) * get_band(coords, .005, .1, true);			// 1 °
+	
+	ALBEDO = color.rgb;
+	ALPHA = mask * color.a;
+}"
+
+[sub_resource type="FastNoiseLite" id="2"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7hcsr"]
+seamless = true
+noise = SubResource("2")
+
+[sub_resource type="ShaderMaterial" id="4"]
+render_priority = 0
+shader = SubResource("Shader_11go5")
+shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/hud_texture = SubResource("NoiseTexture2D_7hcsr")
+
+[sub_resource type="Shader" id="Shader_pin54"]
+code = "shader_type spatial;
+render_mode cull_front, unshaded,
+	depth_draw_always, depth_test_disabled;
+
+const float PI_HALFS = 3.1415923565 / 2.0;
+
+uniform vec4 color: source_color;
+
+uniform vec4 aoa_bounds;
+
+varying vec2 coords;
+
+void vertex(){
+	vec3 v_norm = normalize(VERTEX);
+	float y = asin(dot(v_norm, vec3(0, 1, 0)));
+	float x = acos(dot(normalize(vec3(VERTEX.xz, 0)), vec3(1, 0 , 0)) * .999);
+	if (sign(VERTEX.z) > 0.0){
+		x = -x + PI_HALFS;
+	} else {
+		x -= PI_HALFS;
+	}
+
+	coords = vec2(x, y);
+}
+
+float get_band(vec2 uv, float width, float arg, bool vertical){
+	if (vertical)
+		return step(abs(uv.x - arg), width / cos(uv.y));
+	return step(abs(uv.y - arg), width / cos(uv.x));
+}
+
+void fragment(){
+	float mask = 0.0;
+	vec2 coords_degrees = degrees(coords);
+	mask += step(abs(coords_degrees.y - aoa_bounds.x), .07) * get_band(coords, radians(13.), 0.0, true);
+	mask += step(abs(coords_degrees.y + aoa_bounds.y), .07) * get_band(coords, radians(13.), 0.0, true);
+	mask += step(abs(coords_degrees.x - aoa_bounds.z), .07) * get_band(coords, radians(13.), 0.0, false);
+	mask += step(abs(coords_degrees.x + aoa_bounds.w), .07) * get_band(coords, radians(13.), 0.0, false);
+	
+	ALBEDO = color.rgb;
+	ALPHA = mask * color.a;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r2ya0"]
+render_priority = 0
+shader = SubResource("Shader_pin54")
+shader_parameter/color = Color(0.709804, 0.345098, 0.25098, 1)
+shader_parameter/aoa_bounds = Vector4(15, 15, 15, 15)
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_pbuuj")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_fh4rm")
+
+[node name="ThrottleSlider" type="VSlider" parent="UI"]
+layout_mode = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -153.0
+offset_right = 24.0
+offset_bottom = -2.0
+max_value = 1.0
+step = 0.0
+value = 0.007
+editable = false
+scrollable = false
+
+[node name="VPContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="VP" type="SubViewport" parent="VPContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="HUDControl" type="Node3D" parent="VPContainer/VP"]
+script = ExtResource("5_lbus5")
+pitch_yaw_roll_display_sensitivity = Vector3(0.05, 0.05, 0.5)
+speed_units = 1
+
+[node name="HUDSphere" type="CSGSphere3D" parent="VPContainer/VP/HUDControl"]
+layers = 32
+radial_segments = 64
+rings = 32
+material = SubResource("4")
+
+[node name="Velocity" type="Node3D" parent="VPContainer/VP/HUDControl"]
+
+[node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Velocity"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 1, 0, 0)
+layers = 32
+modulate = Color(0.709804, 0.345098, 0.25098, 1)
+pixel_size = 0.0005
+axis = 0
+no_depth_test = true
+texture = ExtResource("6_ojxyo")
+
+[node name="Heading" type="Node3D" parent="VPContainer/VP/HUDControl"]
+
+[node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 1.008)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0003
+axis = 0
+no_depth_test = true
+texture = ExtResource("7_245ij")
+
+[node name="Heading2" type="Node3D" parent="VPContainer/VP/HUDControl"]
+
+[node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188909, 0, 1.00948)
+layers = 32
+cast_shadow = 0
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0003
+axis = 0
+no_depth_test = true
+texture = ExtResource("8_pio4l")
+
+[node name="Pitch" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
+
+[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/Pitch"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 1.1515, -3.82085e-09, -0.10381)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("9_6vlgd")
+
+[node name="PitchTrim" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
+
+[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/PitchTrim"]
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 1.1515, -4.03816e-09, -0.0923823)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("9_6vlgd")
+
+[node name="Yaw" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
+
+[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/Yaw"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1515, -0.036, -6.66478e-09)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("9_6vlgd")
+
+[node name="YawTrim" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
+
+[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/YawTrim"]
+transform = Transform3D(0.5, 0, 0, 0, -0.5, -7.54979e-08, 0, 7.54979e-08, -0.5, 1.1515, -0.0237624, -3.08501e-09)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("9_6vlgd")
+
+[node name="Roll" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
+
+[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/Roll"]
+transform = Transform3D(1, 0, 0, 0, -1, 1.50996e-07, 0, -1.50996e-07, -1, 1.1515, 0.0713147, -3.21597e-09)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("9_6vlgd")
+
+[node name="RollTrim" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
+
+[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/RollTrim"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 3.17865e-08, 0, -3.17865e-08, 0.5, 1.15148, 0.0605264, 2.1725e-06)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("9_6vlgd")
+
+[node name="IAS" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.0568819, 0.0121655, 1.01014)
+layers = 32
+pixel_size = 0.0005
+no_depth_test = true
+modulate = Color(0, 0.933333, 0.67451, 1)
+text = "aaa"
+outline_size = 0
+
+[node name="Mach" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.0568819, 0.0300737, 1.01014)
+layers = 32
+pixel_size = 0.0005
+no_depth_test = true
+modulate = Color(0, 0.933333, 0.67451, 1)
+text = "aaa"
+outline_size = 0
+
+[node name="Altitude" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0552379, 0.0121655, 1.01014)
+layers = 32
+pixel_size = 0.0005
+no_depth_test = true
+modulate = Color(0, 0.933333, 0.67451, 1)
+text = "aaa"
+outline_size = 0
+
+[node name="Acceleration" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0552379, 0.027089, 1.01014)
+layers = 32
+pixel_size = 0.0005
+no_depth_test = true
+modulate = Color(0, 0.933333, 0.67451, 1)
+text = "aaa"
+outline_size = 0
+
+[node name="BodyCenteredSphere" type="CSGSphere3D" parent="VPContainer/VP/HUDControl/Heading2"]
+layers = 32
+radial_segments = 64
+rings = 32
+material = SubResource("ShaderMaterial_r2ya0")
+
+[node name="HudCam" type="Camera3D" parent="VPContainer/VP"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+cull_mask = 32
+current = true
+fov = 40.0
+far = 50.0

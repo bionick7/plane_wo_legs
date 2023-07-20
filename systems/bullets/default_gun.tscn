@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://cv1b3squia6np"]
+
+[ext_resource type="Shader" path="res://systems/bullets/bullet_particles.gdshader" id="1_tescu"]
+[ext_resource type="Script" path="res://systems/bullets/Bullets.gd" id="2_atxce"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kdyu7"]
+resource_local_to_scene = true
+shader = ExtResource("1_tescu")
+shader_parameter/global_start_velocity = Vector3(0, 0, 1000)
+shader_parameter/include_centrifugal = false
+shader_parameter/include_coreolis = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xsvjn"]
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(4.90196, 3.10588, 0, 1)
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_pe43g"]
+material = SubResource("StandardMaterial3D_xsvjn")
+size = 0.096
+sections = 4
+section_length = 2.0
+section_segments = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t22oe"]
+cull_mode = 2
+depth_draw_mode = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_5egqb"]
+
+[node name="Gun" type="GPUParticles3D" node_paths=PackedStringArray("self_area")]
+transform = Transform3D(1, -1.74846e-07, 7.64276e-15, 0, -4.37114e-08, -1, 1.74846e-07, 1, -4.37114e-08, -5.67881e-08, 0.178382, -2.12344)
+emitting = false
+amount = 128
+lifetime = 3.0
+fixed_fps = 60
+visibility_aabb = AABB(-1.79056, -1.79001, -1.79391, 3.58057, 312.05, 3.58392)
+trail_lifetime = 0.1
+process_material = SubResource("ShaderMaterial_kdyu7")
+draw_pass_1 = SubResource("RibbonTrailMesh_pe43g")
+script = ExtResource("2_atxce")
+muzzle_velocity = 1000
+self_area = NodePath("../Hitbox")
+
+[node name="GunDraw" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, -1.74846e-07, 1.74846e-07, -1.74846e-07, 1.58933e-08, 1, -1.74846e-07, -1, 1.58932e-08, 0, 0, 0)
+top_level = true
+material_override = SubResource("StandardMaterial3D_t22oe")
+cast_shadow = 0
+ignore_occlusion_culling = true
+mesh = SubResource("ImmediateMesh_5egqb")

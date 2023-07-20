@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="FlightModel" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://systems/player/flight_models/flight_model.gd" id="1_foks5"]
+
+[resource]
+script = ExtResource("1_foks5")
+C_D_0 = 0.02
+oswald = 0.7
+C_D_br = 0.1
+C_X_q = 0.0
+"C_X_δe" = 0.0
+C_L_0 = 0.3
+"C_L_α" = 4.575
+C_Z_q = 0.0
+"C_Z_δe" = 0.6
+C_m_ac = 0.0
+C_m_q = -8.0
+"C_m_α_dot" = 0.0
+"C_m_δe" = -0.88
+C_m_br = 0.0
+C_Y_0 = 0.0
+"C_Y_β" = -1.0
+C_Y_p = -0.087
+C_Y_r = 0.43
+"C_Y_δa" = 0.0
+"C_Y_δr" = 0.0
+C_l_0 = 0.0
+"C_l_β" = -0.08
+C_l_p = -0.4
+C_l_r = 0.07
+"C_l_δa" = -0.2
+"C_l_δr" = 0.0
+C_n_0 = 0.0
+"C_n_β" = 0.164
+C_n_p = -0.011
+C_n_r = -0.19
+"C_n_δa" = 0.0
+"C_n_δr" = -0.1
+c = 4.0
+b = 10.0
+canard_surface_ratio = 0.2
+x_cg = 7.2
+x_ac = 8.0
+x_c_ac = 4.693
+stall_enabled = true
+stall_affects_roll = false
+stall_start = 15.0
+stall_full = 25.0

@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://wmsntcnrj0ro"]
+
+[ext_resource type="Script" path="res://support/debug_mesh.gd" id="1_ayfc6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ypb7l"]
+depth_draw_mode = 1
+no_depth_test = true
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_ccvhc"]
+resource_local_to_scene = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_8glbe"]
+font_color = Color(0, 0, 0, 1)
+
+[node name="DebugDrawer" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.349595, -0.0889878)
+material_override = SubResource("StandardMaterial3D_ypb7l")
+mesh = SubResource("ImmediateMesh_ccvhc")
+script = ExtResource("1_ayfc6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_8glbe")
+metadata/_edit_use_anchors_ = true

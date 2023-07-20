@@ -1,0 +1,82 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8r7y7fynwkvr"]
+
+[ext_resource type="Script" path="res://ui/menu/pause_menu.gd" id="1_2e5c6"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_dy7im"]
+resource_name = "button_group"
+
+[node name="PauseUI" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_2e5c6")
+tab_button_group = SubResource("ButtonGroup_dy7im")
+
+[node name="PauseMenu" type="HBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -22.0
+offset_right = 20.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="V" type="VBoxContainer" parent="PauseMenu"]
+layout_mode = 2
+
+[node name="Resume" type="Button" parent="PauseMenu/V"]
+layout_mode = 2
+text = "Resume"
+
+[node name="Options" type="Button" parent="PauseMenu/V"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_dy7im")
+text = "Options"
+metadata/tab = 0
+
+[node name="Controls" type="Button" parent="PauseMenu/V"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_dy7im")
+text = "Controls"
+metadata/tab = 1
+
+[node name="Quit" type="Button" parent="PauseMenu/V"]
+layout_mode = 2
+text = "Quit"
+
+[node name="PauseMenu" type="TabContainer" parent="PauseMenu"]
+custom_minimum_size = Vector2(300, 400)
+layout_mode = 2
+tabs_visible = false
+
+[node name="Options" type="Tree" parent="PauseMenu/PauseMenu"]
+layout_mode = 2
+columns = 2
+hide_root = true
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
+
+[node name="V" type="VBoxContainer" parent="PauseMenu/PauseMenu"]
+visible = false
+layout_mode = 2
+
+[node name="Gamepad" type="Button" parent="PauseMenu/PauseMenu/V"]
+visible = false
+layout_mode = 2
+text = "Rediscover Gamepad"
+
+[node name="Flightstick" type="Button" parent="PauseMenu/PauseMenu/V"]
+visible = false
+layout_mode = 2
+text = "Rediscover FlightStick"
+
+[connection signal="pressed" from="PauseMenu/V/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PauseMenu/V/Quit" to="." method="_on_quit_pressed"]
+[connection signal="item_edited" from="PauseMenu/PauseMenu/Options" to="." method="_on_options_item_edited"]
+[connection signal="pressed" from="PauseMenu/PauseMenu/V/Gamepad" to="." method="_on_gamepad_pressed"]
+[connection signal="pressed" from="PauseMenu/PauseMenu/V/Flightstick" to="." method="_on_flightstick_pressed"]

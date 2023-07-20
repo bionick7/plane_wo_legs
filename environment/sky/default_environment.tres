@@ -1,0 +1,27 @@
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://buql0rkrqx7ge"]
+
+[ext_resource type="Material" uid="uid://7otbdjff6elx" path="res://environment/sky/space_sky.tres" id="1_4qbxm"]
+
+[sub_resource type="Sky" id="Sky_wpdew"]
+sky_material = ExtResource("1_4qbxm")
+
+[resource]
+background_mode = 2
+background_energy_multiplier = 0.52
+background_canvas_max_layer = -100
+sky = SubResource("Sky_wpdew")
+ambient_light_source = 2
+ambient_light_color = Color(0.341176, 0.470588, 0.513726, 1)
+tonemap_exposure = 2.31
+ssil_radius = 10.38
+ssil_intensity = 1.92
+ssil_sharpness = 0.42
+ssil_normal_rejection = 0.15
+glow_strength = 0.54
+glow_bloom = 1.0
+fog_density = 0.001
+fog_sky_affect = 0.666
+volumetric_fog_density = 0.0
+volumetric_fog_emission_energy = 0.31
+volumetric_fog_detail_spread = 2.82843
+volumetric_fog_sky_affect = 0.987

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://generic_assets/materials/general_pbr.gdshader" id="1_0c56l"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_0c56l")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/albedo = Color(0.643137, 0.682353, 0.662745, 1)
+shader_parameter/roughness = 0.729
+shader_parameter/metallicity = 0.0

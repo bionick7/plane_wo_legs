@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://generic_assets/materials/general_pbr.gdshader" id="1_oltmv"]
+[ext_resource type="Texture2D" uid="uid://c7ldvs1hfpqmm" path="res://generic_assets/materials/placeholder.png" id="1_pjpwd"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_oltmv")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/roughness = 0.876
+shader_parameter/metallicity = 0.0
+shader_parameter/albedo_map = ExtResource("1_pjpwd")

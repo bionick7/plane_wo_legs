@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://c36b65adchdla"]
+
+[ext_resource type="Script" path="res://support/PlayerCamera.gd" id="1_rolwp"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_2v38f"]
+dof_blur_far_distance = 1000.0
+
+[node name="CameraRef" type="Node3D"]
+
+[node name="CameraHinge" type="Node3D" parent="."]
+rotation_order = 3
+script = ExtResource("1_rolwp")
+camera_yaw_rate = 3
+camera_pitch_rate = 4
+
+[node name="Camera" type="Camera3D" parent="CameraHinge"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.018617, 3.78373, -29.0435)
+cull_mask = 1048543
+attributes = SubResource("CameraAttributesPractical_2v38f")
+fov = 45.0
+near = 0.5
+far = 15000.0

@@ -1,0 +1,247 @@
+[gd_scene load_steps=19 format=3 uid="uid://byb7rsovl48i7"]
+
+[ext_resource type="PackedScene" uid="uid://c3j3ljgqnp8eo" path="res://environment/terrain/drum_section.tscn" id="1_ae75v"]
+[ext_resource type="Shader" path="res://environment/sky/outside_glass.gdshader" id="2_4suf6"]
+[ext_resource type="PackedScene" uid="uid://cx5g1coyfw0er" path="res://support/post_processing.tscn" id="3_3buq4"]
+[ext_resource type="Shader" path="res://environment/sky/post_processing.gdshader" id="4_sqhui"]
+[ext_resource type="PackedScene" uid="uid://b4fh6oqi5n0v5" path="res://systems/player/player_plane.tscn" id="5_yx4hp"]
+[ext_resource type="PackedScene" uid="uid://c36b65adchdla" path="res://support/camera.tscn" id="6_1v211"]
+[ext_resource type="PackedScene" uid="uid://cb4b2bqavu4tg" path="res://ui/HUD/HUD.tscn" id="7_q3xun"]
+[ext_resource type="Material" uid="uid://7otbdjff6elx" path="res://environment/sky/space_sky.tres" id="8_jyaid"]
+[ext_resource type="PackedScene" uid="uid://iwug150nid4" path="res://systems/npcs/NPC.tscn" id="9_h1300"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_iuum0"]
+top_radius = 4000.0
+bottom_radius = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3dj4k"]
+render_priority = 0
+shader = ExtResource("2_4suf6")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/fresnel_color = null
+shader_parameter/metal_color = null
+shader_parameter/grid_thickness = 0.03
+shader_parameter/roughness = 0.3
+shader_parameter/metal_roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4w27b"]
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1pnkr"]
+material = SubResource("StandardMaterial3D_4w27b")
+flip_faces = true
+top_radius = 4002.0
+bottom_radius = 4002.0
+height = 12300.0
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_xw7yk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rob75"]
+render_priority = 0
+shader = ExtResource("4_sqhui")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/density_mult = 5.0
+shader_parameter/cloud_flatten = 0.0
+shader_parameter/scattering = -0.008
+shader_parameter/noise_weights = Vector4(0.633, 0.155, 0.072, 0)
+shader_parameter/noise_weights_detail = Vector4(0.013, 0.023, 0.034, -0.007)
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sky_color = Color(0.356863, 0.560784, 0.603922, 1)
+shader_parameter/cloude_texture_speed = 0.02
+shader_parameter/noise = SubResource("ImageTexture3D_xw7yk")
+
+[sub_resource type="GDScript" id="GDScript_g0u3i"]
+script/source = "@tool
+extends ShaderGlobalsOverride
+
+@export var primary_light : NodePath
+
+var time: float = 0
+
+func _process(dt: float):
+	time += dt * 0.1
+	set(\"params/cloud_anim_time\", time)
+	update_light()
+
+func update_light() -> void:
+	var light_obj = get_node_or_null(primary_light)
+	if is_instance_valid(light_obj):
+		set(\"params/sun_dir\", light_obj.global_transform.basis.z)
+		#print(material.get_shader_parameter(\"sun_dir\")
+"
+
+[sub_resource type="Sky" id="Sky_wpdew"]
+sky_material = ExtResource("8_jyaid")
+
+[sub_resource type="Environment" id="Environment_ebrsp"]
+background_mode = 2
+background_energy_multiplier = 0.52
+background_canvas_max_layer = -100
+sky = SubResource("Sky_wpdew")
+ambient_light_source = 2
+ambient_light_color = Color(0.341176, 0.470588, 0.513726, 1)
+tonemap_exposure = 2.31
+ssil_radius = 10.38
+ssil_intensity = 1.92
+ssil_sharpness = 0.42
+ssil_normal_rejection = 0.15
+glow_strength = 0.54
+glow_bloom = 1.0
+fog_density = 0.001
+fog_sky_affect = 0.666
+volumetric_fog_density = 0.0
+volumetric_fog_emission_energy = 0.31
+volumetric_fog_detail_spread = 2.82843
+volumetric_fog_sky_affect = 0.987
+
+[node name="Cylinder" type="Node3D"]
+
+[node name="Sections" type="Node3D" parent="."]
+
+[node name="generic2" parent="Sections" instance=ExtResource("1_ae75v")]
+transform = Transform3D(-0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, -3463.06, 1999.34, 0)
+light_layer = 2
+
+[node name="generic4" parent="Sections" instance=ExtResource("1_ae75v")]
+transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, 3462.12, 1997.71, 0)
+light_layer = 4
+
+[node name="generic11" parent="Sections" instance=ExtResource("1_ae75v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4000, -0.763672)
+light_layer = 8
+
+[node name="Cap1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -5992.55)
+mesh = SubResource("CylinderMesh_iuum0")
+
+[node name="Cap2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 6000)
+mesh = SubResource("CylinderMesh_iuum0")
+
+[node name="Drum" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_3dj4k")
+mesh = SubResource("CylinderMesh_1pnkr")
+
+[node name="PostProcessing" parent="." instance=ExtResource("3_3buq4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_rob75")
+cast_shadow = 0
+lacunarity = 2.0
+output_type = "Distance"
+material = SubResource("ShaderMaterial_rob75")
+save_path = "res://environment/sky/generated/clouds_noise"
+texture = SubResource("ImageTexture3D_xw7yk")
+
+[node name="ShaderGlobalsOverride" type="ShaderGlobalsOverride" parent="."]
+script = SubResource("GDScript_g0u3i")
+
+[node name="Player" parent="." instance=ExtResource("5_yx4hp")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0660038, -3589.56, -1461.14)
+initial_velocity = Vector3(0, 0, -150)
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
+remote_path = NodePath("../../CameraRef")
+update_scale = false
+
+[node name="CameraRef" parent="." instance=ExtResource("6_1v211")]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, -0.0660038, -3589.56, -1461.14)
+
+[node name="Camera" parent="CameraRef/CameraHinge" index="0"]
+transform = Transform3D(-1.00001, 6.36649e-12, 8.73114e-08, 6.36646e-12, 1.00001, -2.3283e-10, -8.73115e-08, -2.32831e-10, -1.00001, 0.0186167, 5.22925, -27.0277)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="Restart" type="Button" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -20.0
+offset_right = 88.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "RESTART"
+
+[node name="Progress" type="ProgressBar" parent="CanvasLayer"]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -180.0
+offset_top = 4.0
+offset_right = -6.0
+offset_bottom = 31.0
+grow_horizontal = 0
+max_value = 1.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="CanvasLayer/Progress"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="HUDCOntrol" parent="." node_paths=PackedStringArray("player", "main_camera_hinge") instance=ExtResource("7_q3xun")]
+player = NodePath("../Player")
+main_camera_hinge = NodePath("../CameraRef/CameraHinge")
+
+[node name="DrumCollider" type="StaticBody3D" parent="."]
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="DrumCollider"]
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="DrumCollider"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="CollisionPolygon3D3" type="CollisionPolygon3D" parent="DrumCollider"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="CollisionPolygon3D4" type="CollisionPolygon3D" parent="DrumCollider"]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0, 0)
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ebrsp")
+
+[node name="Enemy" parent="." node_paths=PackedStringArray("target") instance=ExtResource("9_h1300")]
+transform = Transform3D(-1, 0, -8.74227e-08, 0, 1, 0, 8.74228e-08, 0, -0.999999, 0, -3581.88, -2497.7)
+target = NodePath("../Player")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Enemy"]
+remote_path = NodePath("../../CameraRef")
+update_position = false
+update_rotation = false
+update_scale = false
+
+[node name="Enemy2" parent="." node_paths=PackedStringArray("target") instance=ExtResource("9_h1300")]
+transform = Transform3D(-1, 0, -8.74227e-08, 0, 1, 0, 8.74228e-08, 0, -0.999999, 0, -3581.88, -1513.51)
+target = NodePath("../Player")
+pathtrace_color = Color(0.792157, 0.345098, 0.65098, 1)
+
+[connection signal="pressed" from="CanvasLayer/Restart" to="." method="_on_restart_pressed"]
+[connection signal="kill_tracker" from="Enemy" to="HUDCOntrol" method="remove_tracker"]
+[connection signal="spawn_tracker" from="Enemy" to="HUDCOntrol" method="spawn_tracker"]
+[connection signal="kill_tracker" from="Enemy2" to="HUDCOntrol" method="remove_tracker"]
+[connection signal="spawn_tracker" from="Enemy2" to="HUDCOntrol" method="spawn_tracker"]
+
+[editable path="CameraRef"]

@@ -1,0 +1,77 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3j3ljgqnp8eo"]
+
+[ext_resource type="Material" path="res://environment/water/water.tres" id="1_rsrpr"]
+[ext_resource type="ArrayMesh" uid="uid://dteh1lwf4gmi8" path="res://environment/terrain/drum_section.obj" id="2_hp315"]
+
+[sub_resource type="GDScript" id="GDScript_5fjll"]
+script/source = "@tool
+extends Node3D
+
+@export_flags_3d_render var light_layer:
+	set(x):
+		if is_inside_tree():
+			$Water1.layers = x
+			$Water2.layers = x
+			$Water3.layers = x
+			$Light.light_cull_mask = x | 1
+		_light_layer = x
+	get:
+		return _light_layer
+		
+var _light_layer = 1
+
+func _ready():
+	$Water1.layers = light_layer
+	$Water2.layers = light_layer
+	$Water3.layers = light_layer
+	$Light.light_cull_mask = light_layer | 1
+"
+
+[sub_resource type="GDScript" id="GDScript_tp32h"]
+script/source = "extends DirectionalLight3D
+
+const ANGULAR_VELOCITY: float = 0.05
+
+@onready var pause_menu = $\"/root/PauseMenu\"
+
+func _process(dt: float):
+	if pause_menu.get_setting(\"rotate light\", false):
+		rotate_z(dt * ANGULAR_VELOCITY)
+"
+
+[node name="generic" type="Node3D"]
+script = SubResource("GDScript_5fjll")
+light_layer = 1
+
+[node name="Water1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 4000)
+material_override = ExtResource("1_rsrpr")
+mesh = ExtResource("2_hp315")
+
+[node name="Water2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = ExtResource("1_rsrpr")
+mesh = ExtResource("2_hp315")
+
+[node name="Water3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -4000)
+material_override = ExtResource("1_rsrpr")
+mesh = ExtResource("2_hp315")
+
+[node name="Light" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1.77636e-15, 1, 5.96046e-08, 4.37114e-08, -5.96046e-08, 1, 1, 8.29045e-16, -4.37114e-08, 0, 985.058, 0)
+rotation_order = 4
+layers = 2
+light_color = Color(1, 0.917647, 0.811765, 1)
+light_cull_mask = 1
+shadow_enabled = true
+shadow_opacity = 0.82
+directional_shadow_mode = 0
+directional_shadow_split_1 = 0.468
+directional_shadow_split_2 = 0.311
+directional_shadow_split_3 = 0.559
+directional_shadow_blend_splits = true
+directional_shadow_fade_start = 0.444
+directional_shadow_max_distance = 1500.0
+directional_shadow_pancake_size = 0.0
+script = SubResource("GDScript_tp32h")

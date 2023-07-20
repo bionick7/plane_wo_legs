@@ -1,0 +1,31 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://7otbdjff6elx"]
+
+[ext_resource type="Texture2D" uid="uid://5pgg2knobvxr" path="res://environment/sky/starmap_2020_4k.exr" id="1_j1rfr"]
+
+[sub_resource type="Shader" id="Shader_2j4yr"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.0.2.stable's PanoramaSkyMaterial.
+
+shader_type sky;
+
+uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
+
+void sky() {
+	if (AT_CUBEMAP_PASS) {
+		COLOR = vec3(0.0);
+	} else {
+		vec3 star_sky = texture(source_panorama, SKY_COORDS).rgb;
+		
+		float sun = smoothstep(0.99, 1., dot(LIGHT0_DIRECTION, EYEDIR));
+		sun *= sun;
+		sun *= sun;
+		sun *= sun;
+		
+		COLOR = mix(star_sky, LIGHT0_COLOR * 10.0, sun);
+	}
+}
+"
+
+[resource]
+shader = SubResource("Shader_2j4yr")
+shader_parameter/source_panorama = ExtResource("1_j1rfr")

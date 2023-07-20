@@ -1,0 +1,15 @@
+[gd_resource type="NoiseTexture2D" load_steps=2 format=3 uid="uid://d0dbmnauegi5i"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_hfdoi"]
+frequency = 0.005
+fractal_type = 2
+fractal_lacunarity = 1.763
+fractal_gain = 0.578
+fractal_weighted_strength = 0.19
+
+[resource]
+width = 2048
+height = 2048
+seamless = true
+as_normal_map = true
+noise = SubResource("FastNoiseLite_hfdoi")

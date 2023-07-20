@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ui/HUD/tracker.gd" id="1_7j6ec"]
+[ext_resource type="Texture2D" uid="uid://c1agfr4afrylc" path="res://ui/HUD/sprites/tracker.png" id="2_cl2ng"]
+
+[node name="Tracker" type="Node3D"]
+script = ExtResource("1_7j6ec")
+
+[node name="DirectTracker" type="Node3D" parent="."]
+
+[node name="Sprite3D" type="Sprite3D" parent="DirectTracker"]
+transform = Transform3D(-2.98023e-08, 0, -1, -1.49012e-08, 1, 0, 1, 1.49012e-08, -2.98023e-08, 2.98023e-08, -1.49012e-08, 1.0366)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0003
+axis = 0
+no_depth_test = true
+texture = ExtResource("2_cl2ng")
+
+[node name="AimingPoint" type="Node3D" parent="."]
+
+[node name="Sprite3D" type="Sprite3D" parent="AimingPoint"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 1.037)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0001
+axis = 0
+no_depth_test = true
+texture = ExtResource("2_cl2ng")
