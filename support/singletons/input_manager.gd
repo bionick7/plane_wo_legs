@@ -118,8 +118,8 @@ func restart() -> void:
 func get_throttle() -> float:
 	return peer_acc("throttle")
 	
-func get_yaw_pitch_roll(auto_trimmed: bool) -> Vector3:
-	if auto_trimmed:
+func get_yaw_pitch_roll(trimmed: bool) -> Vector3:
+	if trimmed:
 		return peer_acc("ypr") + Vector3.UP * pitch_trim
 	return peer_acc("ypr")
 	

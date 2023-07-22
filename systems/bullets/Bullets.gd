@@ -39,7 +39,7 @@ func _process(dt: float):
 	var ss = get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, 1 << 2)
 	query.collide_with_areas = true
-	if self_area != null:
+	if is_instance_valid(self_area):
 		query.exclude = [self_area.get_rid()]
 	var count = 0
 	for i in range(MAX_BULLET_PATH):
@@ -53,7 +53,7 @@ func _process(dt: float):
 			query.to = new_pos
 			var raycast_result = ss.intersect_ray(query)
 			if raycast_result:
-				var collider: Area3D = raycast_result.collider				
+				var collider: Area3D = raycast_result.collider
 				if collider.is_in_group("Hitbox"):
 					collider.on_bullet_hit(raycast_result.position, bullet_path_vel[i])
 				

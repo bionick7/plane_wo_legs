@@ -63,9 +63,9 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 		trim = fm.get_trim(α)
 	input_manager.pitch_trim = clamp(trim, -2, 2)
 	var ypr = input_manager.get_yaw_pitch_roll(false) * control_multiplier
-	var δr = limit(-ypr.x, rudder_limits_degrees * deg_to_rad(1))
-	var δe = limit(ypr.y, elevator_limits_degrees * deg_to_rad(1)) + trim
-	var δa = limit(-ypr.z, aileron_limits_degrees * deg_to_rad(1))
+	var δr = _limit(-ypr.x, rudder_limits_degrees * deg_to_rad(1))
+	var δe = _limit(ypr.y, elevator_limits_degrees * deg_to_rad(1)) + trim
+	var δa = _limit(-ypr.z, aileron_limits_degrees * deg_to_rad(1))
 	var br = input_manager.get_airbrake()
 	var ang_vel = basis.inverse() * ang_vel_glob
 	var p = fm.b / V *  ang_vel.z
@@ -102,5 +102,5 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	
 	return [aero_force, aero_moment]
 
-func limit(x: float, limit: Vector2) -> float:
+static func _limit(x: float, limit: Vector2) -> float:
 	return lerp(limit.x, limit.y, x * 0.5 + 0.5)

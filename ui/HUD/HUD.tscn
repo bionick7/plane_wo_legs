@@ -71,7 +71,9 @@ const float PI_HALFS = 3.1415923565 / 2.0;
 
 uniform vec4 color: source_color;
 
-uniform vec4 aoa_bounds;
+uniform float max_sideslip: hint_range(-1.0, 90.0, 0.1);
+uniform float max_aoa_pos: hint_range(-1.0, 90.0, 0.1);
+uniform float max_aoa_neg: hint_range(-1.0, 90.0, 0.1);
 
 varying vec2 coords;
 
@@ -97,10 +99,16 @@ float get_band(vec2 uv, float width, float arg, bool vertical){
 void fragment(){
 	float mask = 0.0;
 	vec2 coords_degrees = degrees(coords);
-	mask += step(abs(coords_degrees.y - aoa_bounds.x), .07) * get_band(coords, radians(13.), 0.0, true);
-	mask += step(abs(coords_degrees.y + aoa_bounds.y), .07) * get_band(coords, radians(13.), 0.0, true);
-	mask += step(abs(coords_degrees.x - aoa_bounds.z), .07) * get_band(coords, radians(13.), 0.0, false);
-	mask += step(abs(coords_degrees.x + aoa_bounds.w), .07) * get_band(coords, radians(13.), 0.0, false);
+	if (max_aoa_pos >= 0.) {
+		mask += step(abs(coords_degrees.y + max_aoa_pos), .07) * get_band(coords, radians(13.), 0.0, true);
+	}
+	if (max_aoa_neg >= 0.) {
+		mask += step(abs(coords_degrees.y - max_aoa_neg), .07) * get_band(coords, radians(13.), 0.0, true);
+	}
+	if (max_sideslip >= 0.) {
+		mask += step(abs(coords_degrees.x - max_sideslip), .07) * get_band(coords, radians(13.), 0.0, false);
+		mask += step(abs(coords_degrees.x + max_sideslip), .07) * get_band(coords, radians(13.), 0.0, false);
+	}
 	
 	ALBEDO = color.rgb;
 	ALPHA = mask * color.a;
@@ -109,8 +117,10 @@ void fragment(){
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r2ya0"]
 render_priority = 0
 shader = SubResource("Shader_pin54")
-shader_parameter/color = Color(0.709804, 0.345098, 0.25098, 1)
-shader_parameter/aoa_bounds = Vector4(15, 15, 15, 15)
+shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/max_sideslip = -1.0
+shader_parameter/max_aoa_pos = 30.0
+shader_parameter/max_aoa_neg = -1.0
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_pbuuj")
@@ -168,7 +178,7 @@ material = SubResource("4")
 [node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Velocity"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 1, 0, 0)
 layers = 32
-modulate = Color(0.709804, 0.345098, 0.25098, 1)
+modulate = Color(0, 0.933333, 0.67451, 1)
 pixel_size = 0.0005
 axis = 0
 no_depth_test = true
@@ -311,8 +321,20 @@ radial_segments = 64
 rings = 32
 material = SubResource("ShaderMaterial_r2ya0")
 
+[node name="AoALimitPivot" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2/BodyCenteredSphere"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, 0)
+
+[node name="AoALimit" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2/BodyCenteredSphere/AoALimitPivot"]
+transform = Transform3D(-0.973387, 0, 0.229166, 0, 1, 0, -0.229166, 0, -0.973387, -0.236935, 0, 0.890414)
+layers = 32
+pixel_size = 0.0005
+no_depth_test = true
+modulate = Color(0, 0.933333, 0.67451, 1)
+text = "AoA Limit"
+outline_size = 0
+
 [node name="HudCam" type="Camera3D" parent="VPContainer/VP"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 cull_mask = 32
 current = true
 fov = 40.0

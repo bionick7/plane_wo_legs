@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://cocd4ik7ddubo"]
 
 [ext_resource type="Script" path="res://ui/HUD/tracker.gd" id="1_7j6ec"]
 [ext_resource type="Texture2D" uid="uid://c1agfr4afrylc" path="res://ui/HUD/sprites/tracker.png" id="2_cl2ng"]
@@ -16,6 +16,15 @@ pixel_size = 0.0003
 axis = 0
 no_depth_test = true
 texture = ExtResource("2_cl2ng")
+
+[node name="Distance" type="Label3D" parent="DirectTracker"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0693208, 0, 1.03279)
+layers = 32
+pixel_size = 0.0004
+modulate = Color(0, 0.933333, 0.67451, 1)
+text = "10 km"
+font_size = 48
+outline_size = 0
 
 [node name="AimingPoint" type="Node3D" parent="."]
 

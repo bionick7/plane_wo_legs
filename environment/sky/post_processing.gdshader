@@ -205,7 +205,7 @@ vec4 main(vec3 screen_color, vec3 camera_pos, vec3 camera_dir, float camera_dist
 		//c = c_cloud;
 	}
 	
-	c = mix(sky_color.rgb, c, exp(-t_solid * 1e-4));
+	c = mix(sky_color.rgb, c, exp(-t_solid * 1.5e-4));
 	return vec4(c, 0);
 }
 

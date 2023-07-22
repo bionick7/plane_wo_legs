@@ -1,12 +1,7 @@
 extends MeshInstance3D
 
-@export var material: ShaderMaterial
-
-@onready var input_manager = $"/root/InputManager"
-
 func _ready():
-	assert(is_instance_valid(material))
+	assert(is_instance_valid(material_override))
 
-func _process(dt: float):
-	var throttle = input_manager.get_throttle()
-	material.set_shader_parameter("throttle", throttle)
+func _on_update_ypr(ypr: Vector3, throttle: float):
+	material_override.set_shader_parameter("throttle", throttle)

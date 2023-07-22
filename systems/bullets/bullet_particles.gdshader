@@ -1,12 +1,19 @@
 shader_type particles;
 
+#include "res://shaderincludes/random.gdshaderinc"
+
 uniform vec3 global_start_velocity = vec3(0);
 uniform bool include_centrifugal = true;
 uniform bool include_coreolis = true;
 
 void start() {
 	VELOCITY = global_start_velocity;
+	float vel_length = length(global_start_velocity);
+	float variance = vel_length * DELTA;
+	float per_frame = float(NUMBER) * DELTA / LIFETIME;
+	float offset = fract(float(INDEX) / per_frame) * variance;
 	TRANSFORM = EMISSION_TRANSFORM;
+	TRANSFORM[3].xyz += offset * global_start_velocity / vel_length;
 }
 
 void process() {

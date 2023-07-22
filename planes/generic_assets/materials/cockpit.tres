@@ -1,12 +1,15 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://d1ujcchycu2c3"]
 
 [ext_resource type="Shader" path="res://planes/generic_assets/materials/toon_general.gdshader" id="1_2tsnm"]
 
 [resource]
 render_priority = 0
 shader = ExtResource("1_2tsnm")
-shader_parameter/roughness = 0.39
-shader_parameter/color = Color(0.133333, 0.121569, 0.129412, 1)
-shader_parameter/highlight_threshhold = 0.623
-shader_parameter/filllight_threshhold = 1.0
-shader_parameter/rimlight_threshhold = 0.186
+shader_parameter/roughness = 0.4
+shader_parameter/color = Color(0.0980392, 0.105882, 0.105882, 1)
+shader_parameter/rimlight_color = Color(1, 1, 1, 1)
+shader_parameter/highlight_threshhold = 0.829
+shader_parameter/highlight_variance = 0.131
+shader_parameter/filllight_threshhold = 0.704
+shader_parameter/filllight_variance = 0.088
+shader_parameter/rimlight_threshhold = 0.1

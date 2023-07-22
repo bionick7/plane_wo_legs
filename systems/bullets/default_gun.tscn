@@ -33,10 +33,10 @@ albedo_color = Color(1, 0, 1, 1)
 
 [node name="Gun" type="GPUParticles3D" node_paths=PackedStringArray("self_area")]
 transform = Transform3D(1, -1.74846e-07, 7.64276e-15, 0, -4.37114e-08, -1, 1.74846e-07, 1, -4.37114e-08, -5.67881e-08, 0.178382, -2.12344)
+ignore_occlusion_culling = true
 emitting = false
-amount = 128
-lifetime = 3.0
-fixed_fps = 60
+amount = 1024
+lifetime = 5.0
 visibility_aabb = AABB(-1.79056, -1.79001, -1.79391, 3.58057, 312.05, 3.58392)
 trail_lifetime = 0.1
 process_material = SubResource("ShaderMaterial_kdyu7")

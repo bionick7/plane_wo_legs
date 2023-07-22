@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3j3ljgqnp8eo"]
 
-[ext_resource type="Material" path="res://environment/water/water.tres" id="1_rsrpr"]
+[ext_resource type="Material" uid="uid://ck32odkp8x2jq" path="res://environment/water/water.tres" id="1_rsrpr"]
 [ext_resource type="ArrayMesh" uid="uid://dteh1lwf4gmi8" path="res://environment/terrain/drum_section.obj" id="2_hp315"]
 
 [sub_resource type="GDScript" id="GDScript_5fjll"]
@@ -63,6 +63,7 @@ transform = Transform3D(1.77636e-15, 1, 5.96046e-08, 4.37114e-08, -5.96046e-08, 
 rotation_order = 4
 layers = 2
 light_color = Color(1, 0.917647, 0.811765, 1)
+light_energy = 2.0
 light_cull_mask = 1
 shadow_enabled = true
 shadow_opacity = 0.82

@@ -16,9 +16,10 @@ seamless = true
 noise = SubResource("3")
 
 [resource]
+resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("1_nxx7p")
 shader_parameter/distortion = 0.375
-shader_parameter/throttle = 0.867
+shader_parameter/throttle = 0.569
 shader_parameter/noise = SubResource("4")
 shader_parameter/gradient = SubResource("2")

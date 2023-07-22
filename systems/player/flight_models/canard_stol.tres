@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="FlightModel" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="FlightModel" load_steps=2 format=3 uid="uid://dkx1jqtk7vrf5"]
 
 [ext_resource type="Script" path="res://systems/player/flight_models/flight_model.gd" id="1_foks5"]
 
@@ -44,5 +44,5 @@ x_ac = 8.0
 x_c_ac = 4.693
 stall_enabled = true
 stall_affects_roll = false
-stall_start = 15.0
-stall_full = 25.0
+stall_start = 20.0
+stall_full = 27.0

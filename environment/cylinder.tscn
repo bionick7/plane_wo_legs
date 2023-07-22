@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://byb7rsovl48i7"]
+[gd_scene load_steps=21 format=3 uid="uid://byb7rsovl48i7"]
 
 [ext_resource type="PackedScene" uid="uid://c3j3ljgqnp8eo" path="res://environment/terrain/drum_section.tscn" id="1_ae75v"]
 [ext_resource type="Shader" path="res://environment/sky/outside_glass.gdshader" id="2_4suf6"]
@@ -35,7 +35,7 @@ top_radius = 4002.0
 bottom_radius = 4002.0
 height = 12300.0
 
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_xw7yk"]
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_r7yqw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rob75"]
 render_priority = 0
@@ -43,13 +43,13 @@ shader = ExtResource("4_sqhui")
 shader_parameter/cloud_cover_speed = 0.01
 shader_parameter/density_mult = 5.0
 shader_parameter/cloud_flatten = 0.0
-shader_parameter/scattering = -0.008
+shader_parameter/scattering = -0.001
 shader_parameter/noise_weights = Vector4(0.633, 0.155, 0.072, 0)
 shader_parameter/noise_weights_detail = Vector4(0.013, 0.023, 0.034, -0.007)
 shader_parameter/sun_color = Color(1, 1, 1, 1)
 shader_parameter/sky_color = Color(0.356863, 0.560784, 0.603922, 1)
 shader_parameter/cloude_texture_speed = 0.02
-shader_parameter/noise = SubResource("ImageTexture3D_xw7yk")
+shader_parameter/noise = SubResource("ImageTexture3D_r7yqw")
 
 [sub_resource type="GDScript" id="GDScript_g0u3i"]
 script/source = "@tool
@@ -71,6 +71,13 @@ func update_light() -> void:
 		#print(material.get_shader_parameter(\"sun_dir\")
 "
 
+[sub_resource type="Gradient" id="Gradient_ouj2d"]
+offsets = PackedFloat32Array(0, 0.443946, 0.766816)
+colors = PackedColorArray(0, 0, 0, 1, 0.408329, 0.408329, 0.40833, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6lv1d"]
+gradient = SubResource("Gradient_ouj2d")
+
 [sub_resource type="Sky" id="Sky_wpdew"]
 sky_material = ExtResource("8_jyaid")
 
@@ -80,8 +87,7 @@ background_energy_multiplier = 0.52
 background_canvas_max_layer = -100
 sky = SubResource("Sky_wpdew")
 ambient_light_source = 2
-ambient_light_color = Color(0.341176, 0.470588, 0.513726, 1)
-tonemap_exposure = 2.31
+ambient_light_color = Color(0.482353, 0.458824, 0.435294, 1)
 ssil_radius = 10.38
 ssil_intensity = 1.92
 ssil_sharpness = 0.42
@@ -94,6 +100,8 @@ volumetric_fog_density = 0.0
 volumetric_fog_emission_energy = 0.31
 volumetric_fog_detail_spread = 2.82843
 volumetric_fog_sky_affect = 0.987
+adjustment_enabled = true
+adjustment_color_correction = SubResource("GradientTexture1D_6lv1d")
 
 [node name="Cylinder" type="Node3D"]
 
@@ -132,14 +140,20 @@ lacunarity = 2.0
 output_type = "Distance"
 material = SubResource("ShaderMaterial_rob75")
 save_path = "res://environment/sky/generated/clouds_noise"
-texture = SubResource("ImageTexture3D_xw7yk")
+texture = SubResource("ImageTexture3D_r7yqw")
 
 [node name="ShaderGlobalsOverride" type="ShaderGlobalsOverride" parent="."]
+params/cloud_anim_time = 1.23499
 script = SubResource("GDScript_g0u3i")
 
 [node name="Player" parent="." instance=ExtResource("5_yx4hp")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0660038, -3589.56, -1461.14)
+crash_tolerance = 0.0
 initial_velocity = Vector3(0, 0, -150)
+max_health = 5
+allegency_flags = 1
+manual_step = false
+draw_pathtrace = false
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
 remote_path = NodePath("../../CameraRef")
@@ -223,9 +237,15 @@ polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 77
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ebrsp")
 
-[node name="Enemy" parent="." node_paths=PackedStringArray("target") instance=ExtResource("9_h1300")]
+[node name="Enemy" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(-1, 0, -8.74227e-08, 0, 1, 0, 8.74228e-08, 0, -0.999999, 0, -3581.88, -2497.7)
-target = NodePath("../Player")
+hostility_flags = 1
+draw_avoidance = true
+avoidance_color = Color(0.933333, 0.886275, 0, 1)
+max_health = 5
+allegency_flags = 2
+frozen = true
+draw_pathtrace = true
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Enemy"]
 remote_path = NodePath("../../CameraRef")
@@ -233,9 +253,12 @@ update_position = false
 update_rotation = false
 update_scale = false
 
-[node name="Enemy2" parent="." node_paths=PackedStringArray("target") instance=ExtResource("9_h1300")]
+[node name="Enemy2" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(-1, 0, -8.74227e-08, 0, 1, 0, 8.74228e-08, 0, -0.999999, 0, -3581.88, -1513.51)
-target = NodePath("../Player")
+hostility_flags = 1
+max_health = 5
+allegency_flags = 2
+frozen = true
 pathtrace_color = Color(0.792157, 0.345098, 0.65098, 1)
 
 [connection signal="pressed" from="CanvasLayer/Restart" to="." method="_on_restart_pressed"]

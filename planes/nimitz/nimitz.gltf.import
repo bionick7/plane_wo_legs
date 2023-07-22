@@ -30,36 +30,6 @@ animation/remove_immutable_tracks=true
 import_script/path=""
 _subresources={
 "meshes": {
-"nimitz_Ankle": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_ankle.res"
-},
-"nimitz_Canopy": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Canopy.res"
-},
-"nimitz_Elevon1": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Elevon1.res"
-},
 "nimitz_Elevon2": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
@@ -68,7 +38,7 @@ _subresources={
 "lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
 "save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Elevon2.res"
+"save_to_file/path": "res://planes/nimitz/meshes/nimitz_Elevon2.res"
 },
 "nimitz_Engine": {
 "generate/lightmap_uv": 0,
@@ -78,37 +48,7 @@ _subresources={
 "lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
 "save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Engine.res"
-},
-"nimitz_Foot": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Foot.res"
-},
-"nimitz_GearDoorUp": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_GearDoorUp.res"
-},
-"nimitz_GearDorrDown": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_GearDorrDown.res"
+"save_to_file/path": "res://planes/nimitz/meshes/nimitz_Engine.res"
 },
 "nimitz_Hull": {
 "generate/lightmap_uv": 0,
@@ -118,9 +58,9 @@ _subresources={
 "lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
 "save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Hull.res"
+"save_to_file/path": "res://planes/nimitz/meshes/nimitz_Hull.res"
 },
-"nimitz_Leg1": {
+"nimitz_Rudder": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
@@ -128,27 +68,7 @@ _subresources={
 "lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
 "save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Leg1.res"
-},
-"nimitz_Leg2": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Leg2.res"
-},
-"nimitz_Leg3": {
-"generate/lightmap_uv": 0,
-"generate/lods": 0,
-"generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
-"save_to_file/enabled": true,
-"save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_Leg3.res"
+"save_to_file/path": "res://planes/nimitz/meshes/nimitz_Rudder.res"
 },
 "nimitz_canard": {
 "generate/lightmap_uv": 0,
@@ -158,7 +78,7 @@ _subresources={
 "lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
 "save_to_file/make_streamable": "",
-"save_to_file/path": "res://assets/Nimitz_meshes/nimitz_canard.res"
+"save_to_file/path": "res://planes/nimitz/meshes/nimitz_canard.res"
 }
 }
 }

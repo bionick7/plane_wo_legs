@@ -16,6 +16,7 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @export var thrust_to_weight = .8
 @export_range(0, 1, 0.01, "or_greater", "hide_slider", "suffix:kg") var mass: float = 1
 @export var inertia_tensor: Basis = Basis.IDENTITY
+@export var min_lock_angle_deg: float
 
 @export_group("References")
 @export var flight_dynamics: Node
@@ -29,6 +30,7 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @onready var inverse_inertia_tensor = inertia_tensor.inverse()
 
 var throttle: float
+var locked_target: PlaneInterface = null
 
 var angular_acceleration: Vector3
 var linear_acceleration: Vector3
@@ -38,9 +40,10 @@ var fealt_acceleration: Vector3
 
 var angular_velocity: Vector3
 
-signal on_death
 
 func _process(dt: float):
+	super._process(dt)
+	
 	debug_drawer.draw_basis(global_transform.basis, Vector3.ZERO, Color.DARK_GRAY)
 	
 	throttle = input_manager.get_throttle()
@@ -53,12 +56,30 @@ func _process(dt: float):
 	fealt_acceleration = observed_linear_acceleration - common_physics.get_acc(position, velocity)
 	var pilot_arm = $Pilot.position - center_of_mass
 	fealt_acceleration += observed_angular_acceleration.cross(pilot_arm)  # cylinder is not accelerating
+	
+	visual_ypr = input_manager.get_yaw_pitch_roll(true)
+	visual_throttle = throttle
 
 func _input(event: InputEvent):
 	if event.is_action_pressed("Gun"):
 		gun.start_fire()
 	elif event.is_action_released("Gun"):
 		gun.cease_fire()
+	
+	if event.is_action_pressed("lock"):
+		var min_angle = deg_to_rad(min_lock_angle_deg)
+		var lock_candidate: PlaneInterface = null
+		for plane in get_tree().get_nodes_in_group("Planes"):
+			if plane == self or plane.is_hidden():
+				continue
+			if plane.allegency_flags & 0x02 == 0:
+				continue
+			var angle = basis.z.angle_to(plane.global_position - global_position)
+			if angle < min_angle:
+				lock_candidate = plane
+				min_angle = angle
+		if is_instance_valid(lock_candidate):
+			locked_target = lock_candidate
 
 func update_velocity_rotation(dt: float, manual: bool):
 	super.update_velocity_rotation(dt, manual)

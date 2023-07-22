@@ -1,12 +1,15 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cmuah625hq63q"]
 
 [ext_resource type="Shader" path="res://planes/generic_assets/materials/toon_general.gdshader" id="1_uj2oc"]
 
 [resource]
 render_priority = 0
 shader = ExtResource("1_uj2oc")
-shader_parameter/roughness = 0.39
-shader_parameter/color = Color(0.584314, 0.164706, 0.0823529, 1)
-shader_parameter/highlight_threshhold = 0.473
-shader_parameter/filllight_threshhold = 0.888
-shader_parameter/rimlight_threshhold = 0.157
+shader_parameter/roughness = 0.4
+shader_parameter/color = Color(0.898039, 0.152941, 0.109804, 1)
+shader_parameter/rimlight_color = Color(1, 1, 1, 1)
+shader_parameter/highlight_threshhold = 0.069
+shader_parameter/highlight_variance = 0.153
+shader_parameter/filllight_threshhold = 0.95
+shader_parameter/filllight_variance = 0.03
+shader_parameter/rimlight_threshhold = 0.1

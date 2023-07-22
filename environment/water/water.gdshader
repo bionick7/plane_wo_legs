@@ -16,7 +16,10 @@ uniform vec4 color: source_color;
 uniform vec4 fresnel_color: source_color;
 uniform float roughness: hint_range(0.0, 1.0) = 0.5;
 
+global uniform sampler2D hatching_noise;
+
 varying float custom_shadow;
+varying vec2 hatching_uv;
 
 #ifdef TRANSPERENCY
 uniform sampler2D screen_texture: hint_screen_texture;
@@ -57,15 +60,18 @@ void fragment() {
 	//ROUGHNESS = mix(1., roughness, smoothstep(0.4, 0.6, light));
 	ROUGHNESS = roughness;
 	METALLIC = 0.0;
-	
+	hatching_uv = SCREEN_UV * vec2(1., 10.);
 }
 
 #ifdef CUSTOM_LIGHTING
 void light() {
+	float a = texture(hatching_noise, hatching_uv).r * 2. - 1.;
+	
 	float attenuation = ATTENUATION * mix(0.1, 1.0, custom_shadow);
 	//attenuation = ATTENUATION;
 	DIFFUSE_LIGHT += get_diffuse_lighting(NORMAL, LIGHT, ALBEDO) * LIGHT_COLOR * attenuation;
-	SPECULAR_LIGHT += step(.9, .2 * get_specular_simple(NORMAL, LIGHT, VIEW, ROUGHNESS*ROUGHNESS)) * LIGHT_COLOR * .1 * attenuation;
+	float specular_threshhold = .6 + a * .5;
+	SPECULAR_LIGHT += step(specular_threshhold, .2 * get_specular_simple(NORMAL, LIGHT, VIEW, ROUGHNESS*ROUGHNESS)) * LIGHT_COLOR * .1 * attenuation;
 	//DIFFUSE_LIGHT = vec3(step(.95, dot(NORMAL, LIGHT)));
 	//SPECULAR_LIGHT = vec3(step(.15, dot(NORMAL, LIGHT))) * .15;
 }
