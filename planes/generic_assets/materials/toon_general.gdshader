@@ -1,6 +1,7 @@
 shader_type spatial;
 render_mode diffuse_lambert;
-render_mode specular_schlick_ggx;
+
+#include "res://shaderincludes/custom_pbr.gdshaderinc"
 
 uniform float roughness : hint_range(0, 1) = 0.4;
 uniform vec4 color : source_color = vec4(0, 0, 1, 1);
@@ -19,7 +20,6 @@ void fragment() {
 	ALBEDO = color.rgb;
 	ROUGHNESS = roughness;
 	float rim = step(dot(NORMAL, VIEW), rimlight_threshhold);
-	vec3 rim_color = mix(NORMAL, vec3(1), 0.6);
 	ALBEDO = vec3(mix(color.rgb, rimlight_color.rgb, rim));
 	hatching_uv = SCREEN_UV * vec2(1., 10.) * 2.;
 }
@@ -27,7 +27,11 @@ void fragment() {
 void light() {
 	float a = texture(hatching_noise, hatching_uv).r * 2. - 1.;
 	float highlight_threshhold_rand = highlight_threshhold + a*highlight_variance;
-	float filllight_threshhold_rand = filllight_threshhold + a*filllight_variance;
-	DIFFUSE_LIGHT += vec3(step(highlight_threshhold_rand, dot(NORMAL, LIGHT))) * ATTENUATION;
-	SPECULAR_LIGHT += vec3(step(filllight_threshhold_rand, dot(NORMAL, LIGHT))) * .15 * step(0.5, ATTENUATION);
+	float filllight_threshhold_rand = filllight_threshhold * (1. + a*filllight_variance);
+	float diffuse = clamp(dot(NORMAL, LIGHT), 0., 1.);
+	DIFFUSE_LIGHT += vec3(0.1) * ATTENUATION;
+	//DIFFUSE_LIGHT += vec3(step(filllight_threshhold_rand, diffuse)) * ATTENUATION;
+	float spec = get_specular_simple(NORMAL, LIGHT, VIEW, ROUGHNESS*ROUGHNESS);
+	SPECULAR_LIGHT += vec3(1.) * step(highlight_threshhold_rand, spec) * ATTENUATION * .15;
+	
 }

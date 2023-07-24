@@ -3,6 +3,7 @@ extends GPUParticles3D
 const MAX_BULLET_PATH = 1024
 
 @export var muzzle_velocity = 100
+@export_flags_3d_physics var collision_mask: int
 @export var self_area: Area3D
 @export var draw: bool
 
@@ -37,7 +38,7 @@ func _process(dt: float):
 	process_material.set_shader_parameter("global_start_velocity", global_start_velocity)
 	prev_pos = global_position
 	var ss = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, 1 << 2)
+	var query = PhysicsRayQueryParameters3D.create(Vector3.ZERO, Vector3.ZERO, collision_mask)
 	query.collide_with_areas = true
 	if is_instance_valid(self_area):
 		query.exclude = [self_area.get_rid()]
@@ -53,13 +54,12 @@ func _process(dt: float):
 			query.to = new_pos
 			var raycast_result = ss.intersect_ray(query)
 			if raycast_result:
-				var collider: Area3D = raycast_result.collider
+				var collider: CollisionObject3D = raycast_result.collider
 				if collider.is_in_group("Hitbox"):
 					collider.on_bullet_hit(raycast_result.position, bullet_path_vel[i])
-				
 			else:
 				bullet_path_pos[i] = new_pos
-				
+			
 			if raycast_result or common_physics.is_oob(bullet_path_pos[i]):
 				bullet_path_active[i / 64] &= ~(1 << (i % 64))  # Resets the active flag
 			else:

@@ -76,7 +76,7 @@ func _on_button_group_pressed(button: BaseButton):
 
 func get_setting(key: String, default: Variant) -> Variant:
 	if not key in settings:
-		default
+		return default
 	return settings[key]
 
 func _on_options_item_edited():

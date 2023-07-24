@@ -5,11 +5,11 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_dw4fi")
-shader_parameter/roughness = 0.391
-shader_parameter/color = Color(0.0901961, 0.341176, 0.592157, 1)
+shader_parameter/roughness = 0.634
+shader_parameter/color = Color(0.168627, 0.403922, 0.592157, 1)
 shader_parameter/rimlight_color = Color(1, 1, 1, 1)
-shader_parameter/highlight_threshhold = 0.079
-shader_parameter/highlight_variance = 0.092
-shader_parameter/filllight_threshhold = 0.95
-shader_parameter/filllight_variance = 0.05
-shader_parameter/rimlight_threshhold = 0.1
+shader_parameter/highlight_threshhold = 0.587
+shader_parameter/highlight_variance = 0.15
+shader_parameter/filllight_threshhold = 0.404
+shader_parameter/filllight_variance = 0.142
+shader_parameter/rimlight_threshhold = 0.171

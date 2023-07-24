@@ -1,10 +1,20 @@
-#define CUSTOM_LIGHTING
+// https://google.github.io/filament/Filament.html#materialsystem/specularbrdf/normaldistributionfunction(speculard)
 
+#define CUSTOM_LIGHTING
+//#define A
+#ifdef A
 float D_GGX(float NoH, float rough) {
     float a = NoH * rough;
     float k = rough / (1.0 - NoH * NoH + a * a);
     return k * k;
 }
+#else
+float D_GGX(float NoH, float a) {
+    float a2 = a * a;
+    float f = (NoH * a2 - NoH) * NoH + 1.0;
+    return a2 / (PI * f * f);
+}
+#endif
 
 vec3 F_Schlick(float u, vec3 f0) {
     return f0 + (vec3(1.0) - f0) * pow(1.0 - u, 5.0);
@@ -38,7 +48,7 @@ vec3 get_specular_lighting(vec3 n, vec3 l, vec3 v, float rough) {
 	F = vec3(1);
 
     // specular BRDF
-    return D * F * V;
+    return (D * F * V) / (4. * NoV * NoL);
 }
 
 float get_specular_simple(vec3 n, vec3 l, vec3 v, float rough) {
@@ -54,6 +64,8 @@ float get_specular_simple(vec3 n, vec3 l, vec3 v, float rough) {
 
     float D = D_GGX(NoH, rough);
     float V = V_SmithGGXCorrelated(NoV, NoL, rough);
+	float F = F_Schlick(LoH, f0).r;
 
-    return D * V;
+    //return (D * V * F) / (4. * NoL * NoV);
+    return D;
 }

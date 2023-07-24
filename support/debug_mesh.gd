@@ -15,7 +15,6 @@ var traces: Array[PackedVector3Array] = []
 var trace_flags = PackedByteArray()
 var trace_colors = PackedColorArray()
 
-var text = ""
 var current_vis_type = DEBUG
 
 func _ready():
@@ -33,8 +32,6 @@ func _process(dt: float):
 	mesh.surface_end()
 	_lines.clear()
 	_colors.clear()
-	$CanvasLayer/Label.text = text
-	text = ""
 	
 	assert(traces.size() == trace_flags.size() and traces.size() == trace_colors.size())
 	for i in range(traces.size()):
@@ -102,5 +99,3 @@ func stop_trace(index: int) -> void:
 func extend_trace(index: int, point: Vector3) -> void:
 	traces[index].append(point)
 	
-func write_line(line: String) -> void:
-	text += line + "\n"

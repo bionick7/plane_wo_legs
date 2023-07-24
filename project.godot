@@ -21,9 +21,17 @@ Multiplayer="*res://support/singletons/Multiplayer.tscn"
 InputManager="*res://support/singletons/InputManager.tscn"
 PauseMenu="*res://ui/menu/pause_menu.tscn"
 CommonPhysics="*res://support/singletons/common_physics.gd"
+CloudManager="*res://support/singletons/CloudManager.tscn"
+Logger="*res://support/singletons/Logger.tscn"
 
 [debug]
 
+gdscript/warnings/unassigned_variable=0
+gdscript/warnings/unassigned_variable_op_assign=0
+gdscript/warnings/unused_variable=0
+gdscript/warnings/unused_local_constant=0
+gdscript/warnings/unused_private_class_variable=0
+gdscript/warnings/unused_parameter=0
 gdscript/warnings/confusable_identifier=0
 
 [dotnet]
@@ -93,7 +101,8 @@ lock={
 3d_render/layer_6="HUDs"
 3d_physics/layer_1="world collisions"
 3d_physics/layer_2="feet"
-3d_physics/layer_3="BulletCollider"
+3d_physics/layer_3="BulletCollider1"
+3d_physics/layer_4="BulletCollider2"
 
 [physics]
 

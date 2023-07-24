@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="BlackoutCurve" load_steps=2 format=3 uid="uid://diec35exyvs3b"]
+
+[ext_resource type="Script" path="res://systems/pilot/blackout_curve.gd" id="1_uoxc0"]
+
+[resource]
+script = ExtResource("1_uoxc0")
+paralell_plus_at_100ms = 21.0
+paralell_plus_at_1s = 11.0
+paralell_plus_at_3s = 9.0
+paralell_plus_at_10s = 3.0
+paralell_plus_minimum = 3.0
+paralell_minus_at_100ms = 11.0
+paralell_minus_at_1s = 5.0
+paralell_minus_at_3s = 4.5
+paralell_minus_at_10s = 2.0
+paralell_minus_minimum = 2.0
+transverse_at_100ms = 31.0
+transverse_at_1s = 20.0
+transverse_at_3s = 15.0
+transverse_at_10s = 11.0
+transverse_minimum = 6.0
+lateral_at_100ms = 14.0
+lateral_at_1s = 8.0
+lateral_at_3s = 6.0
+lateral_at_10s = 4.5
+lateral_minimum = 4.0

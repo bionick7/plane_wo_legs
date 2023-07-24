@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="CloudParameters" load_steps=3 format=3 uid="uid://hck7ie2asi5f"]
+
+[ext_resource type="Texture2D" uid="uid://1ops857id4u6" path="res://environment/sky/cloud_cover.tres" id="1_e3tfm"]
+[ext_resource type="Script" path="res://environment/sky/cloud_parameters.gd" id="1_f5pg0"]
+
+[resource]
+script = ExtResource("1_f5pg0")
+threshhold = 0.1
+cloud_flatten = 0.0
+cloud_cover_speed = 0.001
+noise_weights = Vector4(0.633, 0.34, 0.072, 0)
+noise_weights_detail = Vector4(0.013, 0.021, 0.034, -0.007)
+layer_mid = 3000.0
+layer_thickness = 600.0
+coverage_texture = ExtResource("1_e3tfm")

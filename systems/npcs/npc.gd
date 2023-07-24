@@ -5,8 +5,12 @@ extends PlaneInterface
 @export var behaviour: NPCBehaviour
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var hostility_flags: int
 
+@export_group("Debug")
+@export var log_summary: bool
+@export var log_speed: bool
 @export var draw_avoidance: bool
 @export var avoidance_color: Color = Color.YELLOW
+@export_placeholder("Only for reading") var _ai_text_summary: String = ""
 
 var _next_velocity = Vector3.ZERO
 var angular_velocity = Vector3.ZERO
@@ -14,68 +18,73 @@ var angular_velocity = Vector3.ZERO
 var speed = 200 # m/s
 var tgt_speed = 200  # m/s
 var avoidance_point = Vector3.ZERO
+var roll_speed = 0
+var roll_acceleration = 0
 
 var plane_up = Vector3.UP
 
 var allow_fire = true
 
-signal spawn_tracker(this: Node3D)
-signal kill_tracker(this: Node3D)
-
 func _ready():
 	super._ready()
 	velocity = basis.z * speed
-	if is_instance_valid(target):
-		_set_target(target)
-	else:
-		_search_new_target()
-	emit_signal("spawn_tracker", self)
-
-func _exit_tree():
-	emit_signal("kill_tracker", self)
-	
-func _set_target(new_target: PlaneInterface) -> void:
-	target = new_target
-	target.on_death.connect(_search_new_target)
-	
+	if not _is_target_valid():
+		_search_new_target_async()
+		
 func _get_hostile_planes() -> Array[PlaneInterface]:
 	var res: Array[PlaneInterface] = []
 	for plane in get_tree().get_nodes_in_group("Planes"):
 		if plane.allegency_flags & hostility_flags == 0:
 			continue
-		if not behaviour.sees_all:
-			var rel_pos = plane.global_position - global_position
-			if rel_pos.length_squared() > behaviour.view_cone_angle_rad:
-				continue
-			if velocity.angle_to(rel_pos) > behaviour.view_cone_radius_sqr:
-				continue
 		res.append(plane)
 	return res
 	
-func _search_new_target() -> void:
-	var possible_targets = _get_hostile_planes()
-	if possible_targets.size() > 0:
-		_set_target(possible_targets.pick_random())
-	else:
-		target = null
+func _is_target_valid() -> bool:
+	return is_instance_valid(target) and _is_visible(target)
 	
-var roll_speed = 0
-var roll_acceleration = 0
+func _is_visible(plane: PlaneInterface) -> bool:
+	if not behaviour.sees_all:
+		var rel_pos = plane.global_position - global_position
+		if rel_pos.length_squared() > behaviour.view_cone_angle_rad:
+			return false
+		if velocity.angle_to(rel_pos) > behaviour.view_cone_radius_sqr:
+			return false
+	if not behaviour.sees_through_clouds and plane.is_hidden():
+		return false
+	return true
+	
+func _search_new_target_async() -> void:
+	while true:
+		var possible_targets = _get_hostile_planes()
+		if possible_targets.size() > 0:
+			target = possible_targets.pick_random()
+			return
+		else:
+			target = null
+		await get_tree().create_timer(behaviour.search_interval).timeout
+	
 	
 func update_velocity_rotation(dt: float, manual: bool) -> void:
 	super.update_velocity_rotation(dt, manual)
 		
 	_ai_logic(dt)
+	if log_summary:
+		logger.write_line(name + ": " + _ai_text_summary)
 		
 	# Speed
 	var lerp_weight = clamp((velocity / speed).dot(up_direction), 0, 1)
 	var max_speed = lerp(behaviour.max_level_speed, behaviour.max_vertical_speed, lerp_weight)
 	var steady_speed = clamp(tgt_speed, behaviour.stall_speed, max_speed)
 	speed = clamp(speed, behaviour.stall_speed, max_speed)
-	speed = move_toward(speed, steady_speed, behaviour.thrust_acceleration * dt)
+	speed = move_toward(speed, steady_speed, behaviour.thrust_acceleration * dt)	
+	if log_speed:
+		logger.write_line("%s: %5.1f m/s -> %5.1f m/s " % [name, speed, tgt_speed])
 		
 	# Visuals
-	if not frozen or manual:
+	if frozen and not manual:
+		visual_ypr = Vector3.ZERO
+		velocity = basis.z * speed
+	else:
 		var tgt_acc = (_next_velocity - velocity) / dt
 		var load_acc = tgt_acc - common_physics.get_acc(global_position, velocity)
 		
@@ -103,28 +112,35 @@ func update_velocity_rotation(dt: float, manual: bool) -> void:
 		basis = new_basis
 		
 		velocity = _next_velocity
-	else:
-		visual_ypr = Vector3.ZERO
-		velocity = basis.z * speed
 		
-	debug_drawer.draw_line_global(global_position, global_position + _next_velocity, Color.LIGHT_SKY_BLUE)
+	#debug_drawer.draw_line_global(global_position, global_position + _next_velocity, Color.LIGHT_SKY_BLUE)
 
 func _ai_logic(dt: float) -> void:
-	if _test_avoidance():
+	if not _is_target_valid():
+		_search_new_target_async()
+	if _test_terrain_collision():
 		var avoidance_direction = (avoidance_point - global_position).normalized()
 		tgt_speed = behaviour.maneuver_speed
 		_next_velocity = _step_face_direction(velocity / speed, avoidance_direction, speed, dt)
+		_ai_text_summary = "Avoid terrain"
 		return
+	for plane in get_tree().get_nodes_in_group("Planes"):
+		if _test_plane_collision(plane):
+			_avoid_plane_collision(plane, dt)
+			_ai_text_summary = "Avoid plane \"%s\"" % plane.name
+			return
 	for plane in _get_hostile_planes():
 		if _is_beeing_chased_by(plane):
 			_evade_from(plane, dt)
+			_ai_text_summary = "Evade plane \"%s\"" % plane.name
 			return
-	if is_instance_valid(target):
+	if _is_target_valid():
 		_chase_target(dt)
+		_ai_text_summary = "Chase target \"%s\"" % target.name
 		return
 	_idle()
 
-func _test_avoidance() -> bool:
+func _test_terrain_collision() -> bool:
 	avoidance_point = Vector3(0, 0, clamp(global_position.z, -2e3, 2e3))
 	var sim_pos = global_position
 	var sim_vel = velocity
@@ -146,6 +162,13 @@ func _test_avoidance() -> bool:
 		debug_drawer.draw_path_global(avoidance_path, avoidance_color)
 	return false
 	
+func _test_plane_collision(test: PlaneInterface) -> bool:
+	var rel_pos = test.global_position - global_position
+	var rel_vel = test.velocity - velocity
+	var min_delta = rel_pos + rel_vel * max(get_closest_approach(rel_pos, rel_vel), 0)
+	
+	return min_delta.length_squared() < behaviour.plane_safe_radius*behaviour.plane_safe_radius
+	
 func _is_beeing_chased_by(test: PlaneInterface) -> bool:
 	var rel_pos = test.global_position - global_position
 	if velocity.angle_to(-rel_pos) > behaviour.chase_cone_angle_rad:
@@ -160,27 +183,54 @@ func _idle() -> void:
 func _evade_from(chaser: PlaneInterface, dt: float) -> void:
 	var rel_pos = chaser.global_position - global_position
 	var face_dir = rel_pos.normalized()
-	tgt_speed = behaviour.maneuver_speed
+	tgt_speed = behaviour.max_level_speed
 	_next_velocity = _step_face_direction(velocity / speed, face_dir, speed, dt)
+
+func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
+	var rel_pos = plane.global_position - global_position
+	var rel_vel = plane.velocity - velocity
+	var time_at_closest_approach = max(get_closest_approach(rel_pos, rel_vel), 0)
+	var plane_pos = plane.global_position + plane.velocity * time_at_closest_approach
+	var self_pos = global_position + velocity * time_at_closest_approach
+	
+	var vel_dir = velocity / speed
+	var evasion_delta = (plane_pos - self_pos).project(vel_dir) - (plane_pos - self_pos)
+	if evasion_delta.is_zero_approx():
+		evasion_delta = Vector3.UP - Vector3.UP.project(vel_dir)  # breaks if vel_dir and plane dir are both up
+	
+	#var target_pt = self_pos + evasion_delta.normalized() * behaviour.plane_safe_radius - global_position
+	var target_pt = evasion_delta.normalized() * behaviour.plane_safe_radius
+	debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.SPRING_GREEN)
+	_next_velocity = _step_face_direction(vel_dir, target_pt.normalized(), speed, dt)
 
 func _chase_target(dt: float) -> void:
 	var rel_pos = target.global_position - global_position
 	var rel_vel = target.velocity - velocity
 	var preaim_time = preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
-	var face_dir = (rel_pos + rel_vel * preaim_time).normalized()
-	if behaviour.use_gun and allow_fire and face_dir.angle_to(velocity) * rel_pos.length() < behaviour.gun_shoot_distance:
+	var aim_noise = Vector3.ZERO  # TODO: make aiming imperfect
+	var face_dir: Vector3
+	if preaim_time >= 0:
+		face_dir = (rel_pos + rel_vel * preaim_time + aim_noise).normalized()
+	else:
+		# No possibility to hit target (e.g. target will outrun bullets
+		face_dir = rel_pos.normalized()  # Just chase directly
+	if preaim_time >= 0 and behaviour.use_gun and\
+		allow_fire and face_dir.angle_to(velocity) * rel_pos.length() < behaviour.gun_shoot_distance:
 		_give_burst()
-	tgt_speed = target.velocity.length() * behaviour.speed_overshoot
+	tgt_speed = max(target.velocity.length() * behaviour.speed_overshoot, behaviour.maneuver_speed)
+	debug_drawer.draw_line_global(global_position, global_position + face_dir * 10, Color.RED)
 	_next_velocity = _step_face_direction(velocity / speed, face_dir, speed, dt)
 
-func _step_face_direction(current_dir: Vector3, dir: Vector3, speed: float, dt: float) -> Vector3:
-	var acc = clamp((speed*speed / (behaviour.stall_speed*behaviour.stall_speed) - 1.0) * 9.81, 1, behaviour.max_acceleration)
-	return angular_move_toward(current_dir, dir, acc * dt / speed, up_direction) * speed
+func _step_face_direction(current_dir: Vector3, dir: Vector3, turn_speed: float, dt: float) -> Vector3:
+	var acc = clamp((turn_speed*turn_speed / (behaviour.stall_speed*behaviour.stall_speed) - 1.0) * 9.81, 1, behaviour.max_acceleration)
+	return angular_move_toward(current_dir, dir, acc * dt / turn_speed, up_direction) * turn_speed
 
 func _give_burst() -> void:
+	if frozen:
+		return
 	allow_fire = false
 	gun.start_fire()
-	var tween: Tween = get_tree().create_tween()
+	var tween: Tween = get_tree().create_tween().bind_node(self)
 	tween.tween_interval(randf_range(behaviour.gun_min_burst_length, behaviour.gun_max_burst_length))
 	tween.tween_callback(gun.cease_fire)
 	tween.tween_interval(behaviour.gun_cooldown)
@@ -219,7 +269,7 @@ static func preaim(pos: Vector3, vel: Vector3, muzzle_vel: float, acc: Callable)
 static func preaim_simple(pos: Vector3, vel: Vector3, muzzle_vel: float) -> float:
 	# Returns expected time to impact in *global axis system* 
 	# Assuming no acceleration acts on the bullet or target
-	if muzzle_vel == 0 :
+	if muzzle_vel <= 0 :
 		push_error("Muzzleveloxity cannot be 0")
 		return -1
 	# Quadratic equation: (v² - w²) t² + 2vx t + x² = 0, (w is muzzlevelocity)
@@ -235,3 +285,12 @@ static func preaim_simple(pos: Vector3, vel: Vector3, muzzle_vel: float) -> floa
 	if t < 0:  # Check slower solution
 		t = (-b + sqrt(discr)) / (2*a)
 	return t
+
+static func get_closest_approach(pos: Vector3, vel: Vector3) -> float:
+	# returns time at closest approach
+	# Minimize: v² t² + 2vx t + x² = 0
+	var a = vel.dot(vel)
+	var b = 2 * pos.dot(vel)
+	var c = pos.dot(pos)
+	#2a t + b = 0
+	return -b / (2*a)

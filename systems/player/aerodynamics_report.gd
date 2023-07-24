@@ -27,6 +27,7 @@ var last_query_time = 0
 var current_ingame_time = 0
 
 var prev_α = 0. / 0.
+var W = 1.  # weight. setup in parent
 
 func _ready():
 	fm.init()
@@ -60,7 +61,8 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	
 	var trim = 0
 	if V > 5 and use_auto_trim:
-		trim = fm.get_trim(α)
+		var α_steady = W / (Q*fm.S * fm.C_L_α)
+		trim = fm.get_trim(α_steady)
 	input_manager.pitch_trim = clamp(trim, -2, 2)
 	var ypr = input_manager.get_yaw_pitch_roll(false) * control_multiplier
 	var δr = _limit(-ypr.x, rudder_limits_degrees * deg_to_rad(1))
@@ -95,7 +97,7 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.UP * Y * 0.001, Color.GREEN)
 	debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.BACK * Z * 0.001, Color.BLUE)
 	
-	#debug_drawer.write_line("%10.5f -- %10.5f" % [rad_to_deg(α), stall_progress])
+	#write_line("%10.5f -- %10.5f" % [rad_to_deg(α), stall_progress])
 	
 	#printt(Q, α, β, trim)
 	#printt("=>", lerp(aero_force, stall_force, stall_progress), lerp(aero_moment, stall_moment, stall_progress))

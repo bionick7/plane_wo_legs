@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_foks5")
 C_D_0 = 0.02
-oswald = 0.7
+oswald = 1.0
 C_D_br = 0.1
 C_X_q = 0.0
 "C_X_δe" = 0.0

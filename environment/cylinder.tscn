@@ -1,11 +1,13 @@
-[gd_scene load_steps=21 format=3 uid="uid://byb7rsovl48i7"]
+[gd_scene load_steps=22 format=3 uid="uid://byb7rsovl48i7"]
 
 [ext_resource type="PackedScene" uid="uid://c3j3ljgqnp8eo" path="res://environment/terrain/drum_section.tscn" id="1_ae75v"]
 [ext_resource type="Shader" path="res://environment/sky/outside_glass.gdshader" id="2_4suf6"]
 [ext_resource type="PackedScene" uid="uid://cx5g1coyfw0er" path="res://support/post_processing.tscn" id="3_3buq4"]
 [ext_resource type="Shader" path="res://environment/sky/post_processing.gdshader" id="4_sqhui"]
-[ext_resource type="PackedScene" uid="uid://b4fh6oqi5n0v5" path="res://systems/player/player_plane.tscn" id="5_yx4hp"]
+[ext_resource type="Resource" uid="uid://ce8p2fejawntu" path="res://environment/sky/voronoi_generator.tres" id="5_ybq6s"]
+[ext_resource type="PackedScene" uid="uid://dm0ccjvt8ik7a" path="res://systems/player/player_plane.tscn" id="5_yx4hp"]
 [ext_resource type="PackedScene" uid="uid://c36b65adchdla" path="res://support/camera.tscn" id="6_1v211"]
+[ext_resource type="Resource" uid="uid://hck7ie2asi5f" path="res://environment/sky/cloud_parameters.tres" id="6_5d5bi"]
 [ext_resource type="PackedScene" uid="uid://cb4b2bqavu4tg" path="res://ui/HUD/HUD.tscn" id="7_q3xun"]
 [ext_resource type="Material" uid="uid://7otbdjff6elx" path="res://environment/sky/space_sky.tres" id="8_jyaid"]
 [ext_resource type="PackedScene" uid="uid://iwug150nid4" path="res://systems/npcs/NPC.tscn" id="9_h1300"]
@@ -35,41 +37,19 @@ top_radius = 4002.0
 bottom_radius = 4002.0
 height = 12300.0
 
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_r7yqw"]
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_opu4t"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rob75"]
 render_priority = 0
 shader = ExtResource("4_sqhui")
-shader_parameter/cloud_cover_speed = 0.01
-shader_parameter/density_mult = 5.0
+shader_parameter/cloud_cover_speed = 0.001
+shader_parameter/threshhold = 0.1
 shader_parameter/cloud_flatten = 0.0
-shader_parameter/scattering = -0.001
-shader_parameter/noise_weights = Vector4(0.633, 0.155, 0.072, 0)
-shader_parameter/noise_weights_detail = Vector4(0.013, 0.023, 0.034, -0.007)
+shader_parameter/noise_weights = Vector4(0.633, 0.34, 0.072, 0)
+shader_parameter/noise_weights_detail = Vector4(0.013, 0.021, 0.034, -0.007)
 shader_parameter/sun_color = Color(1, 1, 1, 1)
 shader_parameter/sky_color = Color(0.356863, 0.560784, 0.603922, 1)
-shader_parameter/cloude_texture_speed = 0.02
-shader_parameter/noise = SubResource("ImageTexture3D_r7yqw")
-
-[sub_resource type="GDScript" id="GDScript_g0u3i"]
-script/source = "@tool
-extends ShaderGlobalsOverride
-
-@export var primary_light : NodePath
-
-var time: float = 0
-
-func _process(dt: float):
-	time += dt * 0.1
-	set(\"params/cloud_anim_time\", time)
-	update_light()
-
-func update_light() -> void:
-	var light_obj = get_node_or_null(primary_light)
-	if is_instance_valid(light_obj):
-		set(\"params/sun_dir\", light_obj.global_transform.basis.z)
-		#print(material.get_shader_parameter(\"sun_dir\")
-"
+shader_parameter/noise = SubResource("ImageTexture3D_opu4t")
 
 [sub_resource type="Gradient" id="Gradient_ouj2d"]
 offsets = PackedFloat32Array(0, 0.443946, 0.766816)
@@ -136,34 +116,25 @@ mesh = SubResource("CylinderMesh_1pnkr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 material_override = SubResource("ShaderMaterial_rob75")
 cast_shadow = 0
-lacunarity = 2.0
-output_type = "Distance"
 material = SubResource("ShaderMaterial_rob75")
-save_path = "res://environment/sky/generated/clouds_noise"
-texture = SubResource("ImageTexture3D_r7yqw")
-
-[node name="ShaderGlobalsOverride" type="ShaderGlobalsOverride" parent="."]
-params/cloud_anim_time = 1.23499
-script = SubResource("GDScript_g0u3i")
+voronoi_generator = ExtResource("5_ybq6s")
+cloud_parameters = ExtResource("6_5d5bi")
 
 [node name="Player" parent="." instance=ExtResource("5_yx4hp")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0660038, -3589.56, -1461.14)
-crash_tolerance = 0.0
-initial_velocity = Vector3(0, 0, -150)
+transform = Transform3D(-0.999834, 0, -0.0182376, 0, 1, 0, 0.0182376, 0, -0.999834, 673.001, -3446.98, -457.3)
+initial_velocity_local = Vector3(0, 0, 100)
 max_health = 5
 allegency_flags = 1
-manual_step = false
-draw_pathtrace = false
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
 remote_path = NodePath("../../CameraRef")
 update_scale = false
 
 [node name="CameraRef" parent="." instance=ExtResource("6_1v211")]
-transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, -0.0660038, -3589.56, -1461.14)
+transform = Transform3D(-0.999834, 0, -0.0182377, 0, 1, 0, 0.0182377, 0, -0.999834, 673.001, -3446.98, -457.3)
 
 [node name="Camera" parent="CameraRef/CameraHinge" index="0"]
-transform = Transform3D(-1.00001, 6.36649e-12, 8.73114e-08, 6.36646e-12, 1.00001, -2.3283e-10, -8.73115e-08, -2.32831e-10, -1.00001, 0.0186167, 5.22925, -27.0277)
+transform = Transform3D(-1.00001, 6.36649e-12, 8.73114e-08, 6.36646e-12, 1.00001, -2.3283e-10, -8.73115e-08, -2.32831e-10, -1.00001, 3.517, 6.441, -26.905)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 5
@@ -237,34 +208,52 @@ polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 77
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ebrsp")
 
-[node name="Enemy" parent="." instance=ExtResource("9_h1300")]
-transform = Transform3D(-1, 0, -8.74227e-08, 0, 1, 0, 8.74228e-08, 0, -0.999999, 0, -3581.88, -2497.7)
+[node name="NPC" parent="." instance=ExtResource("9_h1300")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3598.88, -2380.86)
 hostility_flags = 1
-draw_avoidance = true
-avoidance_color = Color(0.933333, 0.886275, 0, 1)
+invincible = true
 max_health = 5
 allegency_flags = 2
 frozen = true
-draw_pathtrace = true
 
-[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Enemy"]
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="NPC"]
 remote_path = NodePath("../../CameraRef")
 update_position = false
 update_rotation = false
 update_scale = false
 
-[node name="Enemy2" parent="." instance=ExtResource("9_h1300")]
-transform = Transform3D(-1, 0, -8.74227e-08, 0, 1, 0, 8.74228e-08, 0, -0.999999, 0, -3581.88, -1513.51)
+[node name="NPC5" parent="." instance=ExtResource("9_h1300")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, -10.6047, -3598.88, -2394.83)
 hostility_flags = 1
+invincible = true
 max_health = 5
 allegency_flags = 2
 frozen = true
-pathtrace_color = Color(0.792157, 0.345098, 0.65098, 1)
+
+[node name="NPC4" parent="." instance=ExtResource("9_h1300")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 9.05736, -3598.88, -2394.89)
+hostility_flags = 1
+invincible = true
+max_health = 5
+allegency_flags = 2
+frozen = true
+
+[node name="NPC3" parent="." instance=ExtResource("9_h1300")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3594.13, -2410.66)
+hostility_flags = 1
+invincible = true
+max_health = 5
+allegency_flags = 2
+frozen = true
+
+[node name="NPC2" parent="." instance=ExtResource("9_h1300")]
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3598.88, -2399.4)
+hostility_flags = 1
+invincible = true
+max_health = 5
+allegency_flags = 2
+frozen = true
 
 [connection signal="pressed" from="CanvasLayer/Restart" to="." method="_on_restart_pressed"]
-[connection signal="kill_tracker" from="Enemy" to="HUDCOntrol" method="remove_tracker"]
-[connection signal="spawn_tracker" from="Enemy" to="HUDCOntrol" method="spawn_tracker"]
-[connection signal="kill_tracker" from="Enemy2" to="HUDCOntrol" method="remove_tracker"]
-[connection signal="spawn_tracker" from="Enemy2" to="HUDCOntrol" method="spawn_tracker"]
 
 [editable path="CameraRef"]

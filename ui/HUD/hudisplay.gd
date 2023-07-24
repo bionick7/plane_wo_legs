@@ -1,17 +1,18 @@
 extends Node3D
 
+const KTS_TO_MS = 0.514444
+
 @export var pitch_yaw_roll_display_sensitivity: Vector3 = Vector3(20, 20, 2)
-@export_enum("cylinder", "flat") var coordinates = 0
 @export_enum("m/s", "kts") var speed_units = 0
 
-@onready var player: PlayerPlane = get_node("../../..").player
 @onready var input_manager = $"/root/InputManager"
+@onready var common_physics = $"/root/CommonPhysics"
+@onready var player: PlayerPlane = get_node("../../..").player
 @onready var throttle_slider = get_node("../../../UI/ThrottleSlider")
 
 var V = Vector3.ZERO
 var target_basis = Basis.IDENTITY
 var up = Vector3.UP
-
 
 func _get_signed_angle_on_plane(from: Vector3, to: Vector3, plane: Vector3) -> float:
 	var from_projected = from - from.project(plane)
@@ -19,7 +20,11 @@ func _get_signed_angle_on_plane(from: Vector3, to: Vector3, plane: Vector3) -> f
 	return from_projected.signed_angle_to(to_projected, plane)
 
 func _get_basis_transform(from: Vector3, to: Vector3) -> Basis:
-	return Basis(from.cross(to).normalized(), from.angle_to(to))
+	# Returns rotation between vectors
+	var angle = from.angle_to(to)
+	if is_zero_approx(angle):
+		return Basis.IDENTITY
+	return Basis(from.cross(to).normalized(), angle)
 
 func _process(dt: float):
 	if not is_instance_valid(player):
@@ -27,19 +32,16 @@ func _process(dt: float):
 		return
 		
 	V = player.velocity
-		
-	if coordinates == 0:
-		up = -(player.global_position - Vector3.BACK * player.global_position.z).normalized()
-	else:
-		up = Vector3.DOWN
+	
+	up = common_physics.get_up(player.global_position)
+	assert(up.is_normalized())
+	
 	target_basis = player.global_transform.basis
 	var heading_horizontal = -_get_signed_angle_on_plane(
-		target_basis * Vector3.FORWARD,
-		Vector3.FORWARD,
-		up
+		-target_basis.z, Vector3.FORWARD, up
 	)
 	var heading_vertical = _get_signed_angle_on_plane(
-		target_basis * Vector3.FORWARD,
+		-target_basis.z,
 		Vector3.FORWARD.rotated(up, heading_horizontal),
 		Vector3.RIGHT.rotated(up, heading_horizontal)
 	)
@@ -92,18 +94,14 @@ func _update_display():
 		if speed_units == 0:
 			$Heading2/IAS.text = "%5.1f m/s" % ias
 		else:
-			$Heading2/IAS.text = "%5.1f kts" % (ias / 0.514444)
-		var temperature = 288.15
-		$Heading2/Mach.text = "M = %5.3f" % (tas / sqrt(1.4 * 287 * temperature))
+			$Heading2/IAS.text = "%5.1f kts" % (ias / KTS_TO_MS)
+		$Heading2/Mach.text = "M = %5.3f" % (tas / common_physics.get_soundspeed(player.global_position))
 	else:
 		$Heading2/IAS.hide()
 		$Heading2/Mach.hide()
 		
-	var pos2d: Vector3 = player.global_position - player.global_position.project(Vector3.FORWARD)
-	if coordinates == 0:
-		$Heading2/Altitude.text = "%5.1f m" % (4000 - pos2d.length())
-	else:
-		$Heading2/Altitude.text = "%5.1f m" % player.global_position.y
+	
+	$Heading2/Altitude.text = "%5.1f m" % common_physics.get_altitude(player.global_position)
 	var acc_display = sign(player.fealt_acceleration.dot(target_basis.y)) * player.fealt_acceleration.length()
 	$Heading2/Acceleration.text = "%5.1f G" % (acc_display / 9.81)
 	

@@ -5,11 +5,8 @@ render_mode unshaded, skip_vertex_transform, cull_disabled;
 
 #include "res://shaderincludes/random.gdshaderinc"
 #include "res://shaderincludes/cloud_shadows.gdshaderinc"
-const float threshhold = 0.1;
-
-uniform float density_mult = 5.0;
+uniform float threshhold: hint_range(0, 1) = 0.5;
 uniform float cloud_flatten = 4.0;
-uniform float scattering = -1e-3;
 uniform vec4 noise_weights = vec4(0, 0, 0, 0);
 uniform vec4 noise_weights_detail = vec4(0, 0, 0, 0);
 
@@ -24,9 +21,6 @@ uniform sampler3D noise: filter_linear, repeat_enable;
 #endif
 uniform sampler2D screen_texture: hint_screen_texture;
 uniform sampler2D depth_texture : hint_depth_texture, repeat_disable, filter_nearest;
-
-
-uniform float cloude_texture_speed = 0.02;
 
 #define MAX_DIST 14e3
 #define NORMAL_EPSILON 1.0
@@ -89,12 +83,12 @@ float density_map(vec3 p, int lod) {
 	float mask = clamp(1.0 - 4e6*p.y*p.y/(layer_thickness*layer_thickness), 0.0, 1.0);
 	mask = mask*mask;
 	p.y *= cloud_flatten;
-	p += vec3(cloude_texture_speed, 0, 0) * cloud_anim_time;
+	p += vec3(cloud_cover_speed, 0, 0) * cloud_anim_time;
 	n += smoothstep(0.4, 1.2, 
 		dot(texture(noise, p / 6.28), noise_weights)
 		+ dot(texture(noise, p / 6.28 * 10.0), noise_weights_detail)
 	);
-	return n * cov * mask * density_mult;
+	return cov * mask * n;
 }
 
 float cartesian_density_map(vec3 p, int lod) {
@@ -195,14 +189,7 @@ vec4 main(vec3 screen_color, vec3 camera_pos, vec3 camera_dir, float camera_dist
 		c_cloud *= 1. - step(0.1, ins) * .7;
 #endif
 		
-		//vec3 normal = clamp(normalize(cross(dFdx(pos), dFdy(pos))), -1., 1.);
-				
-		//vec3 c_cloud = clamp(vec3(.5) - normal * .5, 0, 1);
-		//vec3 c_cloud = vec3(1) * step();
-		
 		c = mix(c_cloud, c, mask);
-		//c = vec3(1) * dot(tt, vec4(-1, 1, -1, 1)) * 0.001;
-		//c = c_cloud;
 	}
 	
 	c = mix(sky_color.rgb, c, exp(-t_solid * 1.5e-4));

@@ -5,7 +5,7 @@ extends CharacterBody3D
 @export_range(0, 100, 0.001, "or_greater", "hide_slider", "suffix:m/s") var crash_tolerance: float
 
 @export_group("Initial")
-@export var initial_velocity: Vector3
+@export var initial_velocity_local: Vector3
 @export var invincible: bool
 @export var max_health: int
 
@@ -18,6 +18,7 @@ extends CharacterBody3D
 	set(x):
 		if is_inside_tree():
 			update_velocity_rotation(0.0167, true)
+			move_and_collide(velocity * 0.0167)
 
 @export var draw_pathtrace: bool
 @export var pathtrace_color: Color = Color.RED
@@ -28,39 +29,48 @@ extends CharacterBody3D
 var trace_index = -1
 var visual_ypr = Vector3.ZERO
 var visual_throttle = 0
+var _is_hidden = false
 
 @onready var health = max_health
-@onready var common_physics = $"/root/CommonPhysics"
 @onready var debug_drawer = get_node_or_null("DebugDrawer")
+@onready var common_physics = $"/root/CommonPhysics"
+@onready var cloud_manager = $"/root/CloudManager"
+@onready var logger = $"/root/Logger"
 
 signal on_death
 signal update_ypr(ypr: Vector3, throttle: float)
 
 func _ready():
 	add_to_group("Planes")  # Set automatically for consistency
-	velocity = initial_velocity
+	velocity = basis * initial_velocity_local
 
 func _process(dt: float):
+	_is_hidden = cloud_manager.is_in_cloud(global_position)
 	emit_signal("update_ypr", visual_ypr, visual_throttle)
 
 func _physics_process(dt: float):
 	update_velocity_rotation(dt, false)
 	
-	var collision: KinematicCollision3D = move_and_collide(velocity * dt)
+	var collision: KinematicCollision3D = null
+	if not frozen:
+		collision = move_and_collide(velocity * dt)
+		
 	if collision != null:
 		var collision_velocity = (velocity - collision.get_collider_velocity()).dot(collision.get_normal())
 		if collision_velocity > crash_tolerance:
 			die()
 		else: 
 			velocity = collision.get_collider_velocity()
+			
+			
 	_handle_pathtrace()
 
 func update_velocity_rotation(dt: float, manual: bool) -> void:
-	up_direction = common_physics.get_acc(global_position, velocity).normalized()
+	up_direction = common_physics.get_up(global_position)
 	# Override in children
 
 func is_hidden() -> bool:
-	return false
+	return _is_hidden
 
 func _handle_pathtrace():
 	if debug_drawer == null:
@@ -79,6 +89,7 @@ func die() -> void:
 	if invincible:
 		return
 	emit_signal("on_death")
+	print("%s Has died" % name)
 	queue_free()
 
 func _on_bullet_hit(pos, vel):

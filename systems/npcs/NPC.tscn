@@ -20,7 +20,7 @@
 [ext_resource type="Shader" path="res://systems/bullets/bullet_particles.gdshader" id="19_674i7"]
 [ext_resource type="Script" path="res://systems/bullets/Bullets.gd" id="19_uev3f"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_xm1i0"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_oyk32"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
@@ -30,7 +30,6 @@ bottom_radius = 0.52
 height = 2.629
 
 [sub_resource type="SphereMesh" id="SphereMesh_7upgj"]
-material = ExtResource("12_iodpl")
 flip_faces = true
 radius = 0.4
 
@@ -124,7 +123,7 @@ behaviour = ExtResource("2_hbnob")
 gun = NodePath("Gun")
 
 [node name="DebugDrawer" parent="." instance=ExtResource("2_shsko")]
-mesh = SubResource("ImmediateMesh_xm1i0")
+mesh = SubResource("ImmediateMesh_oyk32")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
@@ -220,14 +219,17 @@ script = ExtResource("5_v4t8d")
 control_matrix = Basis(0, -0.15, 0, 0, 0, 0, 0.15, 0, 0)
 
 [node name="Exhaust" type="MeshInstance3D" parent="ControlSurfaces/Engine"]
-transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.81057, 1.04308e-07)
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.81057, 5.96046e-08)
+visible = false
 material_override = ExtResource("12_iodpl")
 mesh = SubResource("CylinderMesh_b5fyy")
 script = ExtResource("13_msarl")
 
 [node name="Exhaust2" type="MeshInstance3D" parent="ControlSurfaces/Engine"]
-transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 8.74228e-08, -1, -8.74228e-08, 1.14641e-14, -8.74228e-08, 1, 0, 1.31773, 1.19209e-07)
+transform = Transform3D(-1, -8.74228e-08, 0, 8.74228e-08, -1, -8.74228e-08, 1.80322e-14, -8.74228e-08, 1, 7.10543e-15, 0.572855, -5.96046e-08)
+material_override = ExtResource("12_iodpl")
 mesh = SubResource("SphereMesh_7upgj")
+script = ExtResource("13_msarl")
 
 [node name="Engine" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.664726, -11.1122)
@@ -301,6 +303,7 @@ process_material = SubResource("ShaderMaterial_mb6ig")
 draw_pass_1 = SubResource("RibbonTrailMesh_pe43g")
 script = ExtResource("19_uev3f")
 muzzle_velocity = 1000
+collision_mask = 9
 self_area = NodePath("../Hitbox")
 
 [node name="GunDraw" type="MeshInstance3D" parent="Gun"]

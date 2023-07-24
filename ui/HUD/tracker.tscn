@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://ui/HUD/tracker.gd" id="1_7j6ec"]
 [ext_resource type="Texture2D" uid="uid://c1agfr4afrylc" path="res://ui/HUD/sprites/tracker.png" id="2_cl2ng"]
 
-[node name="Tracker" type="Node3D"]
+[node name="Tracker" type="Node3D" groups=["HUDTracker"]]
 script = ExtResource("1_7j6ec")
 
 [node name="DirectTracker" type="Node3D" parent="."]

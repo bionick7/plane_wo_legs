@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="VoronoiGenerator" load_steps=3 format=3 uid="uid://ce8p2fejawntu"]
+
+[ext_resource type="Script" path="res://environment/sky/voronoi_generator.gd" id="1_4p35o"]
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_wysjy"]
+
+[resource]
+script = ExtResource("1_4p35o")
+lacunarity = 2.0
+output_type = "Distance"
+save_path = "res://environment/sky/generated/clouds_noise"
+voronoi = SubResource("ImageTexture3D_wysjy")
+generate = false
+load = false

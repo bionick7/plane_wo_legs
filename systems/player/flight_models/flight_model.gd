@@ -94,8 +94,12 @@ func drag_slope(α: float) -> float:
 	return lerp(C_D_0, sin(abs(α)), stall_progress)
 	
 func get_trim(α: float) -> float:
-	var wing_contr = (C_L_0 + C_L_α * α) * (x_cg - x_ac) / c + C_m_ac
-	var canard_contr = (C_L_α * α) * (x_cg - x_c_ac) / c * canard_surface_ratio
+	#var wing_contr = (C_L_0 + C_L_α * α) * (x_cg - x_ac) / c + C_m_ac
+	#var canard_contr = (C_L_α * α) * (x_cg - x_c_ac) / c * canard_surface_ratio
+	#var Cm = wing_contr + canard_contr
+	#return -Cm / C_m_δe
+	var wing_contr = lift_slope(α) * (x_cg - x_ac) / c + C_m_ac
+	var canard_contr = lift_slope_canard(α, 0) * (x_cg - x_c_ac) / c * canard_surface_ratio
 	var Cm = wing_contr + canard_contr
 	return -Cm / C_m_δe
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=38 format=3 uid="uid://b4fh6oqi5n0v5"]
+[gd_scene load_steps=41 format=3 uid="uid://dm0ccjvt8ik7a"]
 
 [ext_resource type="Script" path="res://systems/player/player_plane.gd" id="1_0wycj"]
 [ext_resource type="Script" path="res://systems/player/aerodynamics_report.gd" id="2_g48uj"]
-[ext_resource type="Resource" uid="uid://dkx1jqtk7vrf5" path="res://systems/player/flight_models/canard_stol.tres" id="3_46wi1"]
+[ext_resource type="Resource" uid="uid://diec35exyvs3b" path="res://systems/pilot/BlackoutCurve.tres" id="2_otciq"]
+[ext_resource type="Resource" uid="uid://dkx1jqtk7vrf5" path="res://systems/player/flight_models/nimiz.tres" id="3_2bqbq"]
 [ext_resource type="PackedScene" uid="uid://wmsntcnrj0ro" path="res://support/debug_drawer.tscn" id="4_kau8f"]
 [ext_resource type="ArrayMesh" uid="uid://dle4mle7fqevg" path="res://planes/nimitz/meshes/nimitz_Hull.res" id="5_kgxno"]
 [ext_resource type="Material" uid="uid://bd1fgsc76ilqh" path="res://planes/generic_assets/materials/plane_finish.tres" id="6_2d45b"]
@@ -10,7 +11,6 @@
 [ext_resource type="ArrayMesh" uid="uid://cq6q8848vn00t" path="res://planes/nimitz/meshes/nimitz_Elevon2.res" id="8_ka5gx"]
 [ext_resource type="ArrayMesh" uid="uid://bxtqoilsfu0q6" path="res://planes/nimitz/meshes/nimitz_Rudder.res" id="10_0v3er"]
 [ext_resource type="ArrayMesh" uid="uid://dppo1afs4ax2b" path="res://planes/nimitz/meshes/nimitz_canard.res" id="11_03qdo"]
-[ext_resource type="Material" path="res://generic_assets/materials/basic.tres" id="12_olf1u"]
 [ext_resource type="ArrayMesh" uid="uid://eoel2ucr22nt" path="res://planes/nimitz/meshes/nimitz_Engine.res" id="13_exvo4"]
 [ext_resource type="Material" uid="uid://cgateux8vxvk0" path="res://planes/generic_assets/materials/engine_exhaust.tres" id="14_cqb0t"]
 [ext_resource type="Script" path="res://planes/nimitz/engine_exhaust.gd" id="15_hb3qk"]
@@ -18,9 +18,11 @@
 [ext_resource type="AudioStream" uid="uid://b04bn3nf6wo1t" path="res://planes/generic_assets/audio/Bluezone_BC0284_soundwave_robot_metal_texture_011.wav" id="17_4t6ca"]
 [ext_resource type="Shader" path="res://systems/bullets/bullet_particles.gdshader" id="18_l7fhk"]
 [ext_resource type="Script" path="res://systems/bullets/Bullets.gd" id="18_t7ovq"]
+[ext_resource type="Shader" path="res://systems/pilot/blockout_shader.gdshader" id="20_3nfd7"]
 [ext_resource type="Script" path="res://systems/bullets/hitbox.gd" id="20_i1elw"]
+[ext_resource type="Script" path="res://systems/pilot/gforce_draw.gd" id="21_r8jrm"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_5pyph"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_5783d"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
@@ -120,6 +122,14 @@ scale_curve = SubResource("CurveTexture_1gcm6")
 radius = 0.2
 height = 0.4
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nii03"]
+shader = ExtResource("20_3nfd7")
+shader_parameter/tunnel = 0.0
+shader_parameter/redout = 0.0
+shader_parameter/greyout = 0.0
+shader_parameter/blackout = 0.41
+shader_parameter/redout_tone = Color(1, 0, 0, 1)
+
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("flight_dynamics", "engine_transform", "gun")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_0wycj")
@@ -127,10 +137,11 @@ thrust_to_weight = 1.5
 mass = 12000.0
 inertia_tensor = Basis(10000, 0, 0, 0, 15000, 0, 0, 0, 5000)
 min_lock_angle_deg = 60.0
+blackout_curve = ExtResource("2_otciq")
 flight_dynamics = NodePath("FlightDynamics")
 engine_transform = NodePath("ControlSurfaces/Engine")
+initial_velocity_local = Vector3(0, 0, -10)
 invincible = true
-frozen = true
 pathtrace_color = Color(0.14902, 0.529412, 0.964706, 1)
 gun = NodePath("Gun")
 
@@ -138,13 +149,13 @@ gun = NodePath("Gun")
 script = ExtResource("2_g48uj")
 use_control_multiplier = false
 player_plane = NodePath("..")
-fm = ExtResource("3_46wi1")
+fm = ExtResource("3_2bqbq")
 aileron_limits_degrees = Vector2(-20, 20)
 
 [node name="DebugDrawer" parent="." instance=ExtResource("4_kau8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.124926, -8.10622)
 visible = false
-mesh = SubResource("ImmediateMesh_5pyph")
+mesh = SubResource("ImmediateMesh_5783d")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
@@ -213,7 +224,7 @@ skeleton = NodePath("../../..")
 
 [node name="Engine" type="MeshInstance3D" parent="ControlSurfaces"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 8.30332e-08, 0.671133, -10.5381)
-material_override = ExtResource("12_olf1u")
+material_override = ExtResource("6_2d45b")
 mesh = ExtResource("13_exvo4")
 skeleton = NodePath("../..")
 script = ExtResource("7_3p0tw")
@@ -280,6 +291,7 @@ process_material = SubResource("ShaderMaterial_o8kwh")
 draw_pass_1 = SubResource("RibbonTrailMesh_pe43g")
 script = ExtResource("18_t7ovq")
 muzzle_velocity = 1000
+collision_mask = 9
 self_area = NodePath("../Hitbox")
 
 [node name="GunDraw" type="MeshInstance3D" parent="Gun"]
@@ -332,6 +344,22 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_841kf")
 draw_pass_1 = SubResource("SphereMesh_xo4sh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, -1.2346e-07, 1.67125e-07, -1.2346e-07, 0.29389, 0.955839, -1.67125e-07, -0.955839, 0.29389, 6.71083e-07, 3.83814, 0)
+
+[node name="GforceEffects" type="CanvasLayer" parent="."]
+layer = 90
+
+[node name="GForceDraw" type="ColorRect" parent="GforceEffects"]
+material = SubResource("ShaderMaterial_nii03")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("21_r8jrm")
+blackout_curve = ExtResource("2_otciq")
 
 [connection signal="update_ypr" from="." to="ControlSurfaces/ElevonRR" method="_on_update_ypr"]
 [connection signal="update_ypr" from="." to="ControlSurfaces/ElevonLL" method="_on_update_ypr"]
