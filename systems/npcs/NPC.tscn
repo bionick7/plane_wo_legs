@@ -20,7 +20,7 @@
 [ext_resource type="Shader" path="res://systems/bullets/bullet_particles.gdshader" id="19_674i7"]
 [ext_resource type="Script" path="res://systems/bullets/Bullets.gd" id="19_uev3f"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_ghbdi"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_spsay"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
@@ -123,7 +123,7 @@ behaviour = ExtResource("2_hbnob")
 gun = NodePath("Gun")
 
 [node name="DebugDrawer" parent="." instance=ExtResource("2_shsko")]
-mesh = SubResource("ImmediateMesh_ghbdi")
+mesh = SubResource("ImmediateMesh_spsay")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)

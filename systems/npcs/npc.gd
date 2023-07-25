@@ -119,9 +119,8 @@ func _ai_logic(dt: float) -> void:
 	if not _is_target_valid():
 		_search_new_target_async()
 	if _test_terrain_collision():
-		var avoidance_direction = (avoidance_point - global_position).normalized()
 		tgt_speed = behaviour.maneuver_speed
-		_next_velocity = _step_face_direction(velocity / speed, avoidance_direction, speed, dt)
+		_exact_update_face_dir((avoidance_point - global_position).normalized(), dt)
 		_ai_text_summary = "Avoid terrain"
 		return
 	for plane in get_tree().get_nodes_in_group("Planes"):
@@ -182,9 +181,8 @@ func _idle() -> void:
 
 func _evade_from(chaser: PlaneInterface, dt: float) -> void:
 	var rel_pos = chaser.global_position - global_position
-	var face_dir = rel_pos.normalized()
 	tgt_speed = behaviour.max_level_speed
-	_next_velocity = _step_face_direction(velocity / speed, face_dir, speed, dt)
+	_exact_update_face_dir(rel_pos.normalized(), dt)
 
 func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	var rel_pos = plane.global_position - global_position
@@ -201,25 +199,51 @@ func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	#var target_pt = self_pos + evasion_delta.normalized() * behaviour.plane_safe_radius - global_position
 	var target_pt = evasion_delta.normalized() * behaviour.plane_safe_radius
 	#debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.SPRING_GREEN)
-	_next_velocity = _step_face_direction(vel_dir, target_pt.normalized(), speed, dt)
+	_exact_update_face_dir(rel_pos.normalized(), dt)
+
+var face_dir = Vector3.ZERO  # TODO
+var face_dir_vel = Vector3.ZERO  # TODO
 
 func _chase_target(dt: float) -> void:
 	var rel_pos = target.global_position - global_position
 	var rel_vel = target.velocity - velocity
 	var preaim_time = preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
-	var aim_noise = Vector3.ZERO  # TODO: make aiming imperfect
-	var face_dir: Vector3
+	var ideal_face_dir: Vector3
 	if preaim_time >= 0:
-		face_dir = (rel_pos + rel_vel * preaim_time + aim_noise).normalized()
+		ideal_face_dir = (rel_pos + rel_vel * preaim_time).normalized()
 	else:
 		# No possibility to hit target (e.g. target will outrun bullets
-		face_dir = rel_pos.normalized()  # Just chase directly
-	if preaim_time >= 0 and behaviour.use_gun and\
+		ideal_face_dir = rel_pos.normalized()  # Just chase directly
+	
+	
+	if preaim_time >= 0 and behaviour.use_gun and \
 		allow_fire and face_dir.angle_to(velocity) * rel_pos.length() < behaviour.gun_shoot_distance:
 		_give_burst()
 	tgt_speed = max(target.velocity.length() * behaviour.speed_overshoot, behaviour.maneuver_speed)
 	#debug_drawer.draw_line_global(global_position, global_position + face_dir * 10, Color.RED)
+	_sloppy_update_face_dir(ideal_face_dir, dt)
+
+func _exact_update_face_dir(ideal_face_dir: Vector3, dt: float) -> void:
+	face_dir_vel = (ideal_face_dir - face_dir) / dt
+	face_dir = ideal_face_dir
+	face_dir_vel -= face_dir_vel.project(face_dir)
 	_next_velocity = _step_face_direction(velocity / speed, face_dir, speed, dt)
+
+func _sloppy_update_face_dir(ideal_face_dir: Vector3, dt: float) -> void:
+	if not behaviour.enable_sloppy_aiming:
+		_exact_update_face_dir(ideal_face_dir, dt)
+		return
+	var delta_fd = ideal_face_dir - face_dir
+	var fd_spring_component = -delta_fd.normalized() * clamp(behaviour.sloppy_aim_stiffness * pow(delta_fd.length_squared(), behaviour.sloppy_aim_stiffness_power / 2), 0.5, 100)
+	var fd_damper_component = -face_dir_vel * behaviour.sloppy_aim_damping
+	var fd_noise = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * behaviour.sloppy_aim_noise_amplitude
+	var fd_acceleration = fd_damper_component + fd_spring_component + fd_noise
+	face_dir_vel += fd_acceleration * dt
+	face_dir += face_dir_vel * dt
+	face_dir = face_dir.normalized()
+	face_dir_vel -= face_dir_vel.project(face_dir)
+	
+	_next_velocity = _step_face_direction(velocity / speed, ideal_face_dir, speed, dt)
 
 func _step_face_direction(current_dir: Vector3, dir: Vector3, turn_speed: float, dt: float) -> Vector3:
 	var acc = clamp((turn_speed*turn_speed / (behaviour.stall_speed*behaviour.stall_speed) - 1.0) * 9.81, 1, behaviour.max_acceleration)
