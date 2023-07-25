@@ -35,10 +35,11 @@ func _process(dt: float):
 	
 	usable = $"/root/CloudManager".get_cloud_density(player.global_position) < 0.1
 	
-	var up = $VPContainer/VP/HUDControl.up
+	#var up = $VPContainer/VP/HUDControl.up
+	var up = player.basis.y
 	var viewer_vel = $VPContainer/VP/HUDControl.V
 	for tracker in get_tree().get_nodes_in_group("HUDTracker"):
-		tracker.visible = usable
+		tracker.player_can_see = usable
 		tracker.draw_preaim = player.locked_target == tracker.tracking_agent
 		tracker.update_pos(main_camera.global_position, viewer_vel, up)
 		

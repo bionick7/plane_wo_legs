@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://dm0ccjvt8ik7a"]
+[gd_scene load_steps=43 format=3 uid="uid://dm0ccjvt8ik7a"]
 
 [ext_resource type="Script" path="res://systems/player/player_plane.gd" id="1_0wycj"]
 [ext_resource type="Script" path="res://systems/player/aerodynamics_report.gd" id="2_g48uj"]
@@ -22,7 +22,7 @@
 [ext_resource type="Script" path="res://systems/bullets/hitbox.gd" id="20_i1elw"]
 [ext_resource type="Script" path="res://systems/pilot/gforce_draw.gd" id="21_r8jrm"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_5783d"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_dgyin"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
@@ -122,13 +122,21 @@ scale_curve = SubResource("CurveTexture_1gcm6")
 radius = 0.2
 height = 0.4
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1fwqn"]
+noise_type = 0
+frequency = 0.478
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_to1cw"]
+noise = SubResource("FastNoiseLite_1fwqn")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nii03"]
 shader = ExtResource("20_3nfd7")
 shader_parameter/tunnel = 0.0
 shader_parameter/redout = 0.0
 shader_parameter/greyout = 0.0
-shader_parameter/blackout = 0.41
+shader_parameter/blackout = 0.0
 shader_parameter/redout_tone = Color(1, 0, 0, 1)
+shader_parameter/white_noise = SubResource("NoiseTexture2D_to1cw")
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("flight_dynamics", "engine_transform", "gun")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, 0, 0)
@@ -155,7 +163,7 @@ aileron_limits_degrees = Vector2(-20, 20)
 [node name="DebugDrawer" parent="." instance=ExtResource("4_kau8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.124926, -8.10622)
 visible = false
-mesh = SubResource("ImmediateMesh_5783d")
+mesh = SubResource("ImmediateMesh_dgyin")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
@@ -291,7 +299,7 @@ process_material = SubResource("ShaderMaterial_o8kwh")
 draw_pass_1 = SubResource("RibbonTrailMesh_pe43g")
 script = ExtResource("18_t7ovq")
 muzzle_velocity = 1000
-collision_mask = 9
+collision_mask = 5
 self_area = NodePath("../Hitbox")
 
 [node name="GunDraw" type="MeshInstance3D" parent="Gun"]
@@ -310,7 +318,7 @@ editor_description = "On ready, overwrites the c.g. of the rigidbody to be this 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.671, -7.45)
 
 [node name="Hitbox" type="Area3D" parent="." groups=["Hitbox"]]
-collision_layer = 4
+collision_layer = 8
 collision_mask = 0
 script = ExtResource("20_i1elw")
 
@@ -337,6 +345,7 @@ depth = 0.1
 polygon = PackedVector2Array(2.78762, -0.041394, -0.0869923, 1.70592, -1.0452, 1.71156, -0.628098, -0.0413934, -0.357546, -0.278127)
 
 [node name="HitExplosion" type="GPUParticles3D" parent="Hitbox"]
+top_level = true
 emitting = false
 amount = 16
 lifetime = 0.5

@@ -36,6 +36,8 @@ enum Axis {
 @export_range(0.0, 40.0, 0.01, "suffix:G") var lateral_at_10s
 @export_range(0.0, 40.0, 0.01, "suffix:G") var lateral_minimum
 
+@export_flags("100ms", "1s", "3s", "10s") var considered_timewindows: int = 0xff
+
 const TIME_WINDOWS = [0.1, 1.0, 3.0, 10.0]
 var avgerages = PackedVector3Array([Vector3.ZERO, Vector3.ZERO, Vector3.ZERO, Vector3.ZERO])
 var g_factor = Vector4.ZERO
@@ -60,6 +62,8 @@ func push_acceleration(acc: Vector3, dt: float) -> void:
 		for i in range(indecies[time_window], next_idx):
 			avgerages[time_window] -= impulse_arr[i]
 		indecies[time_window] = next_idx
+		if considered_timewindows & (1 << time_window) == 0:
+			continue
 	
 		var g_loads = Vector4(
 			abs(avgerages[time_window].x) / (TIME_WINDOWS[time_window] * 9.81),
@@ -84,24 +88,24 @@ func push_acceleration(acc: Vector3, dt: float) -> void:
 			indecies[time_window] -= clean_index
 	
 func get_greyout() -> float:
-	var g_max = g_factor[g_factor.max_axis_index()]
+	var g_max = max(g_factor.x * .5, g_factor.y, g_factor.w * .5)
 	return smoothstep(0.6, 0.9, g_max)
 	
 func get_blackout() -> float:
-	var g_max = max(g_factor.x, g_factor.y, g_factor.z)
-	return smoothstep(0.8, 1.0,g_max)
+	var g_max = max(g_factor.x * .5, g_factor.y, g_factor.w * .5)
+	return smoothstep(0.9, 1.0,g_max)
 	
 func get_redout() -> float:
 	var g_max = g_factor.z
-	return smoothstep(0.4, 1.0, g_max)
+	return smoothstep(0.7, 1.0, g_max)
 	
 func get_tunnel() -> float:
 	var g_max = max(g_factor.y, g_factor.z)
-	return smoothstep(0.7, 0.95, g_max)
+	return smoothstep(0.5, 0.95, g_max)
 	
 func get_control() -> float:
 	var g_max = g_factor[g_factor.max_axis_index()]
-	return smoothstep(1.1, 0.5, g_max)
+	return smoothstep(1.1, 0.7, g_max)
 	
 func _limit_acc(time_window: int) -> Vector4:
 	match time_window:

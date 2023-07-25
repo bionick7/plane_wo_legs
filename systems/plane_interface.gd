@@ -38,6 +38,7 @@ var _is_hidden = false
 @onready var logger = $"/root/Logger"
 
 signal on_death
+signal on_take_dammage(ammount: int)
 signal update_ypr(ypr: Vector3, throttle: float)
 
 func _ready():
@@ -94,6 +95,8 @@ func die() -> void:
 
 func _on_bullet_hit(pos, vel):
 	print("%s Hit" % name)
-	health -= 1
+	var dmg: int = 1
+	emit_signal("on_take_dammage", dmg)
+	health -= dmg
 	if health <= 0:
 		die()

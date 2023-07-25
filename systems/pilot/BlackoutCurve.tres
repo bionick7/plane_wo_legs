@@ -24,3 +24,4 @@ lateral_at_1s = 8.0
 lateral_at_3s = 6.0
 lateral_at_10s = 4.5
 lateral_minimum = 4.0
+considered_timewindows = 7

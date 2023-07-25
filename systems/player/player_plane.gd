@@ -63,7 +63,8 @@ func _process(dt: float):
 	fealt_acceleration = observed_linear_acceleration - common_physics.get_acc(position, velocity)
 	var pilot_arm = $Pilot.position - center_of_mass
 	fealt_acceleration += observed_angular_acceleration.cross(pilot_arm)  # cylinder is not accelerating
-	blackout_curve.push_acceleration(fealt_acceleration, dt)
+	blackout_curve.push_acceleration(basis.inverse() * fealt_acceleration, dt)
+	input_manager.control_multiplier = blackout_curve.get_control()
 	
 	visual_ypr = input_manager.get_yaw_pitch_roll(true)
 	visual_throttle = throttle
@@ -104,6 +105,10 @@ func update_velocity_rotation(dt: float, manual: bool):
 	
 	#printt(engine_transform.position, center_of_mass, engine_transform.position - center_of_mass)
 	#printt(thrust_force, thrust_moment)
+	
+	# var aero_force = basis.inverse() * flight_dynamics.get_kinematics(velocity, angular_velocity)[0]
+	# var L_D = -aero_force.y / aero_force.z
+	# logger.write_line("L/D = %f" % L_D)
 	
 	if frozen and not manual_step:
 		velocity = Vector3.ZERO

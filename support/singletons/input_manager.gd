@@ -13,22 +13,23 @@ var pitch_trim = 0
 var flightstick_devices = PackedInt32Array()
 var gamepad_devices = PackedInt32Array()
 
-# TODO: load kea binding on _ready() from file
-var flightstick_throttle = 0
+# TODO: load key binding on _ready() from file
 # TODO: UI
 
-var gamepad_throttle = 0
+var flightstick_throttle: float = 0.0
+var gamepad_throttle: float = 0.0
 var broken: bool = false
 
 var controls = {
-	throttle = 0,
-	airbrake = 0,
+	throttle = 0.0,
+	airbrake = 0.0,
 	ypr = Vector3.ZERO,
 }
 
 var peer_controls = {}
 var local_input_config: Array[Dictionary] = []
 
+var control_multiplier = 1.0
 
 signal networked_input(origin: int, event_name: String, is_pressed: bool)
 
@@ -58,12 +59,12 @@ func _process(dt: float):
 		#controls.airbrake = 0
 		return
 		
+	# ============== THROTTLE ============== 
+	
 	if Input.is_action_pressed("throttle_set"):
 		gamepad_throttle = clamp(gamepad_throttle - accumulate_axis(gamepad_devices, JOY_AXIS_LEFT_Y) * dt * 5, 0, 1)
-		
-	# ============== THROTTLE ============== 
-		
-	controls.throttle = flightstick_throttle + gamepad_throttle
+	
+	controls.throttle = lerp(controls.throttle, flightstick_throttle + gamepad_throttle, smoothstep(0., .5, control_multiplier))
 	
 	# ============== YAW PITCH ROLL ============== 
 	
@@ -77,8 +78,7 @@ func _process(dt: float):
 		-accumulate_axis(gamepad_devices, JOY_AXIS_RIGHT_Y),
 		accumulate_axis(gamepad_devices, JOY_AXIS_RIGHT_X)
 	)
-	controls.ypr = flightstick_ypr + gamepad_ypr
-	
+	controls.ypr = (flightstick_ypr + gamepad_ypr) * control_multiplier
 	
 	# ============== OTHER ============== 
 	var brake_gamepad = min(accumulate_axis(gamepad_devices, JOY_AXIS_TRIGGER_RIGHT), accumulate_axis(gamepad_devices, JOY_AXIS_TRIGGER_LEFT))

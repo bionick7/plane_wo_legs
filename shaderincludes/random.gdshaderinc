@@ -13,7 +13,7 @@ float rand_float(int seed){
 	return fract(float(rand_int) / 1000000.0);
 }
 
-float random_from_vec2(vec2 uv) {
+float white_noise(vec2 uv) {
 	return fract(sin(dot(uv, vec2(12.9898,78.233)))*43758.5453123);
 }
 

@@ -200,7 +200,7 @@ func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	
 	#var target_pt = self_pos + evasion_delta.normalized() * behaviour.plane_safe_radius - global_position
 	var target_pt = evasion_delta.normalized() * behaviour.plane_safe_radius
-	debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.SPRING_GREEN)
+	#debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.SPRING_GREEN)
 	_next_velocity = _step_face_direction(vel_dir, target_pt.normalized(), speed, dt)
 
 func _chase_target(dt: float) -> void:
@@ -218,7 +218,7 @@ func _chase_target(dt: float) -> void:
 		allow_fire and face_dir.angle_to(velocity) * rel_pos.length() < behaviour.gun_shoot_distance:
 		_give_burst()
 	tgt_speed = max(target.velocity.length() * behaviour.speed_overshoot, behaviour.maneuver_speed)
-	debug_drawer.draw_line_global(global_position, global_position + face_dir * 10, Color.RED)
+	#debug_drawer.draw_line_global(global_position, global_position + face_dir * 10, Color.RED)
 	_next_velocity = _step_face_direction(velocity / speed, face_dir, speed, dt)
 
 func _step_face_direction(current_dir: Vector3, dir: Vector3, turn_speed: float, dt: float) -> Vector3:
