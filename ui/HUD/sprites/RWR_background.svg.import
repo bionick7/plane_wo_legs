@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://rvny21725fcd"
-path="res://.godot/imported/RWR_background.svg-65c6d080fd509ed313619d5e2e486b61.ctex"
+path="res://.godot/imported/RWR_background.svg-74f82a81a706e55be34f99800ed8d610.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/HUD/RWR_background.svg"
-dest_files=["res://.godot/imported/RWR_background.svg-65c6d080fd509ed313619d5e2e486b61.ctex"]
+source_file="res://ui/HUD/sprites/RWR_background.svg"
+dest_files=["res://.godot/imported/RWR_background.svg-74f82a81a706e55be34f99800ed8d610.ctex"]
 
 [params]
 

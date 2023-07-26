@@ -1,7 +1,7 @@
 class_name NPCPlane
 extends PlaneInterface
 
-@export var target: PlaneInterface
+@export var target: TrackingAnchor
 @export var behaviour: NPCBehaviour
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var hostility_flags: int
 
@@ -31,31 +31,41 @@ func _ready():
 	if not _is_target_valid():
 		_search_new_target_async()
 		
+func _get_possible_targets(target_types: int=0) -> Array[TrackingAnchor]:
+	var res: Array[TrackingAnchor] = []
+	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
+		if anchor.allegency_flags & hostility_flags == 0:
+			continue
+		res.append(anchor)
+	return res
+	
 func _get_hostile_planes() -> Array[PlaneInterface]:
 	var res: Array[PlaneInterface] = []
-	for plane in get_tree().get_nodes_in_group("Planes"):
-		if plane.allegency_flags & hostility_flags == 0:
+	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
+		if not anchor.refers_plane():
 			continue
-		res.append(plane)
+		if anchor.allegency_flags & hostility_flags == 0:
+			continue
+		res.append(anchor.ref)
 	return res
 	
 func _is_target_valid() -> bool:
 	return is_instance_valid(target) and _is_visible(target)
 	
-func _is_visible(plane: PlaneInterface) -> bool:
+func _is_visible(tgt: TrackingAnchor) -> bool:
 	if not behaviour.sees_all:
-		var rel_pos = plane.global_position - global_position
+		var rel_pos = tgt.global_position - global_position
 		if rel_pos.length_squared() > behaviour.view_cone_angle_rad:
 			return false
 		if velocity.angle_to(rel_pos) > behaviour.view_cone_radius_sqr:
 			return false
-	if not behaviour.sees_through_clouds and plane.is_hidden():
+	if not behaviour.sees_through_clouds and tgt.is_hidden():
 		return false
 	return true
 	
 func _search_new_target_async() -> void:
 	while true:
-		var possible_targets = _get_hostile_planes()
+		var possible_targets = _get_possible_targets()
 		if possible_targets.size() > 0:
 			target = possible_targets.pick_random()
 			return
@@ -123,11 +133,19 @@ func _ai_logic(dt: float) -> void:
 		_exact_update_face_dir((avoidance_point - global_position).normalized(), dt)
 		_ai_text_summary = "Avoid terrain"
 		return
+	# Find most relevant plane-to-plane collision
+	var max_collision_relevance = 0.0
+	var max_collision_relevance_plane = null
 	for plane in get_tree().get_nodes_in_group("Planes"):
-		if _test_plane_collision(plane):
-			_avoid_plane_collision(plane, dt)
-			_ai_text_summary = "Avoid plane \"%s\"" % plane.name
-			return
+		var collision_relevance = _get_collision_relevance(plane)
+		if collision_relevance > max_collision_relevance:
+			max_collision_relevance = collision_relevance
+			max_collision_relevance_plane = plane
+	# Evade, if any is found
+	if max_collision_relevance_plane != null:
+		_avoid_plane_collision(max_collision_relevance_plane, dt)
+		_ai_text_summary = "Avoid plane \"%s\"" % max_collision_relevance_plane.name
+		return
 	for plane in _get_hostile_planes():
 		if _is_beeing_chased_by(plane):
 			_evade_from(plane, dt)
@@ -135,7 +153,7 @@ func _ai_logic(dt: float) -> void:
 			return
 	if _is_target_valid():
 		_chase_target(dt)
-		_ai_text_summary = "Chase target \"%s\"" % target.name
+		_ai_text_summary = "Chase target \"%s\"" % target.ref.name
 		return
 	_idle()
 
@@ -161,12 +179,14 @@ func _test_terrain_collision() -> bool:
 		debug_drawer.draw_path_global(avoidance_path, avoidance_color)
 	return false
 	
-func _test_plane_collision(test: PlaneInterface) -> bool:
+func _get_collision_relevance(test: PlaneInterface) -> float:
+	# Negative means not worth evading
+	# 1 is exact collision
 	var rel_pos = test.global_position - global_position
 	var rel_vel = test.velocity - velocity
 	var min_delta = rel_pos + rel_vel * max(get_closest_approach(rel_pos, rel_vel), 0)
 	
-	return min_delta.length_squared() < behaviour.plane_safe_radius*behaviour.plane_safe_radius
+	return 1 - min_delta.length() / behaviour.plane_safe_radius
 	
 func _is_beeing_chased_by(test: PlaneInterface) -> bool:
 	var rel_pos = test.global_position - global_position
@@ -198,15 +218,17 @@ func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	
 	#var target_pt = self_pos + evasion_delta.normalized() * behaviour.plane_safe_radius - global_position
 	var target_pt = evasion_delta.normalized() * behaviour.plane_safe_radius
-	#debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.SPRING_GREEN)
-	_exact_update_face_dir(rel_pos.normalized(), dt)
+	
+	debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.PINK)
+	debug_drawer.draw_line_global(global_position, plane.global_position, Color.DEEP_PINK)
+	_exact_update_face_dir(target_pt.normalized(), dt)
 
 var face_dir = Vector3.ZERO  # TODO
 var face_dir_vel = Vector3.ZERO  # TODO
 
 func _chase_target(dt: float) -> void:
 	var rel_pos = target.global_position - global_position
-	var rel_vel = target.velocity - velocity
+	var rel_vel = target.get_velocity() - velocity
 	var preaim_time = preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
 	var ideal_face_dir: Vector3
 	if preaim_time >= 0:
@@ -219,7 +241,7 @@ func _chase_target(dt: float) -> void:
 	if preaim_time >= 0 and behaviour.use_gun and \
 		allow_fire and face_dir.angle_to(velocity) * rel_pos.length() < behaviour.gun_shoot_distance:
 		_give_burst()
-	tgt_speed = max(target.velocity.length() * behaviour.speed_overshoot, behaviour.maneuver_speed)
+	tgt_speed = max(target.get_velocity().length() * behaviour.speed_overshoot, behaviour.maneuver_speed)
 	#debug_drawer.draw_line_global(global_position, global_position + face_dir * 10, Color.RED)
 	_sloppy_update_face_dir(ideal_face_dir, dt)
 

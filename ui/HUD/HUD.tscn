@@ -1,13 +1,14 @@
-[gd_scene load_steps=15 format=3 uid="uid://cb4b2bqavu4tg"]
+[gd_scene load_steps=17 format=3 uid="uid://cb4b2bqavu4tg"]
 
 [ext_resource type="Script" path="res://ui/HUD/hud_root.gd" id="1_pbuuj"]
 [ext_resource type="Theme" uid="uid://bnnh0cyq1wd21" path="res://ui/display_theme.tres" id="2_fh4rm"]
 [ext_resource type="Script" path="res://ui/HUD/hudisplay.gd" id="5_lbus5"]
 [ext_resource type="Texture2D" uid="uid://s5x3xyb2lphp" path="res://ui/HUD/sprites/velocity.png" id="6_ojxyo"]
 [ext_resource type="Texture2D" uid="uid://3e6ymengdqw1" path="res://ui/HUD/sprites/header.png" id="7_245ij"]
-[ext_resource type="Texture2D" uid="uid://rvny21725fcd" path="res://ui/HUD/RWR_background.svg" id="8_80s8e"]
+[ext_resource type="Texture2D" uid="uid://rvny21725fcd" path="res://ui/HUD/sprites/RWR_background.svg" id="8_6f3cr"]
 [ext_resource type="Texture2D" uid="uid://b17ubx5yj0f6y" path="res://ui/HUD/sprites/header_roll.png" id="8_pio4l"]
 [ext_resource type="Texture2D" uid="uid://cxbkyvvfyd6do" path="res://ui/HUD/sprites/pointer.png" id="9_6vlgd"]
+[ext_resource type="Shader" path="res://ui/HUD/tracker_health_2D.gdshader" id="9_luoj4"]
 
 [sub_resource type="Shader" id="Shader_11go5"]
 code = "shader_type spatial;
@@ -123,6 +124,14 @@ shader_parameter/max_sideslip = -1.0
 shader_parameter/max_aoa_pos = 30.0
 shader_parameter/max_aoa_neg = -1.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6brfk"]
+shader = ExtResource("9_luoj4")
+shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/total_hp = 5
+shader_parameter/current_hp = 5
+shader_parameter/spacing = 0.09
+shader_parameter/border = 0.19
+
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_pbuuj")
 
@@ -164,6 +173,7 @@ size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="HUDControl" type="Node3D" parent="VPContainer/VP"]
+unique_name_in_owner = true
 script = ExtResource("5_lbus5")
 pitch_yaw_roll_display_sensitivity = Vector3(0.05, 0.05, 0.5)
 speed_units = 1
@@ -323,6 +333,7 @@ rings = 32
 material = SubResource("ShaderMaterial_r2ya0")
 
 [node name="AoALimitPivot" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2/BodyCenteredSphere"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, 0)
 
 [node name="AoALimit" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2/BodyCenteredSphere/AoALimitPivot"]
@@ -351,7 +362,7 @@ offset_top = -270.0
 offset_right = 270.0
 offset_bottom = -14.0
 grow_vertical = 0
-texture = ExtResource("8_80s8e")
+texture = ExtResource("8_6f3cr")
 
 [node name="Center" type="Node2D" parent="RWR"]
 position = Vector2(128, 128)
@@ -359,3 +370,14 @@ position = Vector2(128, 128)
 [node name="Polygon2D" type="Polygon2D" parent="RWR/Center"]
 scale = Vector2(0.5, 0.5)
 polygon = PackedVector2Array(-19, 8, 0, -36, 18, 8, 0, 0)
+
+[node name="PlayerHP" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_6brfk")
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -103.0
+offset_top = 9.0
+offset_right = 102.0
+offset_bottom = 34.0
+grow_horizontal = 2

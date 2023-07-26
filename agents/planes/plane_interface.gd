@@ -6,10 +6,6 @@ extends CharacterBody3D
 
 @export_group("Initial")
 @export var initial_velocity_local: Vector3
-@export var invincible: bool
-@export var max_health: int
-
-@export_flags("Good Guys", "Bad Guys", "3rd Party") var allegency_flags: int
 
 @export_group("Debug")
 @export var frozen: bool
@@ -25,13 +21,13 @@ extends CharacterBody3D
 
 @export_group("References")
 @export var gun: GPUParticles3D
+@export var hitbox: Hitbox
 
 var trace_index = -1
 var visual_ypr = Vector3.ZERO
 var visual_throttle = 0
 var _is_hidden = false
 
-@onready var health = max_health
 @onready var debug_drawer = get_node_or_null("DebugDrawer")
 @onready var common_physics = $"/root/CommonPhysics"
 @onready var cloud_manager = $"/root/CloudManager"
@@ -87,16 +83,6 @@ func _handle_pathtrace():
 			trace_index = -1
 
 func die() -> void:
-	if invincible:
-		return
 	emit_signal("on_death")
 	print("%s Has died" % name)
 	queue_free()
-
-func _on_bullet_hit(pos, vel):
-	print("%s Hit" % name)
-	var dmg: int = 1
-	emit_signal("on_take_dammage", dmg)
-	health -= dmg
-	if health <= 0:
-		die()

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqk1m7aeup7yw"]
+
+[ext_resource type="Script" path="res://systems/tracking/tracking_anchor.gd" id="1_ilbry"]
+
+[node name="TrackingAnchor" type="Marker3D" groups=["TrackingAnchors"]]
+script = ExtResource("1_ilbry")

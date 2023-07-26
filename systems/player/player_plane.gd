@@ -31,9 +31,7 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @onready var inverse_inertia_tensor = inertia_tensor.inverse()
 
 var throttle: float
-var locked_target: PlaneInterface = null
-
-var blackout = 0.0
+var locked_target: TrackingAnchor = null
 
 var angular_acceleration: Vector3
 var linear_acceleration: Vector3
@@ -77,15 +75,15 @@ func _input(event: InputEvent):
 	
 	if event.is_action_pressed("lock"):
 		var min_angle = deg_to_rad(min_lock_angle_deg)
-		var lock_candidate: PlaneInterface = null
-		for plane in get_tree().get_nodes_in_group("Planes"):
-			if plane == self or plane.is_hidden():
+		var lock_candidate: TrackingAnchor = null
+		for trackable in get_tree().get_nodes_in_group("TrackingAnchors"):
+			if trackable.ref == self or trackable.is_hidden():
 				continue
-			if plane.allegency_flags & 0x02 == 0:
+			if trackable.allegency_flags & 0x02 == 0:
 				continue
-			var angle = basis.z.angle_to(plane.global_position - global_position)
+			var angle = basis.z.angle_to(trackable.global_position - global_position)
 			if angle < min_angle:
-				lock_candidate = plane
+				lock_candidate = trackable
 				min_angle = angle
 		if is_instance_valid(lock_candidate):
 			locked_target = lock_candidate

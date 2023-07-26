@@ -55,7 +55,7 @@ func _process(dt: float):
 			var raycast_result = ss.intersect_ray(query)
 			if raycast_result:
 				var collider: CollisionObject3D = raycast_result.collider
-				if collider.is_in_group("Hitbox"):
+				if collider is Hitbox:
 					collider.on_bullet_hit(raycast_result.position, bullet_path_vel[i])
 			else:
 				bullet_path_pos[i] = new_pos

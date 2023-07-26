@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxodvx6l7wbdp"]
+
+[ext_resource type="PackedScene" uid="uid://cucopf2kuaewq" path="res://agents/elements/CWIS/CWIS.tscn" id="1_aje3e"]
+
+[node name="Fortress" type="Node3D"]
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Visuals"]
+size = Vector3(40, 40, 38.2984)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 39.1133, 0)
+size = Vector3(21.4473, 40, 18.8902)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -38.0369, 0)
+size = Vector3(21.4473, 40, 18.8902)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Visuals"]
+transform = Transform3D(0.5, -0.866025, 0, 0.866025, 0.5, 0, 0, 0, 1, -33.407, 19.8258, 0)
+size = Vector3(21.4473, 40, 18.8902)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Visuals"]
+transform = Transform3D(0.5, -0.866025, 0, 0.866025, 0.5, 0, 0, 0, 1, 33.407, -18.7494, 0)
+size = Vector3(21.4473, 40, 18.8902)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="Visuals"]
+transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, -33.407, -18.7494, 0)
+size = Vector3(21.4473, 40, 18.8902)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="Visuals"]
+transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, 33.407, 19.8258, 0)
+size = Vector3(21.4473, 40, 18.8902)
+
+[node name="Elements" type="Node3D" parent="."]
+
+[node name="CWIS" parent="Elements" instance=ExtResource("1_aje3e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 59.0309, 0)
+
+[node name="CWIS2" parent="Elements" instance=ExtResource("1_aje3e")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, -1.6428e-07, -58.0591, 0)
+
+[node name="CWIS3" parent="Elements" instance=ExtResource("1_aje3e")]
+transform = Transform3D(0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0, 1, 50.7015, 29.7584, 0)
+
+[node name="CWIS4" parent="Elements" instance=ExtResource("1_aje3e")]
+transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, -50.7015, -28.7866, 0)
+
+[node name="CWIS5" parent="Elements" instance=ExtResource("1_aje3e")]
+transform = Transform3D(0.5, -0.866025, 0, 0.866025, 0.5, 0, 0, 0, 1, -50.7015, 29.7584, 0)
+
+[node name="CWIS6" parent="Elements" instance=ExtResource("1_aje3e")]
+transform = Transform3D(-0.5, 0.866026, 0, -0.866026, -0.5, 0, 0, 0, 1, 50.7015, -28.7866, 0)

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://223ea46ra6v7"
-path="res://.godot/imported/nimitz.gltf-0c2358a4348028222224ce6da6309d3e.scn"
+path="res://.godot/imported/nimitz.gltf-221fae1be19ab708c8e0712a4fa5014c.scn"
 
 [deps]
 
-source_file="res://planes/nimitz/nimitz.gltf"
-dest_files=["res://.godot/imported/nimitz.gltf-0c2358a4348028222224ce6da6309d3e.scn"]
+source_file="res://agents/planes/nimitz/nimitz.gltf"
+dest_files=["res://.godot/imported/nimitz.gltf-221fae1be19ab708c8e0712a4fa5014c.scn"]
 
 [params]
 

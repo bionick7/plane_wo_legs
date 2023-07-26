@@ -1,7 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://cocd4ik7ddubo"]
+[gd_scene load_steps=6 format=3 uid="uid://cocd4ik7ddubo"]
 
 [ext_resource type="Script" path="res://ui/HUD/tracker.gd" id="1_7j6ec"]
 [ext_resource type="Texture2D" uid="uid://c1agfr4afrylc" path="res://ui/HUD/sprites/tracker.png" id="2_cl2ng"]
+[ext_resource type="Shader" path="res://ui/HUD/tracker_health.gdshader" id="3_wmlry"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l4675"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_wmlry")
+shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/total_hp = 3
+shader_parameter/current_hp = 2
+shader_parameter/spacing = 0.18
+shader_parameter/border = 0.25
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_i6okm"]
+size = Vector2(48, 16)
 
 [node name="Tracker" type="Node3D" groups=["HUDTracker"]]
 script = ExtResource("1_7j6ec")
@@ -25,6 +39,15 @@ modulate = Color(0, 0.933333, 0.67451, 1)
 text = "10 km"
 font_size = 48
 outline_size = 0
+
+[node name="Health" type="Sprite3D" parent="DirectTracker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.039, 1.037)
+layers = 32
+material_override = SubResource("ShaderMaterial_l4675")
+cast_shadow = 0
+pixel_size = 0.0015
+no_depth_test = true
+texture = SubResource("PlaceholderTexture2D_i6okm")
 
 [node name="AimingPoint" type="Node3D" parent="."]
 

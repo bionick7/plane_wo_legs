@@ -5,12 +5,12 @@
 [ext_resource type="PackedScene" uid="uid://cx5g1coyfw0er" path="res://support/post_processing.tscn" id="3_3buq4"]
 [ext_resource type="Shader" path="res://environment/sky/post_processing.gdshader" id="4_sqhui"]
 [ext_resource type="Resource" uid="uid://ce8p2fejawntu" path="res://environment/sky/voronoi_generator.tres" id="5_ybq6s"]
-[ext_resource type="PackedScene" uid="uid://dm0ccjvt8ik7a" path="res://systems/player/player_plane.tscn" id="5_yx4hp"]
+[ext_resource type="PackedScene" uid="uid://c3llfjwho45mr" path="res://systems/player/player_plane.tscn" id="5_yx4hp"]
 [ext_resource type="PackedScene" uid="uid://c36b65adchdla" path="res://support/camera.tscn" id="6_1v211"]
 [ext_resource type="Resource" uid="uid://hck7ie2asi5f" path="res://environment/sky/cloud_parameters.tres" id="6_5d5bi"]
 [ext_resource type="PackedScene" uid="uid://cb4b2bqavu4tg" path="res://ui/HUD/HUD.tscn" id="7_q3xun"]
 [ext_resource type="Material" uid="uid://7otbdjff6elx" path="res://environment/sky/space_sky.tres" id="8_jyaid"]
-[ext_resource type="PackedScene" uid="uid://iwug150nid4" path="res://systems/npcs/NPC.tscn" id="9_h1300"]
+[ext_resource type="PackedScene" uid="uid://b8fy1v0x3uc2e" path="res://systems/npcs/NPC.tscn" id="9_h1300"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_iuum0"]
 top_radius = 4000.0
@@ -123,8 +123,6 @@ cloud_parameters = ExtResource("6_5d5bi")
 [node name="Player" parent="." instance=ExtResource("5_yx4hp")]
 transform = Transform3D(-0.999834, 0, -0.0182376, 0, 1, 0, 0.0182376, 0, -0.999834, 673.001, -3446.98, -457.3)
 initial_velocity_local = Vector3(0, 0, 100)
-max_health = 5
-allegency_flags = 1
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
 remote_path = NodePath("../../CameraRef")
@@ -211,9 +209,6 @@ environment = SubResource("Environment_ebrsp")
 [node name="NPC" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3598.88, -2380.86)
 hostility_flags = 1
-invincible = true
-max_health = 5
-allegency_flags = 2
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="NPC"]
 remote_path = NodePath("../../CameraRef")
@@ -224,30 +219,18 @@ update_scale = false
 [node name="NPC5" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, -10.6047, -3598.88, -2394.83)
 hostility_flags = 1
-invincible = true
-max_health = 5
-allegency_flags = 2
 
 [node name="NPC4" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 9.05736, -3598.88, -2394.89)
 hostility_flags = 1
-invincible = true
-max_health = 5
-allegency_flags = 2
 
 [node name="NPC3" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3594.13, -2410.66)
 hostility_flags = 1
-invincible = true
-max_health = 5
-allegency_flags = 2
 
 [node name="NPC2" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3598.88, -2399.4)
 hostility_flags = 1
-invincible = true
-max_health = 5
-allegency_flags = 2
 
 [connection signal="pressed" from="CanvasLayer/Restart" to="." method="_on_restart_pressed"]
 
