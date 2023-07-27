@@ -5,8 +5,6 @@ var tracking_anchor: TrackingAnchor
 var max_distance = 1000  # m
 var rwr_radius = 128  # px
 
-@onready var common_physics = $"/root/CommonPhysics"
-
 func setup(anchor: TrackingAnchor) -> void:
 	tracking_anchor = anchor
 
@@ -16,7 +14,7 @@ func update_pos(player: PlayerPlane) -> void:
 		return
 	var rel_pos = tracking_anchor.global_position - player.global_position
 	var distance = rel_pos.length()
-	var up = common_physics.get_up(player.global_position)
+	var up = CommonPhysics.get_up(player.global_position)
 	var m_y = (player.velocity - player.velocity.project(up)).normalized()
 	var m_x = m_y.cross(up)
 	var rel_pos_2d = Vector2(rel_pos.dot(m_x), rel_pos.dot(-m_y))

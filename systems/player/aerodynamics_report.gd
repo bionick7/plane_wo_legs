@@ -9,18 +9,19 @@ const BODY_TO_LOCAL_TRANSF = Basis(
 @export var enabled: bool = true
 @export var use_control_multiplier: bool = true
 @export var use_auto_trim: bool = true
-@export_group("References")
-@export var player_plane: PlayerPlane
-@export var fm: Resource
 
 @export_group("Control")
 @export var elevator_limits_degrees: Vector2 = Vector2(-25, 25)
 @export var aileron_limits_degrees: Vector2 = Vector2(-10, 10)
 @export var rudder_limits_degrees: Vector2 = Vector2(-25, 25)
 
-@onready var input_manager = $"/root/InputManager"
-@onready var common_physics = $"/root/CommonPhysics"
-@onready var debug_drawer = $"../DebugDrawer"
+@export_group("References")
+@export var player_plane: PlayerPlane
+@export var fm: Resource
+@export var debug_drawer: DebugDrawer
+
+@export_group("Debug")
+@export var draw_forces: bool
 
 var stall_progress = 0
 var last_query_time = 0
@@ -43,7 +44,7 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	last_query_time = current_ingame_time
 	
 	var basis = player_plane.global_transform.basis
-	var Q = common_physics.get_air_density(player_plane.global_position) * vel.length_squared() * 0.5
+	var Q = CommonPhysics.get_air_density(player_plane.global_position) * vel.length_squared() * 0.5
 	var α = (vel - vel.project(basis.x)).signed_angle_to(basis.z, -basis.x)
 	var β = (vel - vel.project(basis.y)).signed_angle_to(basis.z, basis.y)
 	var V = vel.length()
@@ -63,12 +64,12 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	if V > 5 and use_auto_trim:
 		var α_steady = W / (Q*fm.S * fm.C_L_α)
 		trim = fm.get_trim(α_steady)
-	input_manager.pitch_trim = clamp(trim, -2, 2)
-	var ypr = input_manager.get_yaw_pitch_roll(false) * control_multiplier
+	InputManager.pitch_trim = clamp(trim, -2, 2)
+	var ypr = InputManager.get_yaw_pitch_roll(false) * control_multiplier
 	var δr = _limit(-ypr.x, rudder_limits_degrees * deg_to_rad(1))
 	var δe = _limit(ypr.y, elevator_limits_degrees * deg_to_rad(1)) + trim
 	var δa = _limit(-ypr.z, aileron_limits_degrees * deg_to_rad(1))
-	var br = input_manager.get_airbrake()
+	var br = InputManager.get_airbrake()
 	var ang_vel = basis.inverse() * ang_vel_glob
 	var p = fm.b / V *  ang_vel.z
 	var q = fm.c / V * -ang_vel.x
@@ -89,15 +90,16 @@ func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	var aero_force = basis * BODY_TO_LOCAL_TRANSF * Vector3(X, Y, Z)
 	var aero_moment = basis * BODY_TO_LOCAL_TRANSF * Vector3(L, M, N)
 		
-	#debug_drawer.draw_line(Vector3.ZERO, aero_force / 1000, Color.RED)
-	#debug_drawer.draw_line(Vector3.ZERO, aero_moment / 1000, Color.YELLOW)
+	if is_instance_valid(debug_drawer) and draw_forces:
+		#debug_drawer.draw_line(Vector3.ZERO, aero_force / 1000, Color.RED)
+		#debug_drawer.draw_line(Vector3.ZERO, aero_moment / 1000, Color.YELLOW)
+		
+		var from = get_parent().global_position
+		debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.RIGHT * X * 0.001, Color.RED)
+		debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.UP * Y * 0.001, Color.GREEN)
+		debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.BACK * Z * 0.001, Color.BLUE)
 	
-	var from = get_parent().global_position
-	debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.RIGHT * X * 0.001, Color.RED)
-	debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.UP * Y * 0.001, Color.GREEN)
-	debug_drawer.draw_line_global(from, from + basis * BODY_TO_LOCAL_TRANSF * Vector3.BACK * Z * 0.001, Color.BLUE)
-	
-	#write_line("%10.5f -- %10.5f" % [rad_to_deg(α), stall_progress])
+	#Logger.write_line("%10.5f -- %10.5f" % [rad_to_deg(α), stall_progress])
 	
 	#printt(Q, α, β, trim)
 	#printt("=>", lerp(aero_force, stall_force, stall_progress), lerp(aero_moment, stall_moment, stall_progress))

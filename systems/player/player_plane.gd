@@ -23,9 +23,6 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @export var flight_dynamics: Node
 @export var engine_transform: Node3D
 
-@onready var pause_menu = $"/root/PauseMenu"
-@onready var input_manager = $"/root/InputManager"
-
 @onready var center_of_mass = $COG.position
 @onready var inverse_mass = 1 / mass
 @onready var inverse_inertia_tensor = inertia_tensor.inverse()
@@ -48,9 +45,9 @@ func _ready():
 func _process(dt: float):
 	super._process(dt)
 	
-	throttle = input_manager.get_throttle()
+	throttle = InputManager.get_throttle()
 	
-	#write_line("density: %5.4f" % $"/root/CloudManager".get_cloud_density(global_position))
+	#write_line("density: %5.4f" % CloudManager.get_cloud_density(global_position))
 	debug_drawer.draw_basis(global_transform.basis, Vector3.ZERO, Color.DARK_GRAY)
 	debug_drawer.draw_line(Vector3.ZERO, Vector3.BACK * throttle * 5, Color.LIGHT_BLUE)
 	
@@ -58,13 +55,13 @@ func _process(dt: float):
 	var observed_angular_acceleration = (angular_velocity - prev_angular_velocity) / dt
 	prev_linear_velocity = velocity
 	prev_angular_velocity = angular_velocity
-	fealt_acceleration = observed_linear_acceleration - common_physics.get_acc(position, velocity)
+	fealt_acceleration = observed_linear_acceleration - CommonPhysics.get_acc(position, velocity)
 	var pilot_arm = $Pilot.position - center_of_mass
 	fealt_acceleration += observed_angular_acceleration.cross(pilot_arm)  # cylinder is not accelerating
 	blackout_curve.push_acceleration(basis.inverse() * fealt_acceleration, dt)
-	input_manager.control_multiplier = blackout_curve.get_control()
+	InputManager.control_multiplier = blackout_curve.get_control()
 	
-	visual_ypr = input_manager.get_yaw_pitch_roll(true)
+	visual_ypr = InputManager.get_yaw_pitch_roll(true)
 	visual_throttle = throttle
 
 func _input(event: InputEvent):
@@ -96,7 +93,7 @@ func update_velocity_rotation(dt: float, manual: bool):
 	var thrust_force = -engine_transform.global_transform.basis.y * throttle * thrust_to_weight * 9.81 * mass
 	var thrust_moment = thrust_force.cross(basis * (engine_transform.position - center_of_mass))
 	
-	var external_acc = common_physics.get_acc(global_position, velocity)
+	var external_acc = CommonPhysics.get_acc(global_position, velocity)
 	flight_dynamics.W = mass * external_acc.length()
 	
 	$DebugDrawer.draw_line_global(global_position, global_position + engine_transform.global_transform.basis.y, Color.DARK_GREEN)
@@ -135,8 +132,8 @@ func update_velocity_rotation(dt: float, manual: bool):
 			if not frozen or manual_step:
 				basis = rot * basis
 	
-	$DebugDrawer.draw_line_global(global_position, global_position + force_moment[0] * 0.001, Color.RED)
-	$DebugDrawer.draw_line_global(global_position, global_position + force_moment[1] * 0.001, Color.YELLOW)
+	#$DebugDrawer.draw_line_global(global_position, global_position + force_moment[0] * 0.001, Color.RED)
+	#$DebugDrawer.draw_line_global(global_position, global_position + force_moment[1] * 0.001, Color.YELLOW)
 	
 func get_air_velocity() -> Vector3:
 	#if pause_menu.get_setting("coreolis force", true):

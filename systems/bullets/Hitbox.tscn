@@ -1,8 +1,37 @@
-[gd_scene load_steps=2 format=3 uid="uid://c3retmojenbya"]
+[gd_scene load_steps=6 format=3 uid="uid://c3retmojenbya"]
 
 [ext_resource type="Script" path="res://systems/bullets/hitbox.gd" id="1_lxmja"]
+
+[sub_resource type="Curve" id="Curve_ldq71"]
+max_value = 5.0
+_data = [Vector2(0, 0.0545454), 0.0, 11.2443, 0, 0, Vector2(1, 5), 0.61442, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ua70s"]
+curve = SubResource("Curve_ldq71")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bwk1r"]
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+scale_curve = SubResource("CurveTexture_ua70s")
+
+[sub_resource type="SphereMesh" id="SphereMesh_gfrxb"]
+radius = 0.2
+height = 0.4
 
 [node name="Hitbox" type="Area3D"]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_lxmja")
+
+[node name="HitExplosion" type="GPUParticles3D" parent="."]
+top_level = true
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_bwk1r")
+draw_pass_1 = SubResource("SphereMesh_gfrxb")

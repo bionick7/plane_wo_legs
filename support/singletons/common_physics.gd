@@ -7,8 +7,6 @@ const ɣ = 1.4  # cp / cv
 
 var is_in_cylinder = true
 
-@onready var pause_menu = $"/root/PauseMenu"
-
 func get_air_density(pos: Vector3) -> float:
 	return 1.225
 
@@ -20,7 +18,7 @@ func get_acc(pos: Vector3, vel: Vector3) -> Vector3:
 		
 func get_cylinder_acc(pos: Vector3, vel: Vector3) -> Vector3:
 	# returns centrifugal and coriolis pseudo forces
-	if pause_menu.get_setting("coreolis force", true):
+	if PauseMenu.get_setting("coreolis force", true):
 		return -2 * ang_vel.cross(vel) - ang_vel.cross(ang_vel.cross(pos))
 	else:
 		return -ang_vel.cross(ang_vel.cross(pos))

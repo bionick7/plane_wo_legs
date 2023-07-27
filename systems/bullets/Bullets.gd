@@ -1,3 +1,4 @@
+class_name Gun
 extends GPUParticles3D
 
 const MAX_BULLET_PATH = 1024
@@ -17,7 +18,6 @@ var bullets_include_centrifugal_force = false
 var bullets_include_coreolis_force = false
 
 @onready var prev_pos = global_position
-@onready var common_physics = $"/root/CommonPhysics"
 @onready var draw_mesh
 
 func _init():
@@ -46,8 +46,8 @@ func _process(dt: float):
 	for i in range(MAX_BULLET_PATH):
 		if (bullet_path_active[i / 64]) & (1 << (i % 64)) != 0:
 			var acc = Vector3.ZERO
-			if bullets_include_centrifugal_force: acc += common_physics.get_centrifugal_acc(bullet_path_pos[i])
-			if bullets_include_coreolis_force: acc += common_physics.get_coreolis_acc(bullet_path_vel[i])
+			if bullets_include_centrifugal_force: acc += CommonPhysics.get_centrifugal_acc(bullet_path_pos[i])
+			if bullets_include_coreolis_force: acc += CommonPhysics.get_coreolis_acc(bullet_path_vel[i])
 			bullet_path_vel[i] += acc * dt
 			var new_pos = bullet_path_pos[i] + bullet_path_vel[i] * dt
 			query.from = bullet_path_pos[i]
@@ -60,7 +60,7 @@ func _process(dt: float):
 			else:
 				bullet_path_pos[i] = new_pos
 			
-			if raycast_result or common_physics.is_oob(bullet_path_pos[i]):
+			if raycast_result or CommonPhysics.is_oob(bullet_path_pos[i]):
 				bullet_path_active[i / 64] &= ~(1 << (i % 64))  # Resets the active flag
 			else:
 				count += 1

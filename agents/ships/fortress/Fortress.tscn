@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bxodvx6l7wbdp"]
+[gd_scene load_steps=2 format=3 uid="uid://7dx42eesbxup"]
 
-[ext_resource type="PackedScene" uid="uid://cucopf2kuaewq" path="res://agents/elements/CWIS/CWIS.tscn" id="1_aje3e"]
+[ext_resource type="PackedScene" uid="uid://cmgycstm6kuj4" path="res://agents/elements/CWIS/CWIS.tscn" id="1_aje3e"]
 
 [node name="Fortress" type="Node3D"]
 

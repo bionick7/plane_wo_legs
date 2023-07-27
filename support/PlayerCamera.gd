@@ -10,14 +10,13 @@ var mouse_null_pos = Vector2.ZERO
 var euler_null = Vector3.ZERO
 
 @onready var camera = $Camera
-@onready var input_manager = $"/root/InputManager"
 
 func _process(dt):
 	var rotation_delta = Vector2.ZERO
 	if joypad_dragging:
 		rotation_delta = Vector2(
-			input_manager.accumulated_gamepad_axis(JOY_AXIS_RIGHT_X),
-			input_manager.accumulated_gamepad_axis(JOY_AXIS_RIGHT_Y)
+			InputManager.accumulated_gamepad_axis(JOY_AXIS_RIGHT_X),
+			InputManager.accumulated_gamepad_axis(JOY_AXIS_RIGHT_Y)
 		)
 		rotation += Vector3(
 			rotation_delta.y * camera_pitch_rate,

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="NPCBehaviour" load_steps=2 format=3 uid="uid://b8clalfrqce"]
+[gd_resource type="Resource" script_class="PlaneBehaviour" load_steps=2 format=3 uid="uid://b8clalfrqce"]
 
 [ext_resource type="Script" path="res://systems/npcs/npc_behaviour.gd" id="1_1q4me"]
 
@@ -13,20 +13,17 @@ max_roll_rate = 150.0
 speed_overshoot = 1.3
 crash_safety_margin = 50.0
 plane_safe_radius = 15.0
+chase_cone_angle = 60.0
+chase_cone_radius = 3000.0
 use_gun = true
-gun_shoot_distance = 500.0
+gun_shoot_distance = 800.0
+gun_shoot_delta = 20.0
 gun_min_burst_length = 0.15
 gun_max_burst_length = 0.5
 gun_cooldown = 0.3
+gun_preaim_factor = 1.0
 sees_all = true
 sees_through_clouds = false
 view_cone_angle = 0.0
 view_cone_radius = 0.0
-chase_cone_angle = 60.0
-chase_cone_radius = 3000.0
 search_interval = 1.0
-enable_sloppy_aiming = false
-sloppy_aim_stiffness = 5.0
-sloppy_aim_stiffness_power = 3.0
-sloppy_aim_damping = 1.5
-sloppy_aim_noise_amplitude = 5.0

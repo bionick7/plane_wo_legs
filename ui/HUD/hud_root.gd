@@ -36,7 +36,7 @@ func _process(dt: float):
 	var base_rot: Basis = Basis.from_euler(Vector3.UP * PI)
 	hud_camera.global_transform.basis = main_camera_hinge.global_transform.basis * base_rot
 	
-	usable = $"/root/CloudManager".get_cloud_density(player.global_position) < 0.1
+	usable = CloudManager.get_cloud_density(player.global_position) < 0.1
 	
 	#var up = $VPContainer/VP/HUDControl.up
 	var up = player.basis.y

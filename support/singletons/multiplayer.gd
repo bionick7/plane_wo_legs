@@ -24,7 +24,7 @@ func _on_host_pressed():
 		OS.alert("Failed to start multiplayer server.")
 		return
 	multiplayer.multiplayer_peer = peer
-	$"/root/InputManager".on_multiplayer_connect()  # Needs to be called manually on the server
+	InputManager.on_multiplayer_connect()  # Needs to be called manually on the server
 	#$V/OwnIP = IP.
 	start_game()
 

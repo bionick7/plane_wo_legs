@@ -1,3 +1,4 @@
+class_name DebugDrawer
 extends MeshInstance3D
 
 enum { DEBUG, GAME }

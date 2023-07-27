@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cafnjijygseny"
-path="res://.godot/imported/plane_interface_icon.svg-9533bdcc89c55857653e74e88c6642e5.ctex"
+path="res://.godot/imported/plane_interface_icon.svg-970065e291bfc3a8e588469126fe0453.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://systems/plane_interface_icon.svg"
-dest_files=["res://.godot/imported/plane_interface_icon.svg-9533bdcc89c55857653e74e88c6642e5.ctex"]
+source_file="res://agents/planes/plane_interface_icon.svg"
+dest_files=["res://.godot/imported/plane_interface_icon.svg-970065e291bfc3a8e588469126fe0453.ctex"]
 
 [params]
 

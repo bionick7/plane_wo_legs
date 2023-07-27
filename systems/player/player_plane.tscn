@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://c3llfjwho45mr"]
+[gd_scene load_steps=40 format=3 uid="uid://c3llfjwho45mr"]
 
 [ext_resource type="Script" path="res://systems/player/player_plane.gd" id="1_0wycj"]
 [ext_resource type="Script" path="res://systems/player/aerodynamics_report.gd" id="2_g48uj"]
@@ -23,7 +23,7 @@
 [ext_resource type="Script" path="res://systems/pilot/gforce_draw.gd" id="21_r8jrm"]
 [ext_resource type="PackedScene" uid="uid://dqk1m7aeup7yw" path="res://systems/tracking/TrackingAnchor.tscn" id="22_hwruk"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_o4mbd"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_luih2"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
@@ -104,25 +104,6 @@ size = Vector3(2.70266, 3.49704, 1)
 radius = 0.584262
 height = 11.7898
 
-[sub_resource type="Curve" id="Curve_d3u1j"]
-max_value = 5.0
-_data = [Vector2(0, 0.0545454), 0.0, 11.2443, 0, 0, Vector2(1, 5), 0.61442, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_1gcm6"]
-curve = SubResource("Curve_d3u1j")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_841kf"]
-spread = 180.0
-gravity = Vector3(0, 0, 0)
-initial_velocity_min = 5.0
-initial_velocity_max = 10.0
-scale_curve = SubResource("CurveTexture_1gcm6")
-
-[sub_resource type="SphereMesh" id="SphereMesh_xo4sh"]
-radius = 0.2
-height = 0.4
-
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_1fwqn"]
 noise_type = 0
 frequency = 0.478
@@ -154,17 +135,18 @@ pathtrace_color = Color(0.14902, 0.529412, 0.964706, 1)
 gun = NodePath("Gun")
 hitbox = NodePath("Hitbox")
 
-[node name="FlightDynamics" type="Node" parent="." node_paths=PackedStringArray("player_plane")]
+[node name="FlightDynamics" type="Node" parent="." node_paths=PackedStringArray("player_plane", "debug_drawer")]
 script = ExtResource("2_g48uj")
 use_control_multiplier = false
+aileron_limits_degrees = Vector2(-20, 20)
 player_plane = NodePath("..")
 fm = ExtResource("3_2bqbq")
-aileron_limits_degrees = Vector2(-20, 20)
+debug_drawer = NodePath("../DebugDrawer")
 
 [node name="DebugDrawer" parent="." instance=ExtResource("4_kau8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.124926, -8.10622)
 visible = false
-mesh = SubResource("ImmediateMesh_o4mbd")
+mesh = SubResource("ImmediateMesh_luih2")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
@@ -344,16 +326,6 @@ shape = SubResource("CapsuleShape3D_kebex")
 transform = Transform3D(-4.37114e-08, 1.74846e-07, -1, 1.74846e-07, 1, 1.74846e-07, 1, -1.74846e-07, -4.37114e-08, 0.0301993, 1.49231, -11.0965)
 depth = 0.1
 polygon = PackedVector2Array(2.78762, -0.041394, -0.0869923, 1.70592, -1.0452, 1.71156, -0.628098, -0.0413934, -0.357546, -0.278127)
-
-[node name="HitExplosion" type="GPUParticles3D" parent="Hitbox"]
-top_level = true
-emitting = false
-amount = 16
-lifetime = 0.5
-one_shot = true
-explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_841kf")
-draw_pass_1 = SubResource("SphereMesh_xo4sh")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, -1.2346e-07, 1.67125e-07, -1.2346e-07, 0.29389, 0.955839, -1.67125e-07, -0.955839, 0.29389, 6.71083e-07, 3.83814, 0)

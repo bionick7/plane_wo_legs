@@ -15,9 +15,10 @@ func setup(anchor: TrackingAnchor) -> void:
 	healthbar_material = $DirectTracker/Health.material_override
 	assert(is_instance_valid(healthbar_material))
 	tracking_anchor = anchor
-	tracking_anchor.hitbox.on_take_dammage.connect(_on_take_dammage)
-	healthbar_material.set_shader_parameter("total_hp", tracking_anchor.get_max_health())
-	_update_hp()
+	if tracking_anchor.has_health():
+		tracking_anchor.hitbox.on_take_dammage.connect(_on_take_dammage)
+		healthbar_material.set_shader_parameter("total_hp", tracking_anchor.get_max_health())
+		_update_hp()
 
 func update_pos(view_pos: Vector3, view_vel: Vector3, up: Vector3) -> void:
 	if not is_instance_valid(tracking_anchor):

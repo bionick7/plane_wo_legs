@@ -29,9 +29,6 @@ var visual_throttle = 0
 var _is_hidden = false
 
 @onready var debug_drawer = get_node_or_null("DebugDrawer")
-@onready var common_physics = $"/root/CommonPhysics"
-@onready var cloud_manager = $"/root/CloudManager"
-@onready var logger = $"/root/Logger"
 
 signal on_death
 signal on_take_dammage(ammount: int)
@@ -42,7 +39,7 @@ func _ready():
 	velocity = basis * initial_velocity_local
 
 func _process(dt: float):
-	_is_hidden = cloud_manager.is_in_cloud(global_position)
+	_is_hidden = CloudManager.is_in_cloud(global_position)
 	emit_signal("update_ypr", visual_ypr, visual_throttle)
 
 func _physics_process(dt: float):
@@ -63,7 +60,7 @@ func _physics_process(dt: float):
 	_handle_pathtrace()
 
 func update_velocity_rotation(dt: float, manual: bool) -> void:
-	up_direction = common_physics.get_up(global_position)
+	up_direction = CommonPhysics.get_up(global_position)
 	# Override in children
 
 func is_hidden() -> bool:

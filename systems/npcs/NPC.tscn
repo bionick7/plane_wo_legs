@@ -1,8 +1,9 @@
-[gd_scene load_steps=37 format=3 uid="uid://b8fy1v0x3uc2e"]
+[gd_scene load_steps=35 format=3 uid="uid://boiwc4noggv3e"]
 
 [ext_resource type="Script" path="res://systems/npcs/npc.gd" id="1_kh4hl"]
 [ext_resource type="Resource" uid="uid://b8clalfrqce" path="res://systems/npcs/default_behaviour.tres" id="2_hbnob"]
 [ext_resource type="PackedScene" uid="uid://wmsntcnrj0ro" path="res://support/debug_drawer.tscn" id="2_shsko"]
+[ext_resource type="Script" path="res://systems/Static npcs/proc_anim_2nd_order.gd" id="3_e4540"]
 [ext_resource type="ArrayMesh" uid="uid://dle4mle7fqevg" path="res://agents/planes/nimitz/meshes/nimitz_Hull.res" id="4_koh6s"]
 [ext_resource type="Script" path="res://systems/player/ControlSurface.gd" id="5_v4t8d"]
 [ext_resource type="Material" path="res://agents/generic_assets/materials/plane_finish_red.tres" id="5_vmqjt"]
@@ -21,8 +22,24 @@
 [ext_resource type="Shader" path="res://systems/bullets/bullet_particles.gdshader" id="19_674i7"]
 [ext_resource type="Script" path="res://systems/bullets/Bullets.gd" id="19_uev3f"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_i5vjy"]
+[sub_resource type="Curve" id="Curve_0y60n"]
+max_value = 2.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.02, 0), 0.0, 0.0, 0, 0, Vector2(0.04, 0), 0.0, 0.0, 0, 0, Vector2(0.06, 0), 0.0, 0.0, 0, 0, Vector2(0.08, 0.188829), 0.0, 0.0, 0, 0, Vector2(0.1, 0.405167), 0.0, 0.0, 0, 0, Vector2(0.12, 0.631893), 0.0, 0.0, 0, 0, Vector2(0.14, 0.853378), 0.0, 0.0, 0, 0, Vector2(0.16, 1.05629), 0.0, 0.0, 0, 0, Vector2(0.18, 1.23015), 0.0, 0.0, 0, 0, Vector2(0.2, 1.36763), 0.0, 0.0, 0, 0, Vector2(0.22, 1.4646), 0.0, 0.0, 0, 0, Vector2(0.24, 1.52005), 0.0, 0.0, 0, 0, Vector2(0.26, 1.53568), 0.0, 0.0, 0, 0, Vector2(0.28, 1.5155), 0.0, 0.0, 0, 0, Vector2(0.3, 1.4653), 0.0, 0.0, 0, 0, Vector2(0.32, 1.39202), 0.0, 0.0, 0, 0, Vector2(0.34, 1.30319), 0.0, 0.0, 0, 0, Vector2(0.36, 1.20636), 0.0, 0.0, 0, 0, Vector2(0.38, 1.10867), 0.0, 0.0, 0, 0, Vector2(0.4, 1.01639), 0.0, 0.0, 0, 0, Vector2(0.42, 0.934674), 0.0, 0.0, 0, 0, Vector2(0.44, 0.867351), 0.0, 0.0, 0, 0, Vector2(0.46, 0.816867), 0.0, 0.0, 0, 0, Vector2(0.48, 0.784295), 0.0, 0.0, 0, 0, Vector2(0.5, 0.769441), 0.0, 0.0, 0, 0, Vector2(0.52, 0.771017), 0.0, 0.0, 0, 0, Vector2(0.54, 0.786858), 0.0, 0.0, 0, 0, Vector2(0.56, 0.814173), 0.0, 0.0, 0, 0, Vector2(0.58, 0.849792), 0.0, 0.0, 0, 0, Vector2(0.6, 0.890424), 0.0, 0.0, 0, 0, Vector2(0.62, 0.932871), 0.0, 0.0, 0, 0, Vector2(0.64, 0.974224), 0.0, 0.0, 0, 0, Vector2(0.66, 1.01201), 0.0, 0.0, 0, 0, Vector2(0.68, 1.04429), 0.0, 0.0, 0, 0, Vector2(0.7, 1.06971), 0.0, 0.0, 0, 0, Vector2(0.72, 1.08754), 0.0, 0.0, 0, 0, Vector2(0.74, 1.09759), 0.0, 0.0, 0, 0, Vector2(0.76, 1.10022), 0.0, 0.0, 0, 0, Vector2(0.78, 1.09619), 0.0, 0.0, 0, 0, Vector2(0.8, 1.08659), 0.0, 0.0, 0, 0, Vector2(0.82, 1.07272), 0.0, 0.0, 0, 0, Vector2(0.84, 1.05601), 0.0, 0.0, 0, 0, Vector2(0.86, 1.03786), 0.0, 0.0, 0, 0, Vector2(0.88, 1.01959), 0.0, 0.0, 0, 0, Vector2(0.9, 1.00239), 0.0, 0.0, 0, 0, Vector2(0.92, 0.987192), 0.0, 0.0, 0, 0, Vector2(0.94, 0.974717), 0.0, 0.0, 0, 0, Vector2(0.96, 0.965406), 0.0, 0.0, 0, 0, Vector2(0.98, 0.95945), 0.0, 0.0, 0, 0]
+point_count = 51
+
+[sub_resource type="Resource" id="Resource_t3svr"]
 resource_local_to_scene = true
+script = ExtResource("3_e4540")
+enabled = true
+keep_normalized = true
+frequency = 1.0
+damping_ratio = 0.5
+r = 2.0
+noise = null
+delta_limit = 1000.0
+step_response_time = 2.0
+generate_step_response = false
+step_respones_output = SubResource("Curve_0y60n")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
 flip_faces = true
@@ -59,25 +76,6 @@ func _process(dt: float):
 	if not Engine.is_editor_hint():
 		strength = input_manager.get_throttle()
 "
-
-[sub_resource type="Curve" id="Curve_8f0v7"]
-max_value = 5.0
-_data = [Vector2(0, 0.0545454), 0.0, 11.2443, 0, 0, Vector2(1, 5), 0.61442, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_ua70s"]
-curve = SubResource("Curve_8f0v7")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k3tah"]
-spread = 180.0
-gravity = Vector3(0, 0, 0)
-initial_velocity_min = 5.0
-initial_velocity_max = 10.0
-scale_curve = SubResource("CurveTexture_ua70s")
-
-[sub_resource type="SphereMesh" id="SphereMesh_350cu"]
-radius = 0.2
-height = 0.4
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wi4db"]
 size = Vector3(10.5291, 3.00024, 12.7653)
@@ -121,11 +119,13 @@ albedo_color = Color(1, 0, 1, 1)
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_kh4hl")
 behaviour = ExtResource("2_hbnob")
+aim_dynamics = SubResource("Resource_t3svr")
+hostility_flags = 1
+frozen = true
 gun = NodePath("Gun")
 hitbox = NodePath("Hitbox")
 
 [node name="DebugDrawer" parent="." instance=ExtResource("2_shsko")]
-mesh = SubResource("ImmediateMesh_i5vjy")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
@@ -161,6 +161,7 @@ skeleton = NodePath("../../ElevonLL/ElevonLL")
 
 [node name="ElevonL" type="Node3D" parent="ControlSurfaces"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565368, 1.33612, -11.0849)
+visible = false
 script = ExtResource("5_v4t8d")
 
 [node name="ElevonL" type="MeshInstance3D" parent="ControlSurfaces/ElevonL"]
@@ -257,16 +258,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2546e-07, 1.28948, -3.46476
 [node name="Hitbox" parent="." instance=ExtResource("17_h05ik")]
 collision_layer = 4
 max_health = 2
-
-[node name="HitExplosion" type="GPUParticles3D" parent="Hitbox"]
-top_level = true
-emitting = false
-amount = 16
-lifetime = 0.5
-one_shot = true
-explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_k3tah")
-draw_pass_1 = SubResource("SphereMesh_350cu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70251e-07, 0.973719, -5.87838)

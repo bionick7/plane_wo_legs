@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ShooterBehavior" load_steps=2 format=3 uid="uid://hb56the01ohx"]
+
+[ext_resource type="Script" path="res://systems/Static npcs/static_npc_behaviour.gd" id="1_f2ilx"]
+
+[resource]
+script = ExtResource("1_f2ilx")
+use_gun = true
+gun_shoot_distance = 800.0
+gun_shoot_delta = 20.0
+gun_min_burst_length = 1.0
+gun_max_burst_length = 2.0
+gun_cooldown = 1.0
+gun_preaim_factor = 1.0
+sees_all = true
+sees_through_clouds = false
+view_cone_angle = 0.0
+view_cone_radius = 0.0
+search_interval = 0.1

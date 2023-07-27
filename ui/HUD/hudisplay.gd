@@ -5,10 +5,8 @@ const KTS_TO_MS = 0.514444
 @export var pitch_yaw_roll_display_sensitivity: Vector3 = Vector3(20, 20, 2)
 @export_enum("m/s", "kts") var speed_units = 0
 
-@onready var input_manager = $"/root/InputManager"
-@onready var common_physics = $"/root/CommonPhysics"
 @onready var player: PlayerPlane = get_node("../../..").player
-@onready var throttle_slider = get_node("../../../UI/ThrottleSlider")
+@onready var throttle_slider = %ThrottleSlider
 
 var V = Vector3.ZERO
 var target_basis = Basis.IDENTITY
@@ -33,7 +31,7 @@ func _process(dt: float):
 		
 	V = player.velocity
 	
-	up = common_physics.get_up(player.global_position)
+	up = CommonPhysics.get_up(player.global_position)
 	assert(up.is_normalized())
 	
 	target_basis = player.global_transform.basis
@@ -64,10 +62,10 @@ func _process(dt: float):
 	else:
 		$Velocity.hide()
 	
-	if input_manager != null:
-		var ypr = input_manager.get_yaw_pitch_roll(true)
-		var trim = ypr - input_manager.get_yaw_pitch_roll(false)
-		var throttle = input_manager.get_throttle()
+	if InputManager != null:
+		var ypr = InputManager.get_yaw_pitch_roll(true)
+		var trim = ypr - InputManager.get_yaw_pitch_roll(false)
+		var throttle = InputManager.get_throttle()
 		$Heading2/Yaw.rotation = null_rot + Vector3.DOWN * ypr.x * pitch_yaw_roll_display_sensitivity.y
 		$Heading2/Pitch.rotation = null_rot + Vector3.FORWARD * ypr.y * pitch_yaw_roll_display_sensitivity.x
 		$Heading2/Roll.rotation = null_rot + Vector3.LEFT * ypr.z * pitch_yaw_roll_display_sensitivity.z
@@ -95,13 +93,13 @@ func _update_display():
 			$Heading2/IAS.text = "%5.1f m/s" % ias
 		else:
 			$Heading2/IAS.text = "%5.1f kts" % (ias / KTS_TO_MS)
-		$Heading2/Mach.text = "M = %5.3f" % (tas / common_physics.get_soundspeed(player.global_position))
+		$Heading2/Mach.text = "M = %5.3f" % (tas / CommonPhysics.get_soundspeed(player.global_position))
 	else:
 		$Heading2/IAS.hide()
 		$Heading2/Mach.hide()
 		
 	
-	$Heading2/Altitude.text = "%5.1f m" % common_physics.get_altitude(player.global_position)
+	$Heading2/Altitude.text = "%5.1f m" % CommonPhysics.get_altitude(player.global_position)
 	var acc_display = sign(player.fealt_acceleration.dot(target_basis.y)) * player.fealt_acceleration.length()
 	$Heading2/Acceleration.text = "%5.1f G" % (acc_display / 9.81)
 	

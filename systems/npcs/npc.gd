@@ -2,7 +2,8 @@ class_name NPCPlane
 extends PlaneInterface
 
 @export var target: TrackingAnchor
-@export var behaviour: NPCBehaviour
+@export var behaviour: PlaneBehaviour
+@export var aim_dynamics: ProcAnim2Order
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var hostility_flags: int
 
 @export_group("Debug")
@@ -28,58 +29,18 @@ var allow_fire = true
 func _ready():
 	super._ready()
 	velocity = basis.z * speed
+		
 	if not _is_target_valid():
 		_search_new_target_async()
 		
-func _get_possible_targets(target_types: int=0) -> Array[TrackingAnchor]:
-	var res: Array[TrackingAnchor] = []
-	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
-		if anchor.allegency_flags & hostility_flags == 0:
-			continue
-		res.append(anchor)
-	return res
-	
-func _get_hostile_planes() -> Array[PlaneInterface]:
-	var res: Array[PlaneInterface] = []
-	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
-		if not anchor.refers_plane():
-			continue
-		if anchor.allegency_flags & hostility_flags == 0:
-			continue
-		res.append(anchor.ref)
-	return res
-	
-func _is_target_valid() -> bool:
-	return is_instance_valid(target) and _is_visible(target)
-	
-func _is_visible(tgt: TrackingAnchor) -> bool:
-	if not behaviour.sees_all:
-		var rel_pos = tgt.global_position - global_position
-		if rel_pos.length_squared() > behaviour.view_cone_angle_rad:
-			return false
-		if velocity.angle_to(rel_pos) > behaviour.view_cone_radius_sqr:
-			return false
-	if not behaviour.sees_through_clouds and tgt.is_hidden():
-		return false
-	return true
-	
-func _search_new_target_async() -> void:
-	while true:
-		var possible_targets = _get_possible_targets()
-		if possible_targets.size() > 0:
-			target = possible_targets.pick_random()
-			return
-		else:
-			target = null
-		await get_tree().create_timer(behaviour.search_interval).timeout
-	
+	aim_dynamics.initialize_to(basis.z, Vector3.ZERO)
 	
 func update_velocity_rotation(dt: float, manual: bool) -> void:
 	super.update_velocity_rotation(dt, manual)
 		
 	_ai_logic(dt)
 	if log_summary:
-		logger.write_line(name + ": " + _ai_text_summary)
+		Logger.write_line(name + ": " + _ai_text_summary)
 		
 	# Speed
 	var lerp_weight = clamp((velocity / speed).dot(up_direction), 0, 1)
@@ -88,49 +49,47 @@ func update_velocity_rotation(dt: float, manual: bool) -> void:
 	speed = clamp(speed, behaviour.stall_speed, max_speed)
 	speed = move_toward(speed, steady_speed, behaviour.thrust_acceleration * dt)	
 	if log_speed:
-		logger.write_line("%s: %5.1f m/s -> %5.1f m/s " % [name, speed, tgt_speed])
+		Logger.write_line("%s: %5.1f m/s -> %5.1f m/s " % [name, speed, tgt_speed])
 		
 	# Visuals
 	if frozen and not manual:
 		visual_ypr = Vector3.ZERO
 		velocity = basis.z * speed
-	else:
-		var tgt_acc = (_next_velocity - velocity) / dt
-		var load_acc = tgt_acc - common_physics.get_acc(global_position, velocity)
+		return
 		
-		var fore = _next_velocity.normalized()
-		var next_up = angular_move_toward(plane_up, load_acc, dt * behaviour.max_roll_rate_rad).normalized()
-		roll_speed = next_up.signed_angle_to(plane_up, fore) / dt
-		roll_acceleration = 0  # ??? how to smooth out 
-		plane_up = next_up
-		
-		plane_up = (plane_up - plane_up.project(fore))
-		var new_basis = Basis(
-			plane_up.cross(fore),
-			plane_up,
-			fore
-		)
-		# var inv_basis = basis.inverse()
-		# var delta_rot = (new_basis * inv_basis).get_rotation_quaternion()
-		# var new_angular_velocity: Vector3 = (delta_rot.get_angle() / dt) * delta_rot.get_axis().normalized()
-		# var angular_acceleration: Vector3 = (new_angular_velocity - angular_velocity) / dt
-		# if angular_acceleration.is_zero_approx():
-		# 	visual_ypr = Vector3.ZERO
-		# angular_velocity = new_angular_velocity
-		visual_ypr = Vector3(0., load_acc.dot(plane_up) * -2e-2, roll_acceleration * 2)
-		visual_throttle = speed / max_speed
-		basis = new_basis
-		
-		velocity = _next_velocity
-		
-	#debug_drawer.draw_line_global(global_position, global_position + _next_velocity, Color.LIGHT_SKY_BLUE)
+	var tgt_acc = (_next_velocity - velocity) / dt
+	var load_acc = tgt_acc - CommonPhysics.get_acc(global_position, velocity)
+	
+	var fore = _next_velocity.normalized()
+	var next_up = angular_move_toward(plane_up, load_acc, dt * behaviour.max_roll_rate_rad).normalized()
+	roll_speed = next_up.signed_angle_to(plane_up, fore) / dt
+	roll_acceleration = 0  # ??? how to smooth out 
+	plane_up = next_up
+	
+	plane_up = (plane_up - plane_up.project(fore))
+	var new_basis = Basis(
+		plane_up.cross(fore),
+		plane_up,
+		fore
+	)
+	
+	visual_ypr = Vector3(0., load_acc.dot(plane_up) * -2e-2, roll_acceleration * 2)
+	visual_throttle = speed / max_speed
+	basis = new_basis
+	
+	velocity = _next_velocity
+
+# <<= ==================================== =>>
+# 				DECISION TREE
+# <<= ==================================== =>>
+func __DECISION_TREE__(): pass
 
 func _ai_logic(dt: float) -> void:
 	if not _is_target_valid():
 		_search_new_target_async()
 	if _test_terrain_collision():
 		tgt_speed = behaviour.maneuver_speed
-		_exact_update_face_dir((avoidance_point - global_position).normalized(), dt)
+		_next_velocity = _step_face_direction(velocity / speed, aim_dynamics.force_update((avoidance_point - global_position).normalized(), dt), speed, dt)
 		_ai_text_summary = "Avoid terrain"
 		return
 	# Find most relevant plane-to-plane collision
@@ -173,7 +132,7 @@ func _test_terrain_collision() -> bool:
 		sim_time += sim_step
 		if draw_avoidance:
 			avoidance_path.append(sim_pos)
-		if common_physics.distance_to_bounds(sim_pos) < behaviour.crash_safety_margin:
+		if CommonPhysics.distance_to_bounds(sim_pos) < behaviour.crash_safety_margin:
 			return true
 	if draw_avoidance and avoidance_path.size() >= 2:
 		debug_drawer.draw_path_global(avoidance_path, avoidance_color)
@@ -202,7 +161,7 @@ func _idle() -> void:
 func _evade_from(chaser: PlaneInterface, dt: float) -> void:
 	var rel_pos = chaser.global_position - global_position
 	tgt_speed = behaviour.max_level_speed
-	_exact_update_face_dir(rel_pos.normalized(), dt)
+	_next_velocity = _step_face_direction(velocity / speed, aim_dynamics.force_update(rel_pos.normalized(), dt), speed, dt)
 
 func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	var rel_pos = plane.global_position - global_position
@@ -221,10 +180,7 @@ func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	
 	debug_drawer.draw_line_global(global_position, global_position + target_pt, Color.PINK)
 	debug_drawer.draw_line_global(global_position, plane.global_position, Color.DEEP_PINK)
-	_exact_update_face_dir(target_pt.normalized(), dt)
-
-var face_dir = Vector3.ZERO  # TODO
-var face_dir_vel = Vector3.ZERO  # TODO
+	_next_velocity = _step_face_direction(velocity / speed, aim_dynamics.force_update(target_pt.normalized(), dt), speed, dt)
 
 func _chase_target(dt: float) -> void:
 	var rel_pos = target.global_position - global_position
@@ -232,45 +188,77 @@ func _chase_target(dt: float) -> void:
 	var preaim_time = preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
 	var ideal_face_dir: Vector3
 	if preaim_time >= 0:
-		ideal_face_dir = (rel_pos + rel_vel * preaim_time).normalized()
+		ideal_face_dir = lerp(rel_pos, rel_pos + rel_vel * preaim_time, behaviour.gun_preaim_factor).normalized()
 	else:
-		# No possibility to hit target (e.g. target will outrun bullets
+		# No possibility to hit target (e.g. target will outrun bullets)
 		ideal_face_dir = rel_pos.normalized()  # Just chase directly
 	
-	
-	if preaim_time >= 0 and behaviour.use_gun and \
-		allow_fire and face_dir.angle_to(velocity) * rel_pos.length() < behaviour.gun_shoot_distance:
+	var deviation = ideal_face_dir.angle_to(velocity) * rel_pos.length()
+	if preaim_time >= 0 and behaviour.use_gun and allow_fire and deviation < behaviour.gun_shoot_delta and rel_pos.length() < behaviour.gun_shoot_distance:
 		_give_burst()
 	tgt_speed = max(target.get_velocity().length() * behaviour.speed_overshoot, behaviour.maneuver_speed)
-	#debug_drawer.draw_line_global(global_position, global_position + face_dir * 10, Color.RED)
-	_sloppy_update_face_dir(ideal_face_dir, dt)
+	# debug_drawer.draw_line_global(global_position, global_position + aim_dynamics.y * 10, Color.RED)
+	# debug_drawer.draw_line_global(global_position + aim_dynamics.y * 10, global_position + aim_dynamics.y * 10 + aim_dynamics.dydt * 10, Color.RED)
+	# debug_drawer.draw_line_global(global_position, global_position + aim_dynamics.x * 10, Color.ORANGE)
+	# debug_drawer.draw_line_global(global_position + aim_dynamics.x * 10, global_position + aim_dynamics.x * 10 + aim_dynamics.dxdt * 10, Color.ORANGE)
+	_next_velocity = _step_face_direction(velocity / speed, aim_dynamics.update(ideal_face_dir, dt), speed, dt)
 
-func _exact_update_face_dir(ideal_face_dir: Vector3, dt: float) -> void:
-	face_dir_vel = (ideal_face_dir - face_dir) / dt
-	face_dir = ideal_face_dir
-	face_dir_vel -= face_dir_vel.project(face_dir)
-	_next_velocity = _step_face_direction(velocity / speed, face_dir, speed, dt)
-
-func _sloppy_update_face_dir(ideal_face_dir: Vector3, dt: float) -> void:
-	if not behaviour.enable_sloppy_aiming:
-		_exact_update_face_dir(ideal_face_dir, dt)
-		return
-	var delta_fd = ideal_face_dir - face_dir
-	var fd_spring_component = -delta_fd.normalized() * clamp(behaviour.sloppy_aim_stiffness * pow(delta_fd.length_squared(), behaviour.sloppy_aim_stiffness_power / 2), 0.5, 100)
-	var fd_damper_component = -face_dir_vel * behaviour.sloppy_aim_damping
-	var fd_noise = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * behaviour.sloppy_aim_noise_amplitude
-	var fd_acceleration = fd_damper_component + fd_spring_component + fd_noise
-	face_dir_vel += fd_acceleration * dt
-	face_dir += face_dir_vel * dt
-	face_dir = face_dir.normalized()
-	face_dir_vel -= face_dir_vel.project(face_dir)
-	
-	_next_velocity = _step_face_direction(velocity / speed, ideal_face_dir, speed, dt)
+# <<= ==================================== =>>
+# 				HELPER FUNCTIONS
+# <<= ==================================== =>>
+func __HELPER_FUNCTIONS__(): pass
 
 func _step_face_direction(current_dir: Vector3, dir: Vector3, turn_speed: float, dt: float) -> Vector3:
 	var acc = clamp((turn_speed*turn_speed / (behaviour.stall_speed*behaviour.stall_speed) - 1.0) * 9.81, 1, behaviour.max_acceleration)
 	return angular_move_toward(current_dir, dir, acc * dt / turn_speed, up_direction) * turn_speed
 
+func _get_possible_targets() -> Array[TrackingAnchor]:
+	var res: Array[TrackingAnchor] = []
+	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
+		if anchor.allegency_flags & hostility_flags == 0:
+			continue
+		res.append(anchor)
+	return res
+
+func _get_hostile_planes() -> Array[PlaneInterface]:
+	var res: Array[PlaneInterface] = []
+	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
+		if not anchor.refers_plane():
+			continue
+		if anchor.allegency_flags & hostility_flags == 0:
+			continue
+		res.append(anchor.ref)
+	return res
+	
+func _is_target_valid() -> bool:
+	return is_instance_valid(target) and _is_visible(target)
+
+func _is_visible(tgt: TrackingAnchor) -> bool:
+	if not behaviour.sees_all:
+		var rel_pos = tgt.global_position - global_position
+		if rel_pos.length_squared() > behaviour.view_cone_angle_rad:
+			return false
+		if velocity.angle_to(rel_pos) > behaviour.view_cone_radius_sqr:
+			return false
+	if not behaviour.sees_through_clouds and tgt.is_hidden():
+		return false
+	return true
+	
+# <<= ==================================== =>>
+# 				ACTIONS / ANIMATIONS
+# <<= ==================================== =>>
+func __ACTIONS_ANIMATIONS__(): pass
+
+func _search_new_target_async() -> void:
+	while true:
+		var possible_targets = _get_possible_targets()
+		if possible_targets.size() > 0:
+			target = possible_targets.pick_random()
+			return
+		else:
+			target = null
+		await get_tree().create_timer(behaviour.search_interval).timeout
+		
 func _give_burst() -> void:
 	if frozen:
 		return
@@ -281,6 +269,11 @@ func _give_burst() -> void:
 	tween.tween_callback(gun.cease_fire)
 	tween.tween_interval(behaviour.gun_cooldown)
 	tween.tween_callback(func (): allow_fire = true)
+
+# <<= ==================================== =>>
+# 				COMMON FUNCTIONS
+# <<= ==================================== =>>
+func __COMMON_FUNCTIONS__(): pass
 
 static func angular_move_toward(from: Vector3, to: Vector3, delta_angle: float, fallback_axis=Vector3.UP) -> Vector3:
 	var axis = from.cross(to).normalized()
