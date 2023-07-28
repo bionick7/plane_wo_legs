@@ -9,10 +9,12 @@ resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("3_wmlry")
 shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/regen_color = Color(1, 1, 1, 1)
 shader_parameter/total_hp = 3
-shader_parameter/current_hp = 2
-shader_parameter/spacing = 0.18
-shader_parameter/border = 0.25
+shader_parameter/current_hp = 1
+shader_parameter/regen_progress = 0.63
+shader_parameter/spacing = 0.08
+shader_parameter/border = 0.18
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_i6okm"]
 size = Vector2(48, 16)

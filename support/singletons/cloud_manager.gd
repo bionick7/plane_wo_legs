@@ -37,7 +37,28 @@ func _load() -> void:
 	image_size = Vector3i(64, 64, 64)
 
 func is_in_cloud(pos: Vector3) -> bool:
-	return get_cloud_density(pos) > cloud_parameters.threshhold
+	var pos_xy = pos - pos.z * Vector3.BACK
+	var p: Vector3 = Vector3(
+		CloudManagerClass.radial_coord(pos_xy.x, pos_xy.y),
+		(cloud_parameters.layer_mid - pos_xy.length()) * 1e-3,
+		pos.z * 3.33333e-4
+	)
+	
+	var mask = clamp(1.0 - 4e6*p.y*p.y/(cloud_parameters.layer_thickness*cloud_parameters.layer_thickness), 0.0, 1.0)
+	mask = mask*mask
+	#if mask < cloud_parameters.threshhold:
+	#	return false
+	var cov = _get_coverage(Vector2(p.x, p.z))
+	#if cov * mask < cloud_parameters.threshhold:
+	#	return false
+	p.y *= cloud_parameters.cloud_flatten
+	p += Vector3(cloud_parameters.cloud_cover_speed, 0, 0) * cloud_anim_time
+	var n = 0.0
+	n += smoothstep(0.4, 1.2, 
+		_evaluate_voronoi(p / TAU).dot(cloud_parameters.noise_weights)
+		+ _evaluate_voronoi(p / TAU * 10.0).dot(cloud_parameters.noise_weights_detail)
+	)
+	return cov * mask * n >= cloud_parameters.threshhold
 
 func get_cloud_density(pos: Vector3) -> float:
 	#assert(is_instance_valid(voronoi_generator.voronoi), "Texture gone *shrugs*")
@@ -54,15 +75,15 @@ func get_cloud_density(pos: Vector3) -> float:
 		pos.z * 3.33333e-4
 	)
 	
-	var cov = _get_coverage(Vector2(p.x, p.z))
 	var mask = clamp(1.0 - 4e6*p.y*p.y/(cloud_parameters.layer_thickness*cloud_parameters.layer_thickness), 0.0, 1.0)
+	var cov = _get_coverage(Vector2(p.x, p.z))
 	mask = mask*mask
 	p.y *= cloud_parameters.cloud_flatten
 	p += Vector3(cloud_parameters.cloud_cover_speed, 0, 0) * cloud_anim_time
 	var n = 0.0
 	n += smoothstep(0.4, 1.2, 
-		_evaluate_voronoi(p / 6.28).dot(cloud_parameters.noise_weights)
-		+ _evaluate_voronoi(p / 6.28 * 10.0).dot(cloud_parameters.noise_weights_detail)
+		_evaluate_voronoi(p / TAU).dot(cloud_parameters.noise_weights)
+		+ _evaluate_voronoi(p / TAU * 10.0).dot(cloud_parameters.noise_weights_detail)
 	)
 	return cov * mask * n
 
@@ -72,7 +93,7 @@ static func radial_coord(x: float, y: float) -> float:
 	return angle;
 
 func _get_coverage(uv: Vector2) -> float:
-	uv /= 6.28
+	uv /= TAU
 	uv += Vector2(cloud_parameters.cloud_cover_speed, 0) * cloud_anim_time
 	return smoothstep(0.4, 1.0, _evaluate_texture_2d(cloud_parameters.coverage_texture, uv))
 	
@@ -86,6 +107,6 @@ func _evaluate_voronoi(pos: Vector3) -> Vector4:
 	pos.x = fposmod(pos.x, 1.0)
 	pos.y = fposmod(pos.y, 1.0)
 	pos.z = fposmod(pos.z, 1.0)
-	var pos_index: Vector3i = Vector3i(pos) * image_size
+	var pos_index: Vector3i = Vector3i(pos * Vector3(image_size))
 	var res_color: Color = image_cache[pos_index.z].get_pixel(pos_index.x, pos_index.y)
 	return Vector4(res_color.r, res_color.g, res_color.b, res_color.a)

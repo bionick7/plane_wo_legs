@@ -23,7 +23,7 @@
 [ext_resource type="Script" path="res://systems/pilot/gforce_draw.gd" id="21_r8jrm"]
 [ext_resource type="PackedScene" uid="uid://dqk1m7aeup7yw" path="res://systems/tracking/TrackingAnchor.tscn" id="22_hwruk"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_luih2"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_2uacn"]
 resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
@@ -146,7 +146,7 @@ debug_drawer = NodePath("../DebugDrawer")
 [node name="DebugDrawer" parent="." instance=ExtResource("4_kau8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.124926, -8.10622)
 visible = false
-mesh = SubResource("ImmediateMesh_luih2")
+mesh = SubResource("ImmediateMesh_2uacn")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)
@@ -302,6 +302,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.671, -7.45)
 
 [node name="Hitbox" parent="." instance=ExtResource("19_kraym")]
 collision_layer = 8
+health_regen_rate = 0.1
 max_health = 5
 invulnerable = true
 

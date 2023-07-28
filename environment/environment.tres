@@ -1,0 +1,35 @@
+[gd_resource type="Environment" load_steps=5 format=3 uid="uid://bh6yorpeite73"]
+
+[ext_resource type="Material" uid="uid://7otbdjff6elx" path="res://environment/sky/space_sky.tres" id="1_cs1wa"]
+
+[sub_resource type="Gradient" id="Gradient_ouj2d"]
+offsets = PackedFloat32Array(0, 0.443946, 0.766816)
+colors = PackedColorArray(0, 0, 0, 1, 0.408329, 0.408329, 0.40833, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6lv1d"]
+gradient = SubResource("Gradient_ouj2d")
+
+[sub_resource type="Sky" id="Sky_wpdew"]
+sky_material = ExtResource("1_cs1wa")
+
+[resource]
+background_mode = 2
+background_energy_multiplier = 0.52
+background_canvas_max_layer = -100
+sky = SubResource("Sky_wpdew")
+ambient_light_source = 2
+ambient_light_color = Color(0.482353, 0.458824, 0.435294, 1)
+ssil_radius = 10.38
+ssil_intensity = 1.92
+ssil_sharpness = 0.42
+ssil_normal_rejection = 0.15
+glow_strength = 0.54
+glow_bloom = 1.0
+fog_density = 0.001
+fog_sky_affect = 0.666
+volumetric_fog_density = 0.0
+volumetric_fog_emission_energy = 0.31
+volumetric_fog_detail_spread = 2.82843
+volumetric_fog_sky_affect = 0.987
+adjustment_enabled = true
+adjustment_color_correction = SubResource("GradientTexture1D_6lv1d")

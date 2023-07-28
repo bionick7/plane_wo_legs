@@ -13,11 +13,9 @@ extends Resource
 @export_group("Detection")
 @export var sees_all: bool
 @export var sees_through_clouds: bool = false
-@export_range(0, 1, 0.001, "or_greater", "hide_slider", "suffix:°") var view_cone_angle: float:
-	set(x): view_cone_angle_rad = deg_to_rad(x)
+@export_range(0, 1, 0.001, "or_greater", "hide_slider", "radians", "degrees") var view_cone_angle: float
 @export_range(0, 1, 0.001, "or_greater", "hide_slider", "suffix:m") var view_cone_radius: float:
 	set(x): view_cone_radius_sqr = x*x
 @export var search_interval: float
 
-var view_cone_angle_rad: float
 var view_cone_radius_sqr: float

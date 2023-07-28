@@ -104,11 +104,7 @@ func update_velocity_rotation(dt: float, manual: bool):
 	# var aero_force = basis.inverse() * flight_dynamics.get_kinematics(velocity, angular_velocity)[0]
 	# var L_D = -aero_force.y / aero_force.z
 	# logger.write_line("L/D = %f" % L_D)
-	
-	if frozen and not manual_step:
-		velocity = Vector3.ZERO
-		angular_velocity = Vector3.ZERO
-	
+		
 	var t0 = Time.get_ticks_usec()
 	for i in range(between_steps):
 		var step = dt / between_steps

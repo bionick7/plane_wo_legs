@@ -16,9 +16,7 @@ func setup(anchor: TrackingAnchor) -> void:
 	assert(is_instance_valid(healthbar_material))
 	tracking_anchor = anchor
 	if tracking_anchor.has_health():
-		tracking_anchor.hitbox.on_take_dammage.connect(_on_take_dammage)
-		healthbar_material.set_shader_parameter("total_hp", tracking_anchor.get_max_health())
-		_update_hp()
+		tracking_anchor.hitbox.set_healthbar(healthbar_material)
 
 func update_pos(view_pos: Vector3, view_vel: Vector3, up: Vector3) -> void:
 	if not is_instance_valid(tracking_anchor):
@@ -50,9 +48,3 @@ func update_pos(view_pos: Vector3, view_vel: Vector3, up: Vector3) -> void:
 		var aim_up = (up - up.project(aim_dir)).normalized()
 		aiming_point.transform = Transform3D(aim_up.cross(aim_dir), aim_up, aim_dir, Vector3.ZERO).orthonormalized()
 
-func _on_take_dammage(ammount: int) -> void:
-	# TODO: animation
-	_update_hp()
-
-func _update_hp() -> void:
-	healthbar_material.set_shader_parameter("current_hp", tracking_anchor.get_health())

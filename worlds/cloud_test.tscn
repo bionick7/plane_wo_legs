@@ -1,0 +1,55 @@
+[gd_scene load_steps=10 format=3 uid="uid://xdjg2rhqiqjs"]
+
+[ext_resource type="PackedScene" uid="uid://blfu2gedo8ypm" path="res://environment/cylinder_shell.tscn" id="1_e6l4s"]
+[ext_resource type="PackedScene" uid="uid://cx5g1coyfw0er" path="res://support/post_processing.tscn" id="2_8edds"]
+[ext_resource type="Shader" path="res://environment/sky/post_processing.gdshader" id="3_8m2gp"]
+[ext_resource type="Environment" uid="uid://bh6yorpeite73" path="res://environment/environment.tres" id="4_niyfi"]
+[ext_resource type="Script" path="res://support/debugging/CloudDebugger.gd" id="5_w110g"]
+
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_opu4t"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y3qkf"]
+render_priority = 0
+shader = ExtResource("3_8m2gp")
+shader_parameter/cloud_cover_speed = 0.001
+shader_parameter/threshhold = 0.1
+shader_parameter/cloud_flatten = 0.0
+shader_parameter/noise_weights = Vector4(0.633, 0.34, 0.072, 0)
+shader_parameter/noise_weights_detail = Vector4(0.013, 0.021, 0.034, -0.007)
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sky_color = Color(0.36, 0.56, 0.6, 1)
+shader_parameter/noise = SubResource("ImageTexture3D_opu4t")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_owfnx"]
+cull_mode = 2
+depth_draw_mode = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+use_point_size = true
+point_size = 3.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_pyyl3"]
+
+[node name="cloud_test" type="Node3D"]
+
+[node name="CylinderShell" parent="." instance=ExtResource("1_e6l4s")]
+
+[node name="PostProcessing" parent="." instance=ExtResource("2_8edds")]
+material_override = SubResource("ShaderMaterial_y3qkf")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("4_niyfi")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+near = 1.0
+far = 16000.0
+
+[node name="CloudDebugger" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_owfnx")
+cast_shadow = 0
+ignore_occlusion_culling = true
+mesh = SubResource("ArrayMesh_pyyl3")
+script = ExtResource("5_w110g")
+debug_region = AABB(-4000, -4000, -6000, 8000, 8000, 12000)
+point_spacing = 100.0

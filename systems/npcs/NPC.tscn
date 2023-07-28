@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://boiwc4noggv3e"]
+[gd_scene load_steps=36 format=3 uid="uid://boiwc4noggv3e"]
 
 [ext_resource type="Script" path="res://systems/npcs/npc.gd" id="1_kh4hl"]
 [ext_resource type="Resource" uid="uid://b8clalfrqce" path="res://systems/npcs/default_behaviour.tres" id="2_hbnob"]
@@ -24,7 +24,7 @@
 
 [sub_resource type="Curve" id="Curve_0y60n"]
 max_value = 2.0
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.02, 0), 0.0, 0.0, 0, 0, Vector2(0.04, 0), 0.0, 0.0, 0, 0, Vector2(0.06, 0), 0.0, 0.0, 0, 0, Vector2(0.08, 0.188829), 0.0, 0.0, 0, 0, Vector2(0.1, 0.405167), 0.0, 0.0, 0, 0, Vector2(0.12, 0.631893), 0.0, 0.0, 0, 0, Vector2(0.14, 0.853378), 0.0, 0.0, 0, 0, Vector2(0.16, 1.05629), 0.0, 0.0, 0, 0, Vector2(0.18, 1.23015), 0.0, 0.0, 0, 0, Vector2(0.2, 1.36763), 0.0, 0.0, 0, 0, Vector2(0.22, 1.4646), 0.0, 0.0, 0, 0, Vector2(0.24, 1.52005), 0.0, 0.0, 0, 0, Vector2(0.26, 1.53568), 0.0, 0.0, 0, 0, Vector2(0.28, 1.5155), 0.0, 0.0, 0, 0, Vector2(0.3, 1.4653), 0.0, 0.0, 0, 0, Vector2(0.32, 1.39202), 0.0, 0.0, 0, 0, Vector2(0.34, 1.30319), 0.0, 0.0, 0, 0, Vector2(0.36, 1.20636), 0.0, 0.0, 0, 0, Vector2(0.38, 1.10867), 0.0, 0.0, 0, 0, Vector2(0.4, 1.01639), 0.0, 0.0, 0, 0, Vector2(0.42, 0.934674), 0.0, 0.0, 0, 0, Vector2(0.44, 0.867351), 0.0, 0.0, 0, 0, Vector2(0.46, 0.816867), 0.0, 0.0, 0, 0, Vector2(0.48, 0.784295), 0.0, 0.0, 0, 0, Vector2(0.5, 0.769441), 0.0, 0.0, 0, 0, Vector2(0.52, 0.771017), 0.0, 0.0, 0, 0, Vector2(0.54, 0.786858), 0.0, 0.0, 0, 0, Vector2(0.56, 0.814173), 0.0, 0.0, 0, 0, Vector2(0.58, 0.849792), 0.0, 0.0, 0, 0, Vector2(0.6, 0.890424), 0.0, 0.0, 0, 0, Vector2(0.62, 0.932871), 0.0, 0.0, 0, 0, Vector2(0.64, 0.974224), 0.0, 0.0, 0, 0, Vector2(0.66, 1.01201), 0.0, 0.0, 0, 0, Vector2(0.68, 1.04429), 0.0, 0.0, 0, 0, Vector2(0.7, 1.06971), 0.0, 0.0, 0, 0, Vector2(0.72, 1.08754), 0.0, 0.0, 0, 0, Vector2(0.74, 1.09759), 0.0, 0.0, 0, 0, Vector2(0.76, 1.10022), 0.0, 0.0, 0, 0, Vector2(0.78, 1.09619), 0.0, 0.0, 0, 0, Vector2(0.8, 1.08659), 0.0, 0.0, 0, 0, Vector2(0.82, 1.07272), 0.0, 0.0, 0, 0, Vector2(0.84, 1.05601), 0.0, 0.0, 0, 0, Vector2(0.86, 1.03786), 0.0, 0.0, 0, 0, Vector2(0.88, 1.01959), 0.0, 0.0, 0, 0, Vector2(0.9, 1.00239), 0.0, 0.0, 0, 0, Vector2(0.92, 0.987192), 0.0, 0.0, 0, 0, Vector2(0.94, 0.974717), 0.0, 0.0, 0, 0, Vector2(0.96, 0.965406), 0.0, 0.0, 0, 0, Vector2(0.98, 0.95945), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0.956804), 0.0, 0.0, 0, 0, Vector2(0, 0.95945), 0.0, 0.0, 0, 0, Vector2(0.02, 0.894053), 0.0, 0.0, 0, 0, Vector2(0.04, 0.782715), 0.0, 0.0, 0, 0, Vector2(0.06, 0.635927), 0.0, 0.0, 0, 0, Vector2(0.08, 0.656246), 0.0, 0.0, 0, 0, Vector2(0.1, 0.695725), 0.0, 0.0, 0, 0, Vector2(0.12, 0.749462), 0.0, 0.0, 0, 0, Vector2(0.14, 0.812272), 0.0, 0.0, 0, 0, Vector2(0.16, 0.879047), 0.0, 0.0, 0, 0, Vector2(0.18, 0.945071), 0.0, 0.0, 0, 0, Vector2(0.2, 1.00627), 0.0, 0.0, 0, 0, Vector2(0.22, 1.05938), 0.0, 0.0, 0, 0, Vector2(0.24, 1.10206), 0.0, 0.0, 0, 0, Vector2(0.26, 1.13294), 0.0, 0.0, 0, 0, Vector2(0.28, 1.15154), 0.0, 0.0, 0, 0, Vector2(0.3, 1.15823), 0.0, 0.0, 0, 0, Vector2(0.32, 1.15408), 0.0, 0.0, 0, 0, Vector2(0.34, 1.14072), 0.0, 0.0, 0, 0, Vector2(0.36, 1.12015), 0.0, 0.0, 0, 0, Vector2(0.38, 1.09458), 0.0, 0.0, 0, 0, Vector2(0.4, 1.06625), 0.0, 0.0, 0, 0, Vector2(0.42, 1.03729), 0.0, 0.0, 0, 0, Vector2(0.44, 1.00962), 0.0, 0.0, 0, 0, Vector2(0.46, 0.984813), 0.0, 0.0, 0, 0, Vector2(0.48, 0.964085), 0.0, 0.0, 0, 0, Vector2(0.5, 0.948231), 0.0, 0.0, 0, 0, Vector2(0.52, 0.937639), 0.0, 0.0, 0, 0, Vector2(0.54, 0.932317), 0.0, 0.0, 0, 0, Vector2(0.56, 0.931939), 0.0, 0.0, 0, 0, Vector2(0.58, 0.935908), 0.0, 0.0, 0, 0, Vector2(0.6, 0.943426), 0.0, 0.0, 0, 0, Vector2(0.62, 0.953573), 0.0, 0.0, 0, 0, Vector2(0.64, 0.965378), 0.0, 0.0, 0, 0, Vector2(0.66, 0.977886), 0.0, 0.0, 0, 0, Vector2(0.68, 0.990219), 0.0, 0.0, 0, 0, Vector2(0.7, 1.00162), 0.0, 0.0, 0, 0, Vector2(0.72, 1.01149), 0.0, 0.0, 0, 0, Vector2(0.74, 1.01939), 0.0, 0.0, 0, 0, Vector2(0.76, 1.02507), 0.0, 0.0, 0, 0, Vector2(0.78, 1.02846), 0.0, 0.0, 0, 0, Vector2(0.8, 1.02962), 0.0, 0.0, 0, 0, Vector2(0.82, 1.02876), 0.0, 0.0, 0, 0, Vector2(0.84, 1.0262), 0.0, 0.0, 0, 0, Vector2(0.86, 1.0223), 0.0, 0.0, 0, 0, Vector2(0.88, 1.01749), 0.0, 0.0, 0, 0, Vector2(0.9, 1.01217), 0.0, 0.0, 0, 0, Vector2(0.92, 1.00676), 0.0, 0.0, 0, 0, Vector2(0.94, 1.00159), 0.0, 0.0, 0, 0, Vector2(0.96, 0.99698), 0.0, 0.0, 0, 0, Vector2(0.98, 0.993136), 0.0, 0.0, 0, 0]
 point_count = 51
 
 [sub_resource type="Resource" id="Resource_t3svr"]
@@ -35,11 +35,14 @@ keep_normalized = true
 frequency = 1.0
 damping_ratio = 0.5
 r = 2.0
-noise = null
+noise = 0.0
 delta_limit = 1000.0
 step_response_time = 2.0
 generate_step_response = false
 step_respones_output = SubResource("Curve_0y60n")
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_dibl5"]
+resource_local_to_scene = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5fyy"]
 flip_faces = true
@@ -90,7 +93,7 @@ size = Vector3(2.63042, 1, 4.97663)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mb6ig"]
 resource_local_to_scene = true
 shader = ExtResource("19_674i7")
-shader_parameter/global_start_velocity = Vector3(0, 0, 1000)
+shader_parameter/global_start_velocity = Vector3(-0.000174846, -4.37114e-05, 1000)
 shader_parameter/include_centrifugal = false
 shader_parameter/include_coreolis = false
 
@@ -126,6 +129,7 @@ gun = NodePath("Gun")
 hitbox = NodePath("Hitbox")
 
 [node name="DebugDrawer" parent="." instance=ExtResource("2_shsko")]
+mesh = SubResource("ImmediateMesh_dibl5")
 
 [node name="Visuals" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.29681e-08, 0.474521, -8.01723)

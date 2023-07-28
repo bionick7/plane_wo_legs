@@ -127,10 +127,12 @@ shader_parameter/max_aoa_neg = -1.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6brfk"]
 shader = ExtResource("9_luoj4")
 shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/regen_color = Color(1, 1, 1, 1)
 shader_parameter/total_hp = 5
-shader_parameter/current_hp = 5
+shader_parameter/current_hp = 4
+shader_parameter/regen_progress = 0.5
 shader_parameter/spacing = 0.09
-shader_parameter/border = 0.19
+shader_parameter/border = 0.16
 
 [node name="HUDRoot" type="CanvasLayer"]
 script = ExtResource("1_pbuuj")

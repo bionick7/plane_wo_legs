@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_f2ilx")
 use_gun = true
-gun_shoot_distance = 800.0
+gun_shoot_distance = 1500.0
 gun_shoot_delta = 20.0
 gun_min_burst_length = 1.0
 gun_max_burst_length = 2.0

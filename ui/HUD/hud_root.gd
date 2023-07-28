@@ -24,9 +24,7 @@ func _ready():
 		else:
 			_set_aoa_limit(-1)
 			
-	player.hitbox.on_take_dammage.connect(_update_player_health)
-	$PlayerHP.material.set_shader_parameter("total_hp", player.hitbox.max_health)
-	_update_player_health(0)
+	player.hitbox.set_healthbar($PlayerHP.material)
 
 func _input(event: InputEvent):
 	if event.is_action_pressed("toggle_hud"):
@@ -75,5 +73,3 @@ func _set_aoa_limit(aoa_degrees: float):
 		%AoALimitPivot.hide()
 	%HUDControl/Heading2/BodyCenteredSphere.material.set_shader_parameter("max_aoa_pos", aoa_degrees)
 
-func _update_player_health(dmg: int):
-	$PlayerHP.material.set_shader_parameter("current_hp", player.hitbox.health)

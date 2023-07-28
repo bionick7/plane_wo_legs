@@ -86,7 +86,7 @@ func _update_step_response() -> void:
 		return
 	var _keep_normalized = keep_normalized
 	keep_normalized = false
-	initialize_to(Vector3.ZERO, Vector3.ZERO)
+	initialize_to(y, dydt)
 	print("dt_crit = %f s" % dt_crit)
 	if not is_instance_valid(step_respones_output):
 		step_respones_output = Curve.new()

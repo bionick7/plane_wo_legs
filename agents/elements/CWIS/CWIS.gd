@@ -1,21 +1,36 @@
+@tool
 class_name CWIS
 extends Element
 
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var hostility_flags
 @export_placeholder("Only for reading") var _ai_text_summary: String = ""
 
-@export_range(-90.0, 90.0, 0.1, "suffix:°") var min_elevation = 0.0
-@export_range(-90.0, 90.0, 0.1, "suffix:°") var max_elevation = 90.0
-@export_range(-360.0, 360.0, 0.1, "suffix:°") var min_transverse = -180.0
-@export_range(-360.0, 360.0, 0.1, "suffix:°") var max_transverse = 180.0
+@export_range(-90.0, 90.0, 0.1, "degrees", "radians") var min_elevation = 0.0
+@export_range(-90.0, 90.0, 0.1, "degrees", "radians") var max_elevation = PI/2
+@export_range(-360.0, 360.0, 0.1, "degrees", "radians") var min_transverse = -PI
+@export_range(-360.0, 360.0, 0.1, "degrees", "radians") var max_transverse = PI
 
 @export var behaviour: ShooterBehavior
+@export var aim_dynamics: ProcAnim2Order
+
+@export_group("Debug")
+var _aim_in_editor: bool = false
+@export var aim_in_editor: bool:
+	get: return _aim_in_editor
+	set(x):
+		if (x): _configure_for_editor()
+		else:
+			$Turret.basis = Basis.IDENTITY
+			$Barrel1.basis = Basis.IDENTITY
+		_aim_in_editor = x
+
+@export_group("References")
 @export var turret: Node3D
 @export var barrel_paths: Array[NodePath]
 @export var gun: Gun
-@export var aim_dynamics: ProcAnim2Order
 
 @onready var debug_drawer = $DebugDrawer
+@onready var hinge = $Hinge
 @onready var barrels = barrel_paths.map(get_node)
 
 var target: TrackingAnchor
@@ -36,11 +51,20 @@ func _ready():
 	if not _is_target_valid():
 		_search_new_target_async()
 
+var editor_target_pos = Vector3.ZERO
+var editor_target: Node3D
+	
+func _process(dt: float):
+	if Engine.is_editor_hint() and aim_in_editor:
+		var editor_target_vel = (editor_target.global_position - editor_target_pos) / dt
+		editor_target_pos = editor_target.global_position
+		_aim_at_particle(editor_target_pos, editor_target_vel, dt)
+	elif not Engine.is_editor_hint():
+		_ai_logic(dt)
+
 func _physics_process(dt: float):
 	velocity = (global_position - _pos) / dt
 	_pos = global_position
-	
-	_ai_logic(dt)
 
 func _get_possible_targets() -> Array[TrackingAnchor]:
 	var res: Array[TrackingAnchor] = []
@@ -76,27 +100,37 @@ func _ai_logic(dt: float) -> void:
 	if not _is_target_valid() and not is_searching:
 		_search_new_target_async()
 	if _is_target_valid():
-		var rel_pos = target.global_position - global_position
-		var rel_vel = target.velocity - velocity
-		var preaim_time = NPCPlane.preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
-		var ideal_aim = lerp(rel_pos, rel_pos + rel_vel * preaim_time, behaviour.gun_preaim_factor).normalized()
-		var aim = aim_dynamics.update(ideal_aim, dt)
-		var free_aim = _aim_turret(aim)
-		var deviation = ideal_aim.angle_to(_get_real_point_dir()) * rel_pos.length()
-		var on_target = free_aim and preaim_time > 0 and behaviour.use_gun and deviation < behaviour.gun_shoot_delta and rel_pos.length() < behaviour.gun_shoot_distance
-		if on_target and not gun.emitting:
-			gun.start_fire()
-		if gun.emitting and not on_target:
-			gun.cease_fire()
+		_aim_at_particle(target.global_position, target.velocity, dt)
 		_ai_text_summary = "Chase target \"%s\"" % target.ref.name
-		debug_drawer.draw_line_global(global_position, global_position + ideal_aim * 50, Color.RED)
-		debug_drawer.draw_line_global(global_position, global_position + aim * 50, Color.ORANGE)
 		return
+
+func _aim_at_particle(tgt_pos: Vector3, tgt_vel: Vector3, dt: float) -> void:
+	var rel_pos = tgt_pos - hinge.global_position
+	var rel_vel = tgt_vel - velocity
+	var muzzle_vel = 1000
+	if is_instance_valid(gun): 
+		muzzle_vel = gun.muzzle_velocity
+	var preaim_time = NPCPlane.preaim_simple(rel_pos, rel_vel, muzzle_vel)
+	var ideal_aim = lerp(rel_pos, rel_pos + rel_vel * preaim_time, behaviour.gun_preaim_factor).normalized()
+	var aim = aim_dynamics.update(ideal_aim, dt)
+	var free_aim = _aim_turret(aim)
+	
+	if Engine.is_editor_hint():
+		return
+		
+	var deviation = ideal_aim.angle_to(_get_real_point_dir()) * rel_pos.length()
+	var on_target = free_aim and preaim_time > 0 and behaviour.use_gun and deviation < behaviour.gun_shoot_delta and rel_pos.length() < behaviour.gun_shoot_distance
+	if on_target and not gun.emitting:
+		gun.start_fire()
+	if gun.emitting and not on_target:
+		gun.cease_fire()
+	debug_drawer.draw_line_global(global_position, global_position + ideal_aim * 50, Color.RED)
+	debug_drawer.draw_line_global(global_position, global_position + aim * 50, Color.ORANGE)
 
 func _aim_turret(dir: Vector3, test: bool = false) -> bool:
 	var r = _cartesian2spherical(dir)
 	
-	if r.x < deg_to_rad(min_elevation) || r.x > deg_to_rad(max_elevation):
+	if r.x < min_elevation || r.x > max_elevation:
 		return false
 	
 	if not test:
@@ -120,7 +154,7 @@ func _cartesian2spherical(dir: Vector3) -> Vector2:
 	var barrel_up = dir.cross(barrel_side).normalized()
 	
 	var elevation = dir.signed_angle_to(turret_looking, turret_side)
-	var true_elevation = clamp(elevation, deg_to_rad(min_elevation), deg_to_rad(max_elevation))
+	var true_elevation = clamp(elevation, min_elevation, max_elevation)
 	
 	var transverse = _fore().signed_angle_to(turret_looking, turret_up)
 	var true_transverse = transverse #  Change if needed
@@ -148,3 +182,13 @@ func _set_elevation_transverse(elevation: float, transverse: float) -> void:
 	for b in barrels:
 		b.transform = Transform3D(barrelRot, b.position);
 
+func  _configure_for_editor() -> void:
+	# Makes some assumptions about the scene. Intended to be used with CWIS
+	editor_target = $EditorTarget
+	editor_target_pos = editor_target.global_position
+	turret = $Turret
+	hinge = $Hinge
+	gun = $Barrel1/Gun
+	debug_drawer = $DebugDrawer
+	barrels = [$Barrel1]
+	aim_dynamics.initialize_to(_get_real_point_dir(), Vector3.ZERO)

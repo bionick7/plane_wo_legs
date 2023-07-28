@@ -96,7 +96,7 @@ vec4 find_rect_limits(vec3 ro, vec3 rd, vec3 box_extents, float max_dist) {
 
 float get_coverage(vec2 uv) {
 	//return 1.0;
-	uv /= 6.28;
+	uv /= TAU;
 	uv += vec2(cloud_cover_speed, 0) * cloud_anim_time;
 	return smoothstep(0.4, 1.0, texture(cloud_cover, uv).r);
 }

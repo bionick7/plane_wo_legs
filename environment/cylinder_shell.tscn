@@ -1,0 +1,82 @@
+[gd_scene load_steps=7 format=3 uid="uid://blfu2gedo8ypm"]
+
+[ext_resource type="PackedScene" uid="uid://c3j3ljgqnp8eo" path="res://environment/terrain/drum_section.tscn" id="1_oh7uc"]
+[ext_resource type="Shader" path="res://environment/sky/outside_glass.gdshader" id="2_88ce0"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_iuum0"]
+top_radius = 4000.0
+bottom_radius = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3dj4k"]
+render_priority = 0
+shader = ExtResource("2_88ce0")
+shader_parameter/cloud_cover_speed = 0.01
+shader_parameter/fresnel_color = null
+shader_parameter/metal_color = null
+shader_parameter/grid_thickness = 0.03
+shader_parameter/roughness = 0.3
+shader_parameter/metal_roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4w27b"]
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1pnkr"]
+material = SubResource("StandardMaterial3D_4w27b")
+flip_faces = true
+top_radius = 4002.0
+bottom_radius = 4002.0
+height = 12300.0
+
+[node name="CylinderShell" type="Node3D"]
+
+[node name="DrumCollider" type="StaticBody3D" parent="."]
+
+[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="DrumCollider"]
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="CollisionPolygon3D2" type="CollisionPolygon3D" parent="DrumCollider"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="CollisionPolygon3D3" type="CollisionPolygon3D" parent="DrumCollider"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="CollisionPolygon3D4" type="CollisionPolygon3D" parent="DrumCollider"]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0, 0)
+depth = 12000.0
+polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 774.047, -3826.11, 1164.27, -3697.39, 1529.65, -3528.99, 1886.63, -3326.8, 2221.52, -3090.04, 2541.82, -2831.29, 2826.67, -2538.35, 3095.34, -2222.33, 3329.28, -1889.32, 3528.25, -1534.84, 3697.31, -1156.5, 3830.9, -773.137, 3926.56, -391.627, 3981.92, 6.44701, 3999.97, -4683.17, 5219.55)
+
+[node name="Sections" type="Node3D" parent="."]
+
+[node name="generic2" parent="Sections" instance=ExtResource("1_oh7uc")]
+transform = Transform3D(-0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, -3463.06, 1999.34, 0)
+light_layer = 2
+
+[node name="generic4" parent="Sections" instance=ExtResource("1_oh7uc")]
+transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, 3462.12, 1997.71, 0)
+light_layer = 4
+
+[node name="generic11" parent="Sections" instance=ExtResource("1_oh7uc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4000, -0.763672)
+light_layer = 8
+
+[node name="Cap1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -5992.55)
+mesh = SubResource("CylinderMesh_iuum0")
+skeleton = NodePath("../..")
+
+[node name="Cap2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 6000)
+mesh = SubResource("CylinderMesh_iuum0")
+skeleton = NodePath("../..")
+
+[node name="Drum" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_3dj4k")
+mesh = SubResource("CylinderMesh_1pnkr")
+skeleton = NodePath("../..")

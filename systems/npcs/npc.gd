@@ -61,7 +61,7 @@ func update_velocity_rotation(dt: float, manual: bool) -> void:
 	var load_acc = tgt_acc - CommonPhysics.get_acc(global_position, velocity)
 	
 	var fore = _next_velocity.normalized()
-	var next_up = angular_move_toward(plane_up, load_acc, dt * behaviour.max_roll_rate_rad).normalized()
+	var next_up = angular_move_toward(plane_up, load_acc, dt * behaviour.max_roll_rate).normalized()
 	roll_speed = next_up.signed_angle_to(plane_up, fore) / dt
 	roll_acceleration = 0  # ??? how to smooth out 
 	plane_up = next_up
@@ -149,7 +149,7 @@ func _get_collision_relevance(test: PlaneInterface) -> float:
 	
 func _is_beeing_chased_by(test: PlaneInterface) -> bool:
 	var rel_pos = test.global_position - global_position
-	if velocity.angle_to(-rel_pos) > behaviour.chase_cone_angle_rad:
+	if velocity.angle_to(-rel_pos) > behaviour.chase_cone_angle:
 		return false
 	if rel_pos.length_squared() > behaviour.chase_cone_radius_sqr:
 		return false
@@ -236,7 +236,7 @@ func _is_target_valid() -> bool:
 func _is_visible(tgt: TrackingAnchor) -> bool:
 	if not behaviour.sees_all:
 		var rel_pos = tgt.global_position - global_position
-		if rel_pos.length_squared() > behaviour.view_cone_angle_rad:
+		if rel_pos.length_squared() > behaviour.view_cone_angle:
 			return false
 		if velocity.angle_to(rel_pos) > behaviour.view_cone_radius_sqr:
 			return false

@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" path="res://environment/sky/voronoi_generator.gd" id="1_4p35o"]
 
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_wysjy"]
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_p5k3t"]
 
 [resource]
 script = ExtResource("1_4p35o")
 lacunarity = 2.0
 output_type = "Distance"
 save_path = "res://environment/sky/generated/clouds_noise"
-voronoi = SubResource("ImageTexture3D_wysjy")
+voronoi = SubResource("ImageTexture3D_p5k3t")
 generate = false
 load = false
