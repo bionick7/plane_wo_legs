@@ -53,10 +53,7 @@ func _physics_process(dt: float):
 		var collision_velocity = (velocity - collision.get_collider_velocity()).dot(collision.get_normal())
 		if collision_velocity > crash_tolerance:
 			die()
-		else: 
-			velocity = collision.get_collider_velocity()
-			
-			
+	
 	_handle_pathtrace()
 
 func update_velocity_rotation(dt: float, manual: bool) -> void:

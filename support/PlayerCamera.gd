@@ -1,3 +1,4 @@
+class_name PlayerCamera
 extends Node3D
 
 @export var camera_yaw_rate = 1

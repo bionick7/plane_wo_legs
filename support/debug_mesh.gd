@@ -55,7 +55,7 @@ func draw_line(from: Vector3, to: Vector3, color: Color) -> void:
 func draw_point(point: Vector3, color: Color) -> void:
 	draw_line(point + Vector3.FORWARD * marker_size, point + Vector3.BACK * marker_size, color)
 	draw_line(point + Vector3.RIGHT * marker_size, point + Vector3.LEFT * marker_size, color)
-	draw_line(point + Vector3.UP * marker_size, point + Vector3.DOWN * marker_size, color)
+	draw_line(point + Vector3.UP  * marker_size, point + Vector3.DOWN * marker_size, color)
 	
 func draw_path(pts: PackedVector3Array, color: Color) -> void:
 	assert(pts.size() >= 2)

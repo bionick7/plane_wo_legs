@@ -22,7 +22,9 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @export_group("References")
 @export var flight_dynamics: Node
 @export var engine_transform: Node3D
+@export var missile_paths: Array[NodePath]
 
+@onready var missile_stack = missile_paths.map(get_node)
 @onready var center_of_mass = $COG.position
 @onready var inverse_mass = 1 / mass
 @onready var inverse_inertia_tensor = inertia_tensor.inverse()
@@ -66,11 +68,14 @@ func _process(dt: float):
 
 func _input(event: InputEvent):
 	if event.is_action_pressed("Gun"):
-		gun.start_fire()
+		if Input.is_action_pressed("lock"):
+			launch_next_missile()
+		else:
+			gun.start_fire()
 	elif event.is_action_released("Gun"):
 		gun.cease_fire()
 	
-	if event.is_action_pressed("lock"):
+	if Input.is_action_pressed("lock"):
 		var min_angle = deg_to_rad(min_lock_angle_deg)
 		var lock_candidate: TrackingAnchor = null
 		for trackable in get_tree().get_nodes_in_group("TrackingAnchors"):
@@ -85,8 +90,17 @@ func _input(event: InputEvent):
 		if is_instance_valid(lock_candidate):
 			locked_target = lock_candidate
 
+func launch_next_missile() -> Missile:
+	for missile in missile_stack:
+		if missile.is_ready(locked_target):
+			missile.launch(locked_target, velocity)
+			missile_stack.erase(missile)
+			return missile
+	return null
+
 func update_velocity_rotation(dt: float, manual: bool):
 	super.update_velocity_rotation(dt, manual)
+	# TODO: figure out dt analytically (How hard is it?)
 	const between_steps = 3
 	
 	var force_moment = [Vector3.ZERO, Vector3.ZERO]
@@ -117,8 +131,9 @@ func update_velocity_rotation(dt: float, manual: bool):
 		linear_acceleration = inverse_mass * force_moment[0] + external_acc
 		angular_acceleration = inverse_inertia_tensor * force_moment[1]
 		
-		velocity += linear_acceleration * step
-		angular_velocity += angular_acceleration * step
+		if not frozen or manual_step:
+			velocity += linear_acceleration * step
+			angular_velocity += angular_acceleration * step
 		
 		# more or less exactly from godot_body_3d.cpp
 		if not angular_velocity.is_zero_approx():

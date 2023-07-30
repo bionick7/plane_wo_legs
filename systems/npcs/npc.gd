@@ -61,7 +61,7 @@ func update_velocity_rotation(dt: float, manual: bool) -> void:
 	var load_acc = tgt_acc - CommonPhysics.get_acc(global_position, velocity)
 	
 	var fore = _next_velocity.normalized()
-	var next_up = angular_move_toward(plane_up, load_acc, dt * behaviour.max_roll_rate).normalized()
+	var next_up = NPCUtility.angular_move_toward(plane_up, load_acc, dt * behaviour.max_roll_rate).normalized()
 	roll_speed = next_up.signed_angle_to(plane_up, fore) / dt
 	roll_acceleration = 0  # ??? how to smooth out 
 	plane_up = next_up
@@ -143,7 +143,7 @@ func _get_collision_relevance(test: PlaneInterface) -> float:
 	# 1 is exact collision
 	var rel_pos = test.global_position - global_position
 	var rel_vel = test.velocity - velocity
-	var min_delta = rel_pos + rel_vel * max(get_closest_approach(rel_pos, rel_vel), 0)
+	var min_delta = rel_pos + rel_vel * max(NPCUtility.get_closest_approach(rel_pos, rel_vel), 0)
 	
 	return 1 - min_delta.length() / behaviour.plane_safe_radius
 	
@@ -166,7 +166,7 @@ func _evade_from(chaser: PlaneInterface, dt: float) -> void:
 func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 	var rel_pos = plane.global_position - global_position
 	var rel_vel = plane.velocity - velocity
-	var time_at_closest_approach = max(get_closest_approach(rel_pos, rel_vel), 0)
+	var time_at_closest_approach = max(NPCUtility.get_closest_approach(rel_pos, rel_vel), 0)
 	var plane_pos = plane.global_position + plane.velocity * time_at_closest_approach
 	var self_pos = global_position + velocity * time_at_closest_approach
 	
@@ -185,7 +185,7 @@ func _avoid_plane_collision(plane: PlaneInterface, dt: float) -> void:
 func _chase_target(dt: float) -> void:
 	var rel_pos = target.global_position - global_position
 	var rel_vel = target.get_velocity() - velocity
-	var preaim_time = preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
+	var preaim_time = NPCUtility.preaim_simple(rel_pos, rel_vel, gun.muzzle_velocity)
 	var ideal_face_dir: Vector3
 	if preaim_time >= 0:
 		ideal_face_dir = lerp(rel_pos, rel_pos + rel_vel * preaim_time, behaviour.gun_preaim_factor).normalized()
@@ -210,7 +210,7 @@ func __HELPER_FUNCTIONS__(): pass
 
 func _step_face_direction(current_dir: Vector3, dir: Vector3, turn_speed: float, dt: float) -> Vector3:
 	var acc = clamp((turn_speed*turn_speed / (behaviour.stall_speed*behaviour.stall_speed) - 1.0) * 9.81, 1, behaviour.max_acceleration)
-	return angular_move_toward(current_dir, dir, acc * dt / turn_speed, up_direction) * turn_speed
+	return NPCUtility.angular_move_toward(current_dir, dir, acc * dt / turn_speed, up_direction) * turn_speed
 
 func _get_possible_targets() -> Array[TrackingAnchor]:
 	var res: Array[TrackingAnchor] = []
@@ -269,67 +269,3 @@ func _give_burst() -> void:
 	tween.tween_callback(gun.cease_fire)
 	tween.tween_interval(behaviour.gun_cooldown)
 	tween.tween_callback(func (): allow_fire = true)
-
-# <<= ==================================== =>>
-# 				COMMON FUNCTIONS
-# <<= ==================================== =>>
-func __COMMON_FUNCTIONS__(): pass
-
-static func angular_move_toward(from: Vector3, to: Vector3, delta_angle: float, fallback_axis=Vector3.UP) -> Vector3:
-	var axis = from.cross(to).normalized()
-	if not axis.is_normalized():  # only when from and to are roughly aligned
-		axis = fallback_axis
-	var angle = from.signed_angle_to(to, axis)
-	if angle < delta_angle:
-		return to
-	return from.rotated(axis, delta_angle)
-
-# TODO: UNTESTED!
-static func preaim(pos: Vector3, vel: Vector3, muzzle_vel: float, acc: Callable) -> Vector3:
-	# Returns expected time to impact and direction of aiming in *global axis system* 
-	# Assuming no acceleration acts on the target
-	var t = preaim_simple(pos, vel, muzzle_vel)
-	var tgtpos = pos + vel * t
-	var error = Vector3.ONE * 100
-	var dt = 0.01
-	while error.length_squared() > 1:
-		var sim_pos = Vector3.ZERO
-		var sim_vel = muzzle_vel * tgtpos.normalized()
-		var sim_t = 0
-		while sim_pos.length_squared() < (pos + vel * sim_t).length_squared():
-			sim_vel += acc.call(sim_pos, sim_vel) * dt
-			sim_pos += sim_vel * dt
-			sim_t += dt
-		error = sim_pos - (pos + vel * sim_t)
-		tgtpos += error
-		t = sim_t
-	return t
-
-static func preaim_simple(pos: Vector3, vel: Vector3, muzzle_vel: float) -> float:
-	# Returns expected time to impact in *global axis system* 
-	# Assuming no acceleration acts on the bullet or target
-	if muzzle_vel <= 0 :
-		push_error("Muzzleveloxity cannot be 0")
-		return -1
-	# Quadratic equation: (v² - w²) t² + 2vx t + x² = 0, (w is muzzlevelocity)
-	var a = vel.dot(vel) - muzzle_vel*muzzle_vel
-	var b = 2 * pos.dot(vel)
-	var c = pos.dot(pos)
-	var discr = b*b - 4*a*c
-	if discr < 0:
-		# Failure: no solutions
-		return -1
-	# Always fastest solution, since sqrt > 0 and a > 0
-	var t = (-b - sqrt(discr)) / (2*a)
-	if t < 0:  # Check slower solution
-		t = (-b + sqrt(discr)) / (2*a)
-	return t
-
-static func get_closest_approach(pos: Vector3, vel: Vector3) -> float:
-	# returns time at closest approach
-	# Minimize: v² t² + 2vx t + x² = 0
-	var a = vel.dot(vel)
-	var b = 2 * pos.dot(vel)
-	var c = pos.dot(pos)
-	#2a t + b = 0
-	return -b / (2*a)

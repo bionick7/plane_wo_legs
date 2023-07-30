@@ -42,7 +42,7 @@ func update_pos(view_pos: Vector3, view_vel: Vector3, up: Vector3) -> void:
 	if draw_preaim:
 		var rel_vel = tracking_anchor.get_velocity() - view_vel
 		
-		var aim_t = NPCPlane.preaim_simple(rel_pos, rel_vel, 1000)
+		var aim_t = NPCUtility.preaim_simple(rel_pos, rel_vel, 1000)
 		
 		var aim_dir = (rel_pos + aim_t * rel_vel).normalized()
 		var aim_up = (up - up.project(aim_dir)).normalized()

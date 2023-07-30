@@ -39,26 +39,26 @@ top_radius = 4002.0
 bottom_radius = 4002.0
 height = 12300.0
 
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_opu4t"]
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_4626w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rob75"]
 render_priority = 0
 shader = ExtResource("4_sqhui")
-shader_parameter/cloud_cover_speed = 0.001
+shader_parameter/cloud_cover_speed = 0.0
 shader_parameter/threshhold = 0.1
 shader_parameter/cloud_flatten = 0.0
 shader_parameter/noise_weights = Vector4(0.633, 0.34, 0.072, 0)
 shader_parameter/noise_weights_detail = Vector4(0.013, 0.021, 0.034, -0.007)
 shader_parameter/sun_color = Color(1, 1, 1, 1)
 shader_parameter/sky_color = Color(0.36, 0.56, 0.6, 1)
-shader_parameter/noise = SubResource("ImageTexture3D_opu4t")
+shader_parameter/noise = SubResource("ImageTexture3D_4626w")
 
 [sub_resource type="Curve" id="Curve_0y60n"]
 max_value = 2.0
 _data = [Vector2(0, 0.956804), 0.0, 0.0, 0, 0, Vector2(0, 0.95945), 0.0, 0.0, 0, 0, Vector2(0.02, 0.894053), 0.0, 0.0, 0, 0, Vector2(0.04, 0.782715), 0.0, 0.0, 0, 0, Vector2(0.06, 0.635927), 0.0, 0.0, 0, 0, Vector2(0.08, 0.656246), 0.0, 0.0, 0, 0, Vector2(0.1, 0.695725), 0.0, 0.0, 0, 0, Vector2(0.12, 0.749462), 0.0, 0.0, 0, 0, Vector2(0.14, 0.812272), 0.0, 0.0, 0, 0, Vector2(0.16, 0.879047), 0.0, 0.0, 0, 0, Vector2(0.18, 0.945071), 0.0, 0.0, 0, 0, Vector2(0.2, 1.00627), 0.0, 0.0, 0, 0, Vector2(0.22, 1.05938), 0.0, 0.0, 0, 0, Vector2(0.24, 1.10206), 0.0, 0.0, 0, 0, Vector2(0.26, 1.13294), 0.0, 0.0, 0, 0, Vector2(0.28, 1.15154), 0.0, 0.0, 0, 0, Vector2(0.3, 1.15823), 0.0, 0.0, 0, 0, Vector2(0.32, 1.15408), 0.0, 0.0, 0, 0, Vector2(0.34, 1.14072), 0.0, 0.0, 0, 0, Vector2(0.36, 1.12015), 0.0, 0.0, 0, 0, Vector2(0.38, 1.09458), 0.0, 0.0, 0, 0, Vector2(0.4, 1.06625), 0.0, 0.0, 0, 0, Vector2(0.42, 1.03729), 0.0, 0.0, 0, 0, Vector2(0.44, 1.00962), 0.0, 0.0, 0, 0, Vector2(0.46, 0.984813), 0.0, 0.0, 0, 0, Vector2(0.48, 0.964085), 0.0, 0.0, 0, 0, Vector2(0.5, 0.948231), 0.0, 0.0, 0, 0, Vector2(0.52, 0.937639), 0.0, 0.0, 0, 0, Vector2(0.54, 0.932317), 0.0, 0.0, 0, 0, Vector2(0.56, 0.931939), 0.0, 0.0, 0, 0, Vector2(0.58, 0.935908), 0.0, 0.0, 0, 0, Vector2(0.6, 0.943426), 0.0, 0.0, 0, 0, Vector2(0.62, 0.953573), 0.0, 0.0, 0, 0, Vector2(0.64, 0.965378), 0.0, 0.0, 0, 0, Vector2(0.66, 0.977886), 0.0, 0.0, 0, 0, Vector2(0.68, 0.990219), 0.0, 0.0, 0, 0, Vector2(0.7, 1.00162), 0.0, 0.0, 0, 0, Vector2(0.72, 1.01149), 0.0, 0.0, 0, 0, Vector2(0.74, 1.01939), 0.0, 0.0, 0, 0, Vector2(0.76, 1.02507), 0.0, 0.0, 0, 0, Vector2(0.78, 1.02846), 0.0, 0.0, 0, 0, Vector2(0.8, 1.02962), 0.0, 0.0, 0, 0, Vector2(0.82, 1.02876), 0.0, 0.0, 0, 0, Vector2(0.84, 1.0262), 0.0, 0.0, 0, 0, Vector2(0.86, 1.0223), 0.0, 0.0, 0, 0, Vector2(0.88, 1.01749), 0.0, 0.0, 0, 0, Vector2(0.9, 1.01217), 0.0, 0.0, 0, 0, Vector2(0.92, 1.00676), 0.0, 0.0, 0, 0, Vector2(0.94, 1.00159), 0.0, 0.0, 0, 0, Vector2(0.96, 0.99698), 0.0, 0.0, 0, 0, Vector2(0.98, 0.993136), 0.0, 0.0, 0, 0]
 point_count = 51
 
-[sub_resource type="Resource" id="Resource_y2a5x"]
+[sub_resource type="Resource" id="Resource_g407o"]
 resource_local_to_scene = true
 script = ExtResource("12_3f8jp")
 enabled = true
@@ -72,7 +72,7 @@ step_response_time = 2.0
 generate_step_response = false
 step_respones_output = SubResource("Curve_0y60n")
 
-[sub_resource type="Resource" id="Resource_qiy1j"]
+[sub_resource type="Resource" id="Resource_n3xo2"]
 resource_local_to_scene = true
 script = ExtResource("12_3f8jp")
 enabled = true
@@ -122,7 +122,7 @@ material_override = SubResource("ShaderMaterial_rob75")
 cast_shadow = 0
 
 [node name="Player" parent="." instance=ExtResource("5_yx4hp")]
-transform = Transform3D(-0.999834, 0, -0.0182376, 0, 1, 0, 0.0182376, 0, -0.999834, 127.052, 75.4487, 2679.94)
+transform = Transform3D(0.970486, 0, -0.24116, 0, 1, 0, 0.24116, 0, 0.970486, -34.8662, -3592.54, -2941.3)
 initial_velocity_local = Vector3(0, 0, 100)
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
@@ -130,7 +130,7 @@ remote_path = NodePath("../../CameraRef")
 update_scale = false
 
 [node name="CameraRef" parent="." instance=ExtResource("6_1v211")]
-transform = Transform3D(-0.999834, 0, -0.0182377, 0, 1, 0, 0.0182377, 0, -0.999834, 127.052, 75.4487, 2679.94)
+transform = Transform3D(0.970485, 0, -0.24116, 0, 1, 0, 0.24116, 0, 0.970485, -34.8662, -3592.54, -2941.3)
 
 [node name="Camera" parent="CameraRef/CameraHinge" index="0"]
 transform = Transform3D(-1.00001, 6.36649e-12, 8.73114e-08, 6.36646e-12, 1.00001, -2.3283e-10, -8.73115e-08, -2.32831e-10, -1.00001, 3.517, 6.441, -26.905)
@@ -209,8 +209,9 @@ environment = ExtResource("8_cktf8")
 
 [node name="NPC" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 2.12133e-06, -3611.01, -2380.86)
-aim_dynamics = SubResource("Resource_y2a5x")
+aim_dynamics = SubResource("Resource_g407o")
 frozen = false
+draw_pathtrace = true
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="NPC"]
 remote_path = NodePath("../../CameraRef")
@@ -220,8 +221,9 @@ update_scale = false
 
 [node name="NPC2" parent="." instance=ExtResource("9_h1300")]
 transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3598.88, -2380.86)
-aim_dynamics = SubResource("Resource_qiy1j")
+aim_dynamics = SubResource("Resource_n3xo2")
 frozen = false
+draw_pathtrace = true
 
 [node name="Fortress" parent="." instance=ExtResource("12_lqemq")]
 

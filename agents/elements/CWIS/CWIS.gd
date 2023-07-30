@@ -110,7 +110,7 @@ func _aim_at_particle(tgt_pos: Vector3, tgt_vel: Vector3, dt: float) -> void:
 	var muzzle_vel = 1000
 	if is_instance_valid(gun): 
 		muzzle_vel = gun.muzzle_velocity
-	var preaim_time = NPCPlane.preaim_simple(rel_pos, rel_vel, muzzle_vel)
+	var preaim_time = NPCUtility.preaim_simple(rel_pos, rel_vel, muzzle_vel)
 	var ideal_aim = lerp(rel_pos, rel_pos + rel_vel * preaim_time, behaviour.gun_preaim_factor).normalized()
 	var aim = aim_dynamics.update(ideal_aim, dt)
 	var free_aim = _aim_turret(aim)

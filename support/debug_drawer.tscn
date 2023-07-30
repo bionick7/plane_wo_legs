@@ -14,5 +14,7 @@ resource_local_to_scene = true
 [node name="DebugDrawer" type="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.349595, -0.0889878)
 material_override = SubResource("StandardMaterial3D_ypb7l")
+extra_cull_margin = 16384.0
+ignore_occlusion_culling = true
 mesh = SubResource("ImmediateMesh_ccvhc")
 script = ExtResource("1_ayfc6")

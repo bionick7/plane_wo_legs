@@ -31,6 +31,10 @@ func _input(event: InputEvent):
 		visible = not visible
 
 func _process(dt: float):
+	if not is_instance_valid(player):
+		hide()
+		return
+	
 	var base_rot: Basis = Basis.from_euler(Vector3.UP * PI)
 	hud_camera.global_transform.basis = main_camera_hinge.global_transform.basis * base_rot
 	

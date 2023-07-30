@@ -104,9 +104,9 @@ func _evaluate_texture_2d(texture2d: Texture2D, uv: Vector2) -> float:
 	return texture2d.get_image().get_pixelv(uv_index).r
 	
 func _evaluate_voronoi(pos: Vector3) -> Vector4:
-	pos.x = fposmod(pos.x, 1.0)
-	pos.y = fposmod(pos.y, 1.0)
-	pos.z = fposmod(pos.z, 1.0)
 	var pos_index: Vector3i = Vector3i(pos * Vector3(image_size))
+	pos_index.x = posmod(pos_index.x, image_size.x)
+	pos_index.y = posmod(pos_index.y, image_size.y)
+	pos_index.z = posmod(pos_index.z, image_size.z)
 	var res_color: Color = image_cache[pos_index.z].get_pixel(pos_index.x, pos_index.y)
 	return Vector4(res_color.r, res_color.g, res_color.b, res_color.a)
