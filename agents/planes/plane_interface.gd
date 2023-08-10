@@ -43,16 +43,20 @@ func _process(dt: float):
 	emit_signal("update_ypr", visual_ypr, visual_throttle)
 
 func _physics_process(dt: float):
-	update_velocity_rotation(dt, false)
-	
 	var collision: KinematicCollision3D = null
 	if not frozen:
 		collision = move_and_collide(velocity * dt)
 		
 	if collision != null:
-		var collision_velocity = (velocity - collision.get_collider_velocity()).dot(collision.get_normal())
-		if collision_velocity > crash_tolerance:
-			die()
+		var collision_velocity := (velocity - collision.get_collider_velocity()).project(collision.get_normal())
+		velocity -= collision_velocity
+		if collision_velocity.length() > crash_tolerance:
+			die("Collision with %s" % collision.get_collider().get_path())
+			
+	update_velocity_rotation(dt, false)
+	
+	assert(transform.is_finite())
+	assert(velocity.is_finite())
 	
 	_handle_pathtrace()
 
@@ -76,7 +80,7 @@ func _handle_pathtrace():
 			debug_drawer.stop_trace(trace_index)
 			trace_index = -1
 
-func die() -> void:
+func die(cause: String) -> void:
 	emit_signal("on_death")
-	print("%s Has died" % name)
+	print("%s Has died because of %s" % [name, cause])
 	queue_free()

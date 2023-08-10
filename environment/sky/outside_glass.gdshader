@@ -6,9 +6,9 @@ shader_type spatial;
 uniform sampler2D panorama_sky;
 uniform vec4 fresnel_color: source_color;
 uniform vec4 metal_color: source_color;
-uniform float grid_thickness: hint_range(0.0, 1.0, 0.1) = 0.03;
-uniform float roughness: hint_range(0.0, 1.0, 0.1) = 0.3;
-uniform float metal_roughness: hint_range(0.0, 1.0, 0.1) = 0.3;
+uniform float grid_thickness: hint_range(0.0, 1.0, 0.01) = 0.03;
+uniform float roughness: hint_range(0.0, 1.0, 0.01) = 0.3;
+uniform float metal_roughness: hint_range(0.0, 1.0, 0.01) = 0.3;
 
 varying float custom_shadow;
 
@@ -27,10 +27,10 @@ void fragment() {
 	vec2 grid_uv = fract(UV * 100.0);
 	float grid_mask = step(1.0 - grid_thickness, grid_uv.x) + step(1.0 - grid_thickness, grid_uv.y);
 	
-	float sun = smoothstep(0.99, 1., dot(-sun_dir, global_view));
+	/*float sun = smoothstep(0.99, 1., dot(-sun_dir, global_view));
 	sun *= sun;
 	sun *= sun;
-	sun *= sun;
+	sun *= sun;*/
 	
 	ALBEDO = mix(
 		mix(outside, fresnel_color.rgb, fresnel),
@@ -38,13 +38,16 @@ void fragment() {
 	);
 	METALLIC = grid_mask;
 	ROUGHNESS = mix(roughness, metal_roughness, grid_mask);
-	EMISSION = vec3(100.) * sun;
+	//EMISSION = vec3(100.) * sun;
 }
+
+#undef CUSTOM_LIGHTING
 #ifdef CUSTOM_LIGHTING
 void light() {
 	float attenuation = ATTENUATION * mix(0.1, 1.0, custom_shadow);
 	DIFFUSE_LIGHT += get_diffuse_lighting(NORMAL, LIGHT, ALBEDO) * LIGHT_COLOR * attenuation;
 	//SPECULAR_LIGHT += step(.9, .6 * get_specular_lighting(NORMAL, LIGHT, VIEW, ROUGHNESS*ROUGHNESS)) * LIGHT_COLOR * .1 * attenuation;
-	//SPECULAR_LIGHT += get_specular_lighting(NORMAL, LIGHT, VIEW, ROUGHNESS*ROUGHNESS) * 0.3 * LIGHT_COLOR * attenuation;
+	SPECULAR_LIGHT += get_specular_lighting(NORMAL, LIGHT, VIEW, ROUGHNESS*ROUGHNESS) * 0.3 * LIGHT_COLOR * attenuation;
 }
 #endif // CUSTOM_LIGHTING
+#define CUSTOM_LIGHT

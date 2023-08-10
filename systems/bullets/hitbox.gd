@@ -17,7 +17,7 @@ var _healthbar: ShaderMaterial
 signal bullet_hit(pos: Vector3, vel: Vector3)
 signal missile_hit(pos: Vector3, vel: Vector3)
 signal on_take_dammage(dmg: int)
-signal die()
+signal die(cause: String)
 
 func _process(dt: float):
 	if health_regen_rate > 0 and health != max_health:
@@ -51,7 +51,7 @@ func on_bullet_hit(pos: Vector3, vel: Vector3) -> void:
 	emit_signal("on_take_dammage", dmg)
 	_update_healthbar()
 	if health <= 0 and not invulnerable:
-		emit_signal("die")
+		emit_signal("die", "0HP (bullet hit)")
 		
 	accept_hits = false
 	get_tree().create_timer(vulnerability_cooldown).timeout.connect(func(): accept_hits = true)
@@ -66,7 +66,7 @@ func on_missile_hit(dmg: int, pos: Vector3, vel: Vector3) -> void:
 	emit_signal("on_take_dammage", dmg)
 	_update_healthbar()
 	if health <= 0 and not invulnerable:
-		emit_signal("die")		
+		emit_signal("die", "0HP (missile hit)")
 
 func _update_healthbar() -> void:
 	if not is_instance_valid(_healthbar):

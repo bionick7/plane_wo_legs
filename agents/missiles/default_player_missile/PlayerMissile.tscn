@@ -1,11 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://ckd2u876bo0x5"]
+[gd_scene load_steps=14 format=3 uid="uid://bprom577c7j6j"]
 
-[ext_resource type="Script" path="res://systems/missiles/default_missile.gd" id="1_5k0wn"]
-[ext_resource type="PackedScene" uid="uid://bwuohnacoiw0r" path="res://systems/visual attachment/Trail.tscn" id="2_2y26y"]
-[ext_resource type="PackedScene" uid="uid://wmsntcnrj0ro" path="res://support/debug_drawer.tscn" id="2_8yiks"]
-[ext_resource type="Shader" path="res://systems/visual attachment/bullet_stream.gdshader" id="3_muoeo"]
+[ext_resource type="Script" path="res://systems/missiles/default_missile.gd" id="1_3jft7"]
+[ext_resource type="Resource" uid="uid://csd0hw80gorvp" path="res://agents/missiles/default_player_missile/playermissile_behaviour.tres" id="2_tyqm2"]
+[ext_resource type="PackedScene" uid="uid://wmsntcnrj0ro" path="res://support/debug_drawer.tscn" id="3_am1oa"]
+[ext_resource type="PackedScene" uid="uid://bwuohnacoiw0r" path="res://systems/visual attachment/Trail.tscn" id="4_27hhq"]
+[ext_resource type="Shader" path="res://systems/visual attachment/bullet_stream.gdshader" id="5_3xvfe"]
+[ext_resource type="Script" path="res://systems/missiles/trackingindicator.gd" id="6_3kluq"]
+[ext_resource type="PackedScene" uid="uid://dqk1m7aeup7yw" path="res://systems/tracking/TrackingAnchor.tscn" id="7_lqxx8"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_ijnji"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_jk0kg"]
 resource_local_to_scene = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bpkp5"]
@@ -14,13 +17,13 @@ albedo_color = Color(0.47451, 0.635294, 0.823529, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ctp0w"]
 render_priority = 0
-shader = ExtResource("3_muoeo")
+shader = ExtResource("5_3xvfe")
 shader_parameter/time = 13.5124
 shader_parameter/max_index = 1101
 shader_parameter/color = Color(1, 1, 0, 1)
 shader_parameter/fade_time_start = 1.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_s6c0w"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_5wlpk"]
 resource_local_to_scene = true
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 1e-05, 1e-05),
@@ -35,18 +38,21 @@ _surfaces = [{
 height = 4.0
 radius = 0.18
 
-[node name="DefaultMissile" type="CharacterBody3D"]
-script = ExtResource("1_5k0wn")
-cruise_aiming_method = 1
-final_aiming_method = 1
-turn_acceleration = 100.0
-cruise_speed = 500.0
-final_speed = 500.0
-draw_pathtrace = true
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qn6pn"]
+depth_draw_mode = 2
+no_depth_test = true
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[node name="PlayerMissile" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_3jft7")
+behaviour = ExtResource("2_tyqm2")
 pathtrace_color = Color(1, 1, 0, 1)
 
-[node name="DebugDrawer" parent="." instance=ExtResource("2_8yiks")]
-mesh = SubResource("ImmediateMesh_ijnji")
+[node name="DebugDrawer" parent="." instance=ExtResource("3_am1oa")]
+mesh = SubResource("ImmediateMesh_jk0kg")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -54,10 +60,10 @@ radius = 0.18
 height = 4.0
 material = SubResource("StandardMaterial3D_bpkp5")
 
-[node name="Trail" parent="." instance=ExtResource("2_2y26y")]
+[node name="Trail" parent="." instance=ExtResource("4_27hhq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.0324)
 material_override = SubResource("ShaderMaterial_ctp0w")
-mesh = SubResource("ArrayMesh_s6c0w")
+mesh = SubResource("ArrayMesh_5wlpk")
 gen_in_editor = false
 emit_velocity = Vector3(0, 0, 0)
 lifetime = 3
@@ -67,3 +73,18 @@ is_pushing = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 shape = SubResource("CylinderShape3D_jbvdw")
+
+[node name="TrackingIndicator" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+visible = false
+material_override = SubResource("StandardMaterial3D_qn6pn")
+cast_shadow = 0
+extra_cull_margin = 16384.0
+ignore_occlusion_culling = true
+script = ExtResource("6_3kluq")
+
+[node name="TrackingAnchor" parent="." instance=ExtResource("7_lqxx8")]
+show_on_hud = false
+show_on_rwr = false
+target_flags = 4
+allegency_flags = 1

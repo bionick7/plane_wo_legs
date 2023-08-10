@@ -4,12 +4,15 @@ const TRACKER_TEMPLATE: PackedScene = preload("res://ui/HUD/tracker.tscn")
 const RWR_TRACKER_TEMPLATE: PackedScene = preload("res://ui/HUD/rwr_tracker.tscn")
 
 @export var player: PlayerPlane
-@export var main_camera_hinge: Node3D
+@export var main_camera_ref: Node3D
 
 var usable = true
 
-@onready var hud_camera: Camera3D = $VPContainer/VP/HudCam
-@onready var main_camera: Camera3D = main_camera_hinge.get_node("Camera")
+@onready var hud_camera: Camera3D = %HudCamera
+@onready var hud_rear_camera: Camera3D = %RearCamera
+@onready var main_camera_hinge: Node3D = main_camera_ref.get_node("CameraHinge")
+@onready var main_camera: Camera3D = main_camera_ref.get_node("CameraHinge/Camera")
+#@onready var rear_camera: Camera3D = main_camera_ref.get_node("%RearCamera")
 
 func _ready():
 	await get_tree().process_frame  # Wait for a frame for everything to be set up
@@ -17,6 +20,7 @@ func _ready():
 		_spawn_tracker(anchor)
 	
 	hud_camera.fov = main_camera.fov
+	#hud_rear_camera.fov = rear_camera.fov
 	if is_instance_valid(player):
 		var flightmodel = player.flight_dynamics.fm
 		if flightmodel.stall_enabled:
@@ -45,7 +49,7 @@ func _process(dt: float):
 	var viewer_vel = %HUDControl.V
 	for tracker in get_tree().get_nodes_in_group("HUDTracker"):
 		tracker.player_can_see = usable
-		tracker.draw_preaim = player.locked_target == tracker.tracking_anchor
+		tracker.is_targeted = player.locked_target == tracker.tracking_anchor
 		tracker.update_pos(main_camera.global_position, viewer_vel, up)
 		
 	for rwr_tracker in get_tree().get_nodes_in_group("RWRTracker"):

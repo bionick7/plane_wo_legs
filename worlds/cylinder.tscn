@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c3j3ljgqnp8eo" path="res://environment/terrain/drum_section.tscn" id="1_ae75v"]
 [ext_resource type="Shader" path="res://environment/sky/outside_glass.gdshader" id="2_4suf6"]
 [ext_resource type="PackedScene" uid="uid://cx5g1coyfw0er" path="res://support/post_processing.tscn" id="3_3buq4"]
+[ext_resource type="Texture2D" uid="uid://5pgg2knobvxr" path="res://environment/sky/starmap_2020_4k.exr" id="3_81puf"]
 [ext_resource type="Shader" path="res://environment/sky/post_processing.gdshader" id="4_sqhui"]
 [ext_resource type="PackedScene" uid="uid://c3llfjwho45mr" path="res://systems/player/player_plane.tscn" id="5_yx4hp"]
 [ext_resource type="PackedScene" uid="uid://c36b65adchdla" path="res://support/camera.tscn" id="6_1v211"]
@@ -12,21 +13,23 @@
 [ext_resource type="Script" path="res://systems/Static npcs/proc_anim_2nd_order.gd" id="12_3f8jp"]
 [ext_resource type="PackedScene" uid="uid://7dx42eesbxup" path="res://agents/ships/fortress/Fortress.tscn" id="12_lqemq"]
 
-[sub_resource type="GDScript" id="GDScript_wcoxb"]
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_iuum0"]
 top_radius = 4000.0
-bottom_radius = 1.0
+bottom_radius = 4000.0
+height = 0.001
+rings = 1
+cap_bottom = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3dj4k"]
 render_priority = 0
 shader = ExtResource("2_4suf6")
 shader_parameter/cloud_cover_speed = 0.01
-shader_parameter/fresnel_color = null
-shader_parameter/metal_color = null
+shader_parameter/fresnel_color = Color(0.0470588, 0.2, 0.219608, 1)
+shader_parameter/metal_color = Color(0.835294, 0.835294, 0.835294, 1)
 shader_parameter/grid_thickness = 0.03
-shader_parameter/roughness = 0.3
-shader_parameter/metal_roughness = 0.3
+shader_parameter/roughness = 0.38
+shader_parameter/metal_roughness = 0.45
+shader_parameter/panorama_sky = ExtResource("3_81puf")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4w27b"]
 shading_mode = 0
@@ -37,9 +40,11 @@ material = SubResource("StandardMaterial3D_4w27b")
 flip_faces = true
 top_radius = 4002.0
 bottom_radius = 4002.0
-height = 12300.0
+height = 12000.0
+cap_top = false
+cap_bottom = false
 
-[sub_resource type="ImageTexture3D" id="ImageTexture3D_4626w"]
+[sub_resource type="ImageTexture3D" id="ImageTexture3D_cj1lw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rob75"]
 render_priority = 0
@@ -51,14 +56,14 @@ shader_parameter/noise_weights = Vector4(0.633, 0.34, 0.072, 0)
 shader_parameter/noise_weights_detail = Vector4(0.013, 0.021, 0.034, -0.007)
 shader_parameter/sun_color = Color(1, 1, 1, 1)
 shader_parameter/sky_color = Color(0.36, 0.56, 0.6, 1)
-shader_parameter/noise = SubResource("ImageTexture3D_4626w")
+shader_parameter/noise = SubResource("ImageTexture3D_cj1lw")
 
 [sub_resource type="Curve" id="Curve_0y60n"]
 max_value = 2.0
 _data = [Vector2(0, 0.956804), 0.0, 0.0, 0, 0, Vector2(0, 0.95945), 0.0, 0.0, 0, 0, Vector2(0.02, 0.894053), 0.0, 0.0, 0, 0, Vector2(0.04, 0.782715), 0.0, 0.0, 0, 0, Vector2(0.06, 0.635927), 0.0, 0.0, 0, 0, Vector2(0.08, 0.656246), 0.0, 0.0, 0, 0, Vector2(0.1, 0.695725), 0.0, 0.0, 0, 0, Vector2(0.12, 0.749462), 0.0, 0.0, 0, 0, Vector2(0.14, 0.812272), 0.0, 0.0, 0, 0, Vector2(0.16, 0.879047), 0.0, 0.0, 0, 0, Vector2(0.18, 0.945071), 0.0, 0.0, 0, 0, Vector2(0.2, 1.00627), 0.0, 0.0, 0, 0, Vector2(0.22, 1.05938), 0.0, 0.0, 0, 0, Vector2(0.24, 1.10206), 0.0, 0.0, 0, 0, Vector2(0.26, 1.13294), 0.0, 0.0, 0, 0, Vector2(0.28, 1.15154), 0.0, 0.0, 0, 0, Vector2(0.3, 1.15823), 0.0, 0.0, 0, 0, Vector2(0.32, 1.15408), 0.0, 0.0, 0, 0, Vector2(0.34, 1.14072), 0.0, 0.0, 0, 0, Vector2(0.36, 1.12015), 0.0, 0.0, 0, 0, Vector2(0.38, 1.09458), 0.0, 0.0, 0, 0, Vector2(0.4, 1.06625), 0.0, 0.0, 0, 0, Vector2(0.42, 1.03729), 0.0, 0.0, 0, 0, Vector2(0.44, 1.00962), 0.0, 0.0, 0, 0, Vector2(0.46, 0.984813), 0.0, 0.0, 0, 0, Vector2(0.48, 0.964085), 0.0, 0.0, 0, 0, Vector2(0.5, 0.948231), 0.0, 0.0, 0, 0, Vector2(0.52, 0.937639), 0.0, 0.0, 0, 0, Vector2(0.54, 0.932317), 0.0, 0.0, 0, 0, Vector2(0.56, 0.931939), 0.0, 0.0, 0, 0, Vector2(0.58, 0.935908), 0.0, 0.0, 0, 0, Vector2(0.6, 0.943426), 0.0, 0.0, 0, 0, Vector2(0.62, 0.953573), 0.0, 0.0, 0, 0, Vector2(0.64, 0.965378), 0.0, 0.0, 0, 0, Vector2(0.66, 0.977886), 0.0, 0.0, 0, 0, Vector2(0.68, 0.990219), 0.0, 0.0, 0, 0, Vector2(0.7, 1.00162), 0.0, 0.0, 0, 0, Vector2(0.72, 1.01149), 0.0, 0.0, 0, 0, Vector2(0.74, 1.01939), 0.0, 0.0, 0, 0, Vector2(0.76, 1.02507), 0.0, 0.0, 0, 0, Vector2(0.78, 1.02846), 0.0, 0.0, 0, 0, Vector2(0.8, 1.02962), 0.0, 0.0, 0, 0, Vector2(0.82, 1.02876), 0.0, 0.0, 0, 0, Vector2(0.84, 1.0262), 0.0, 0.0, 0, 0, Vector2(0.86, 1.0223), 0.0, 0.0, 0, 0, Vector2(0.88, 1.01749), 0.0, 0.0, 0, 0, Vector2(0.9, 1.01217), 0.0, 0.0, 0, 0, Vector2(0.92, 1.00676), 0.0, 0.0, 0, 0, Vector2(0.94, 1.00159), 0.0, 0.0, 0, 0, Vector2(0.96, 0.99698), 0.0, 0.0, 0, 0, Vector2(0.98, 0.993136), 0.0, 0.0, 0, 0]
 point_count = 51
 
-[sub_resource type="Resource" id="Resource_g407o"]
+[sub_resource type="Resource" id="Resource_1fbch"]
 resource_local_to_scene = true
 script = ExtResource("12_3f8jp")
 enabled = true
@@ -72,7 +77,7 @@ step_response_time = 2.0
 generate_step_response = false
 step_respones_output = SubResource("Curve_0y60n")
 
-[sub_resource type="Resource" id="Resource_n3xo2"]
+[sub_resource type="Resource" id="Resource_dhfvd"]
 resource_local_to_scene = true
 script = ExtResource("12_3f8jp")
 enabled = true
@@ -87,28 +92,27 @@ generate_step_response = false
 step_respones_output = SubResource("Curve_0y60n")
 
 [node name="Cylinder" type="Node3D"]
-script = SubResource("GDScript_wcoxb")
 
 [node name="Sections" type="Node3D" parent="."]
 
 [node name="generic2" parent="Sections" instance=ExtResource("1_ae75v")]
-transform = Transform3D(-0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, -3463.06, 1999.34, 0)
+transform = Transform3D(-0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1.01, -3463.06, 1999.34, 0)
 light_layer = 2
 
 [node name="generic4" parent="Sections" instance=ExtResource("1_ae75v")]
-transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, 3462.12, 1997.71, 0)
+transform = Transform3D(-0.505, -0.874686, 0, 0.874686, -0.505, 0, 0, 0, 1.01, 3462.12, 1997.71, 0)
 light_layer = 4
 
 [node name="generic11" parent="Sections" instance=ExtResource("1_ae75v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4000, -0.763672)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.01, 0, -4000, 64.5796)
 light_layer = 8
 
 [node name="Cap1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -5992.55)
+transform = Transform3D(-1, 8.74228e-08, 3.82137e-15, 0, -4.37114e-08, 1, 8.74228e-08, 1, 4.37114e-08, 0, 0, -6000)
 mesh = SubResource("CylinderMesh_iuum0")
 
 [node name="Cap2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 6000)
+transform = Transform3D(1, 0, 0, 0, -0.0394516, 0.999221, 0, -0.999221, -0.0394516, 0, 0, 6000)
 mesh = SubResource("CylinderMesh_iuum0")
 
 [node name="Drum" type="MeshInstance3D" parent="."]
@@ -122,18 +126,12 @@ material_override = SubResource("ShaderMaterial_rob75")
 cast_shadow = 0
 
 [node name="Player" parent="." instance=ExtResource("5_yx4hp")]
-transform = Transform3D(0.970486, 0, -0.24116, 0, 1, 0, 0.24116, 0, 0.970486, -34.8662, -3592.54, -2941.3)
-initial_velocity_local = Vector3(0, 0, 100)
+transform = Transform3D(0.970486, 0, -0.24116, 0, 1, 0, 0.24116, 0, 0.970486, 0, -3000, 0)
+initial_velocity_local = Vector3(0, 0, 200)
 
-[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
-remote_path = NodePath("../../CameraRef")
-update_scale = false
-
-[node name="CameraRef" parent="." instance=ExtResource("6_1v211")]
-transform = Transform3D(0.970485, 0, -0.24116, 0, 1, 0, 0.24116, 0, 0.970485, -34.8662, -3592.54, -2941.3)
-
-[node name="Camera" parent="CameraRef/CameraHinge" index="0"]
-transform = Transform3D(-1.00001, 6.36649e-12, 8.73114e-08, 6.36646e-12, 1.00001, -2.3283e-10, -8.73115e-08, -2.32831e-10, -1.00001, 3.517, 6.441, -26.905)
+[node name="CameraRef" parent="." node_paths=PackedStringArray("tracking_plane") instance=ExtResource("6_1v211")]
+transform = Transform3D(0.970485, 0, -0.24116, 0, 1, 0, 0.24116, 0, 0.970485, 0, -3000, 0)
+tracking_plane = NodePath("../Player")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 5
@@ -179,11 +177,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="HUDCOntrol" parent="." node_paths=PackedStringArray("player", "main_camera_hinge") instance=ExtResource("7_q3xun")]
+[node name="HUDCOntrol" parent="." node_paths=PackedStringArray("player", "main_camera_ref") instance=ExtResource("7_q3xun")]
 player = NodePath("../Player")
-main_camera_hinge = NodePath("../CameraRef/CameraHinge")
+main_camera_ref = NodePath("../CameraRef")
 
 [node name="DrumCollider" type="StaticBody3D" parent="."]
+visible = false
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="DrumCollider"]
 depth = 12000.0
@@ -208,25 +207,17 @@ polygon = PackedVector2Array(-3998.97, -6.87732, -3983.31, 395.113, -3923.59, 77
 environment = ExtResource("8_cktf8")
 
 [node name="NPC" parent="." instance=ExtResource("9_h1300")]
-transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 2.12133e-06, -3611.01, -2380.86)
-aim_dynamics = SubResource("Resource_g407o")
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 2.12133e-06, -2700.58, -1382.06)
+aim_dynamics = SubResource("Resource_1fbch")
 frozen = false
 draw_pathtrace = true
 
-[node name="RemoteTransform3D" type="RemoteTransform3D" parent="NPC"]
-remote_path = NodePath("../../CameraRef")
-update_position = false
-update_rotation = false
-update_scale = false
-
 [node name="NPC2" parent="." instance=ExtResource("9_h1300")]
-transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -3598.88, -2380.86)
-aim_dynamics = SubResource("Resource_n3xo2")
+transform = Transform3D(1, -1.74846e-07, 0, 1.74846e-07, 1, 0, 0, 0, 1, 0, -2989.24, 541.092)
+aim_dynamics = SubResource("Resource_dhfvd")
 frozen = false
 draw_pathtrace = true
 
 [node name="Fortress" parent="." instance=ExtResource("12_lqemq")]
 
 [connection signal="pressed" from="CanvasLayer/Restart" to="." method="_on_restart_pressed"]
-
-[editable path="CameraRef"]

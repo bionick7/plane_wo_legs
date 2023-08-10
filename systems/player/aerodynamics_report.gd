@@ -36,6 +36,17 @@ func _ready():
 func _process(dt: float):
 	current_ingame_time += dt
 
+func analyse() -> void:
+	var C_L_α_c = fm.C_L_α
+	var np = fm.x_ac + C_L_α_c / fm.C_L_α * fm.canard_surface_ratio * (fm.x_c_ac - fm.x_ac)
+	var C_L_max = fm.C_L_0 + fm.C_L_α * deg_to_rad(fm.stall_start)
+	var V_so = sqrt(2 * W / (1.225 * C_L_max * fm.S))
+	var V_accr_5 = V_so * sqrt(5)
+	var V_accr_10 = V_so * sqrt(10)
+	print("neutral point: %5.3f m" % np)
+	print("V_so = %4.2f kts; V_accr(5G) = %4.2f kts; V_accr(10G) = %4.2f kts" % [V_so/.5144, V_accr_5/.5144, V_accr_10/.5144])
+	
+
 func get_kinematics(vel: Vector3, ang_vel_glob: Vector3) -> Array:
 	if not enabled:
 		return [Vector3.ZERO, Vector3.ZERO]

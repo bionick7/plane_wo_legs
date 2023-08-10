@@ -69,6 +69,8 @@ func _physics_process(dt: float):
 func _get_possible_targets() -> Array[TrackingAnchor]:
 	var res: Array[TrackingAnchor] = []
 	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
+		if (anchor.target_flags & TrackingAnchor.TGT_FLAGS.CWIS_CAN_TARGET) == 0:
+			continue
 		if anchor.allegency_flags & hostility_flags == 0:
 			continue
 		res.append(anchor)
@@ -100,7 +102,7 @@ func _ai_logic(dt: float) -> void:
 	if not _is_target_valid() and not is_searching:
 		_search_new_target_async()
 	if _is_target_valid():
-		_aim_at_particle(target.global_position, target.velocity, dt)
+		_aim_at_particle(target.global_position, target.get_velocity(), dt)
 		_ai_text_summary = "Chase target \"%s\"" % target.ref.name
 		return
 

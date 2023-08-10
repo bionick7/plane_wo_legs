@@ -17,9 +17,8 @@ static func basis_align(x: Vector3, up: Vector3, align_z: bool=false) -> Basis:
 		up = Vector3.UP if x.y < 0.5 else Vector3.RIGHT
 	up = (up - up.dot(x) * x).normalized()
 	if align_z:
-		return Basis(x.cross(up), up, x)
-	else:
-		return Basis(x, up, x.cross(up))
+		return Basis(up.cross(x), up, x)
+	return Basis(x, up, x.cross(up))
 
 # TODO: UNTESTED!
 static func preaim(pos: Vector3, vel: Vector3, muzzle_vel: float, acc: Callable) -> Vector3:
@@ -68,6 +67,8 @@ static func preaim_simple(pos: Vector3, vel: Vector3, muzzle_vel: float) -> floa
 static func get_closest_approach(pos: Vector3, vel: Vector3) -> float:
 	# returns time at closest approach
 	# Minimize: v² t² + 2vx t + x² = 0
+	if vel.is_zero_approx():
+		return 0  # covers for a = 0
 	var a = vel.dot(vel)
 	var b = 2 * pos.dot(vel)
 	var c = pos.dot(pos)

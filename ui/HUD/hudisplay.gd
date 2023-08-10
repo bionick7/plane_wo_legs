@@ -12,6 +12,9 @@ var V = Vector3.ZERO
 var target_basis = Basis.IDENTITY
 var up = Vector3.UP
 
+func _ready():
+	$Heading2/MissileReadiness.set_player(player)
+
 func _get_signed_angle_on_plane(from: Vector3, to: Vector3, plane: Vector3) -> float:
 	var from_projected = from - from.project(plane)
 	var to_projected = to - to.project(plane)

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MissileGuidanceBehaviour" load_steps=2 format=3 uid="uid://csd0hw80gorvp"]
+
+[ext_resource type="Script" path="res://systems/missiles/missile_guidance_behaviour.gd" id="1_hp7vo"]
+
+[resource]
+script = ExtResource("1_hp7vo")
+cruise_aiming_method = 1
+final_aiming_method = 1
+transition_distance = 300.0
+maximum_distance = 3000.0
+acceleration = 120.0
+angular_acceleration = 300.0
+cruise_speed = 850.0
+final_speed = 850.0
+view_cone = 0.523599

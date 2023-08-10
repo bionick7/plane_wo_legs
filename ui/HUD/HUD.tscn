@@ -1,11 +1,13 @@
-[gd_scene load_steps=17 format=3 uid="uid://cb4b2bqavu4tg"]
+[gd_scene load_steps=21 format=3 uid="uid://cb4b2bqavu4tg"]
 
 [ext_resource type="Script" path="res://ui/HUD/hud_root.gd" id="1_pbuuj"]
 [ext_resource type="Theme" uid="uid://bnnh0cyq1wd21" path="res://ui/display_theme.tres" id="2_fh4rm"]
 [ext_resource type="Script" path="res://ui/HUD/hudisplay.gd" id="5_lbus5"]
 [ext_resource type="Texture2D" uid="uid://s5x3xyb2lphp" path="res://ui/HUD/sprites/velocity.png" id="6_ojxyo"]
 [ext_resource type="Texture2D" uid="uid://3e6ymengdqw1" path="res://ui/HUD/sprites/header.png" id="7_245ij"]
+[ext_resource type="Shader" path="res://ui/HUD/MissileReadinessCircle.gdshader" id="7_hqen1"]
 [ext_resource type="Texture2D" uid="uid://rvny21725fcd" path="res://ui/HUD/sprites/RWR_background.svg" id="8_6f3cr"]
+[ext_resource type="Script" path="res://ui/HUD/MissileReadiness.gd" id="8_byqwt"]
 [ext_resource type="Texture2D" uid="uid://b17ubx5yj0f6y" path="res://ui/HUD/sprites/header_roll.png" id="8_pio4l"]
 [ext_resource type="Texture2D" uid="uid://cxbkyvvfyd6do" path="res://ui/HUD/sprites/pointer.png" id="9_6vlgd"]
 [ext_resource type="Shader" path="res://ui/HUD/tracker_health_2D.gdshader" id="9_luoj4"]
@@ -124,6 +126,22 @@ shader_parameter/max_sideslip = -1.0
 shader_parameter/max_aoa_pos = 30.0
 shader_parameter/max_aoa_neg = -1.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i18r8"]
+render_priority = 0
+shader = ExtResource("7_hqen1")
+shader_parameter/total_segments = 64
+shader_parameter/outside_radius = 0.2
+shader_parameter/thickness = 0.006
+shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
+shader_parameter/blinking_frequency = 4.0
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_cady8"]
+shape = 0
+size = 0.2
+sections = 64
+section_length = 0.01
+section_segments = 1
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6brfk"]
 shader = ExtResource("9_luoj4")
 shader_parameter/color = Color(0, 0.933333, 0.67451, 1)
@@ -135,33 +153,10 @@ shader_parameter/spacing = 0.09
 shader_parameter/border = 0.16
 
 [node name="HUDRoot" type="CanvasLayer"]
+layer = 10
 script = ExtResource("1_pbuuj")
 
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("2_fh4rm")
-
-[node name="ThrottleSlider" type="VSlider" parent="UI"]
-unique_name_in_owner = true
-layout_mode = 0
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -153.0
-offset_right = 24.0
-offset_bottom = -2.0
-max_value = 1.0
-step = 0.0
-value = 0.007
-editable = false
-scrollable = false
-
-[node name="VPContainer" type="SubViewportContainer" parent="."]
+[node name="MainViewContainer" type="SubViewportContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -169,27 +164,27 @@ grow_horizontal = 2
 grow_vertical = 2
 stretch = true
 
-[node name="VP" type="SubViewport" parent="VPContainer"]
+[node name="MainView" type="SubViewport" parent="MainViewContainer"]
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
-[node name="HUDControl" type="Node3D" parent="VPContainer/VP"]
+[node name="HUDControl" type="Node3D" parent="MainViewContainer/MainView"]
 unique_name_in_owner = true
 script = ExtResource("5_lbus5")
 pitch_yaw_roll_display_sensitivity = Vector3(0.05, 0.05, 0.5)
 speed_units = 1
 
-[node name="HUDSphere" type="CSGSphere3D" parent="VPContainer/VP/HUDControl"]
+[node name="HUDSphere" type="CSGSphere3D" parent="MainViewContainer/MainView/HUDControl"]
 layers = 32
 radial_segments = 64
 rings = 32
 material = SubResource("4")
 
-[node name="Velocity" type="Node3D" parent="VPContainer/VP/HUDControl"]
+[node name="Velocity" type="Node3D" parent="MainViewContainer/MainView/HUDControl"]
 
-[node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Velocity"]
+[node name="Sprite2D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Velocity"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 1, 0, 0)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -198,9 +193,9 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("6_ojxyo")
 
-[node name="Heading" type="Node3D" parent="VPContainer/VP/HUDControl"]
+[node name="Heading" type="Node3D" parent="MainViewContainer/MainView/HUDControl"]
 
-[node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading"]
+[node name="Sprite2D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 1.008)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -209,9 +204,18 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("7_245ij")
 
-[node name="Heading2" type="Node3D" parent="VPContainer/VP/HUDControl"]
+[node name="Sprite2D2" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 1.008)
+layers = 32
+modulate = Color(0, 0.933333, 0.67451, 1)
+pixel_size = 0.0003
+axis = 0
+no_depth_test = true
+texture = ExtResource("7_245ij")
 
-[node name="Sprite2D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Heading2" type="Node3D" parent="MainViewContainer/MainView/HUDControl"]
+
+[node name="Sprite2D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188909, 0, 1.00948)
 layers = 32
 cast_shadow = 0
@@ -221,10 +225,10 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("8_pio4l")
 
-[node name="Pitch" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Pitch" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
 
-[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/Pitch"]
+[node name="Sprite3D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2/Pitch"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 1.1515, -3.82085e-09, -0.10381)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -233,10 +237,10 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("9_6vlgd")
 
-[node name="PitchTrim" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="PitchTrim" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
 
-[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/PitchTrim"]
+[node name="Sprite3D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2/PitchTrim"]
 transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 1.1515, -4.03816e-09, -0.0923823)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -245,10 +249,10 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("9_6vlgd")
 
-[node name="Yaw" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Yaw" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
 
-[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/Yaw"]
+[node name="Sprite3D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2/Yaw"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1515, -0.036, -6.66478e-09)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -257,10 +261,10 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("9_6vlgd")
 
-[node name="YawTrim" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="YawTrim" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
 
-[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/YawTrim"]
+[node name="Sprite3D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2/YawTrim"]
 transform = Transform3D(0.5, 0, 0, 0, -0.5, -7.54979e-08, 0, 7.54979e-08, -0.5, 1.1515, -0.0237624, -3.08501e-09)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -269,10 +273,10 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("9_6vlgd")
 
-[node name="Roll" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Roll" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
 
-[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/Roll"]
+[node name="Sprite3D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2/Roll"]
 transform = Transform3D(1, 0, 0, 0, -1, 1.50996e-07, 0, -1.50996e-07, -1, 1.1515, 0.0713147, -3.21597e-09)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -281,10 +285,10 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("9_6vlgd")
 
-[node name="RollTrim" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="RollTrim" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.000188953, 0, -0.142996)
 
-[node name="Sprite3D" type="Sprite3D" parent="VPContainer/VP/HUDControl/Heading2/RollTrim"]
+[node name="Sprite3D" type="Sprite3D" parent="MainViewContainer/MainView/HUDControl/Heading2/RollTrim"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 3.17865e-08, 0, -3.17865e-08, 0.5, 1.15148, 0.0605264, 2.1725e-06)
 layers = 32
 modulate = Color(0, 0.933333, 0.67451, 1)
@@ -293,7 +297,7 @@ axis = 0
 no_depth_test = true
 texture = ExtResource("9_6vlgd")
 
-[node name="IAS" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="IAS" type="Label3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.0568819, 0.0121655, 1.01014)
 layers = 32
 pixel_size = 0.0005
@@ -302,7 +306,7 @@ modulate = Color(0, 0.933333, 0.67451, 1)
 text = "aaa"
 outline_size = 0
 
-[node name="Mach" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Mach" type="Label3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.0568819, 0.0300737, 1.01014)
 layers = 32
 pixel_size = 0.0005
@@ -311,7 +315,7 @@ modulate = Color(0, 0.933333, 0.67451, 1)
 text = "aaa"
 outline_size = 0
 
-[node name="Altitude" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Altitude" type="Label3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0552379, 0.0121655, 1.01014)
 layers = 32
 pixel_size = 0.0005
@@ -320,7 +324,7 @@ modulate = Color(0, 0.933333, 0.67451, 1)
 text = "aaa"
 outline_size = 0
 
-[node name="Acceleration" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="Acceleration" type="Label3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.0552379, 0.027089, 1.01014)
 layers = 32
 pixel_size = 0.0005
@@ -329,17 +333,17 @@ modulate = Color(0, 0.933333, 0.67451, 1)
 text = "aaa"
 outline_size = 0
 
-[node name="BodyCenteredSphere" type="CSGSphere3D" parent="VPContainer/VP/HUDControl/Heading2"]
+[node name="BodyCenteredSphere" type="CSGSphere3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
 layers = 32
 radial_segments = 64
 rings = 32
 material = SubResource("ShaderMaterial_r2ya0")
 
-[node name="AoALimitPivot" type="Node3D" parent="VPContainer/VP/HUDControl/Heading2/BodyCenteredSphere"]
+[node name="AoALimitPivot" type="Node3D" parent="MainViewContainer/MainView/HUDControl/Heading2/BodyCenteredSphere"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, 0)
 
-[node name="AoALimit" type="Label3D" parent="VPContainer/VP/HUDControl/Heading2/BodyCenteredSphere/AoALimitPivot"]
+[node name="AoALimit" type="Label3D" parent="MainViewContainer/MainView/HUDControl/Heading2/BodyCenteredSphere/AoALimitPivot"]
 transform = Transform3D(-0.973387, 0, 0.229166, 0, 1, 0, -0.229166, 0, -0.973387, -0.236935, 0, 0.890414)
 layers = 32
 pixel_size = 0.0005
@@ -348,14 +352,55 @@ modulate = Color(0, 0.933333, 0.67451, 1)
 text = "AoA Limit"
 outline_size = 0
 
-[node name="HudCam" type="Camera3D" parent="VPContainer/VP"]
+[node name="MissileReadiness" type="MeshInstance3D" parent="MainViewContainer/MainView/HUDControl/Heading2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.01701)
+layers = 32
+material_override = SubResource("ShaderMaterial_i18r8")
+mesh = SubResource("RibbonTrailMesh_cady8")
+skeleton = NodePath("../..")
+script = ExtResource("8_byqwt")
+
+[node name="HudCamera" type="Camera3D" parent="MainViewContainer/MainView"]
+unique_name_in_owner = true
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 cull_mask = 32
 current = true
 fov = 40.0
 far = 50.0
 
+[node name="MarginContainer" type="MarginContainer" parent="."]
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -304.0
+offset_right = 304.0
+grow_vertical = 0
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="RearViewContainer" type="SubViewportContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="RearView" type="SubViewport" parent="MarginContainer/RearViewContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(300, 300)
+size_2d_override_stretch = true
+render_target_update_mode = 0
+
+[node name="RearCamera" type="Camera3D" parent="MarginContainer/RearViewContainer/RearView"]
+unique_name_in_owner = true
+visible = false
+cull_mask = 32
+current = true
+fov = 100.0
+far = 50.0
+
 [node name="RWR" type="TextureRect" parent="."]
+visible = false
 modulate = Color(0, 0.933333, 0.67451, 1)
 anchors_preset = 2
 anchor_top = 1.0
@@ -384,3 +429,27 @@ offset_top = 9.0
 offset_right = 102.0
 offset_bottom = 34.0
 grow_horizontal = 2
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_fh4rm")
+
+[node name="ThrottleSlider" type="VSlider" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -153.0
+offset_right = 24.0
+offset_bottom = -2.0
+max_value = 1.0
+step = 0.0
+value = 0.007
+editable = false
+scrollable = false

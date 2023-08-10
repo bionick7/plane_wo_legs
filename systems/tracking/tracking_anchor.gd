@@ -1,8 +1,15 @@
 class_name TrackingAnchor
 extends Node3D
 
+enum TGT_FLAGS {
+	PLAYER_CAN_TARGET = 	0x01,
+	NPC_CAN_TARGET = 		0x02,
+	CWIS_CAN_TARGET = 		0x04
+}
+
 @export var show_on_hud = true
 @export var show_on_rwr = true
+@export_flags("Player", "NPC Planes", "CWIS") var target_flags: int
 @export var hitbox: Hitbox
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var allegency_flags: int
 
@@ -10,7 +17,7 @@ signal on_take_dammage(dmg: int)
 
 var ref: Node3D
 var _pos = Vector3.ZERO
-var velocity = Vector3.ZERO
+var _calc_velocity = Vector3.ZERO
 
 func _ready():
 	_pos = global_position
@@ -18,7 +25,7 @@ func _ready():
 		_auto_setup()
 		
 func _physics_process(dt: float):
-	velocity = (global_position - _pos) / dt
+	_calc_velocity = (global_position - _pos) / dt
 	_pos = global_position
 		
 func _auto_setup():
@@ -62,7 +69,9 @@ func get_max_health() -> int:
 	return hitbox.max_health
 	
 func get_velocity() -> Vector3:
-	return velocity
+	if refers_plane():
+		return ref.velocity
+	return _calc_velocity
 
 func is_hidden() -> bool:
 	if refers_plane():

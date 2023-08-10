@@ -70,9 +70,6 @@ var stall_progress = 0
 func init() -> void:
 	S = b*c
 	A = b/c
-	var C_L_α_c = C_L_α
-	var np = x_ac + C_L_α_c / C_L_α * canard_surface_ratio * (x_c_ac - x_ac)
-	print("neutral point: %5.3f m" % np)
 	
 func update_stall_progress(α: float, dt: float):
 	if stall_enabled:

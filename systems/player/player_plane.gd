@@ -22,6 +22,7 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @export_group("References")
 @export var flight_dynamics: Node
 @export var engine_transform: Node3D
+@export var missile_launcher: MissileLauncher
 @export var missile_paths: Array[NodePath]
 
 @onready var missile_stack = missile_paths.map(get_node)
@@ -40,14 +41,22 @@ var fealt_acceleration: Vector3
 
 var angular_velocity: Vector3
 
+signal set_missile_certainty(x: float)
+
 func _ready():
 	super._ready()
 	#blackout_curve.test()
+	flight_dynamics.W = mass * CommonPhysics.g
+	flight_dynamics.analyse()
 
 func _process(dt: float):
 	super._process(dt)
 	
+	if not is_instance_valid(locked_target) or not locked_target.is_inside_tree():
+		locked_target = null
+	
 	throttle = InputManager.get_throttle()
+	missile_launcher.update(locked_target)
 	
 	#write_line("density: %5.4f" % CloudManager.get_cloud_density(global_position))
 	debug_drawer.draw_basis(global_transform.basis, Vector3.ZERO, Color.DARK_GRAY)
@@ -65,11 +74,13 @@ func _process(dt: float):
 	
 	visual_ypr = InputManager.get_yaw_pitch_roll(true)
 	visual_throttle = throttle
+	
+	var next_missile := missile_launcher.get_next_missile()
 
 func _input(event: InputEvent):
 	if event.is_action_pressed("Gun"):
 		if Input.is_action_pressed("lock"):
-			launch_next_missile()
+			missile_launcher.launch_next_missile()
 		else:
 			gun.start_fire()
 	elif event.is_action_released("Gun"):
@@ -79,6 +90,8 @@ func _input(event: InputEvent):
 		var min_angle = deg_to_rad(min_lock_angle_deg)
 		var lock_candidate: TrackingAnchor = null
 		for trackable in get_tree().get_nodes_in_group("TrackingAnchors"):
+			if (trackable.target_flags & TrackingAnchor.TGT_FLAGS.PLAYER_CAN_TARGET) == 0:
+				continue
 			if trackable.ref == self or trackable.is_hidden():
 				continue
 			if trackable.allegency_flags & 0x02 == 0:
@@ -89,14 +102,13 @@ func _input(event: InputEvent):
 				min_angle = angle
 		if is_instance_valid(lock_candidate):
 			locked_target = lock_candidate
-
-func launch_next_missile() -> Missile:
-	for missile in missile_stack:
-		if missile.is_ready(locked_target):
-			missile.launch(locked_target, velocity)
-			missile_stack.erase(missile)
-			return missile
-	return null
+			var next_missile := missile_launcher.get_next_missile()
+			if is_instance_valid(next_missile):
+				var certainty = clamp((next_missile.sim_path(velocity, lock_candidate) - 10.0) / 40.0, 0.0, 1.0)
+				emit_signal("set_missile_certainty", certainty)
+	else:
+		emit_signal("set_missile_certainty", -1)
+		
 
 func update_velocity_rotation(dt: float, manual: bool):
 	super.update_velocity_rotation(dt, manual)

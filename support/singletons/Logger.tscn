@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://d3bjphdpr754q"]
+[gd_scene load_steps=3 format=3 uid="uid://d3bjphdpr754q"]
 
 [ext_resource type="Script" path="res://support/singletons/Logger.gd" id="1_7kk25"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_0f1nt"]
+font_color = Color(1, 0.168627, 0, 1)
 
 [node name="Logger" type="CanvasLayer"]
 layer = 100
@@ -9,3 +12,4 @@ script = ExtResource("1_7kk25")
 [node name="Label" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_0f1nt")

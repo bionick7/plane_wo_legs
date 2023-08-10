@@ -66,7 +66,7 @@ func update_img() -> void:
 				offsets.append(Vector3(x_n, y_n, z_n) / float(CELLS))
 	
 	var time_end: int = Time.get_ticks_usec()
-	print("Cell neighbours done: %f ms" % ((time_end - time_start) / 1000))
+	print("Cell neighbours done: %d ms" % ((time_end - time_start) / 1000))
 	time_start = time_end
 	
 	#print(cell_neighbours)

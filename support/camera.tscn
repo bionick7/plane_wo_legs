@@ -1,22 +1,63 @@
-[gd_scene load_steps=3 format=3 uid="uid://c36b65adchdla"]
+[gd_scene load_steps=4 format=3 uid="uid://c36b65adchdla"]
 
 [ext_resource type="Script" path="res://support/PlayerCamera.gd" id="1_rolwp"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_2v38f"]
 dof_blur_far_distance = 1000.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vo8x"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0.933333, 0.67451, 1)
+
 [node name="CameraRef" type="Node3D"]
+script = ExtResource("1_rolwp")
 
 [node name="CameraHinge" type="Node3D" parent="."]
 rotation_order = 3
-script = ExtResource("1_rolwp")
-camera_yaw_rate = 3
-camera_pitch_rate = 4
 
 [node name="Camera" type="Camera3D" parent="CameraHinge"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.018617, 3.78373, -29.0435)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 3.517, 5.79318, -30.6709)
 cull_mask = 1048543
 attributes = SubResource("CameraAttributesPractical_2v38f")
-fov = 45.0
+fov = 50.0
 near = 0.5
 far = 15000.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -304.0
+offset_right = 304.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7vo8x")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/PanelContainer"]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/PanelContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(300, 300)
+size_2d_override_stretch = true
+render_target_update_mode = 0
+
+[node name="RefAnchor" type="Node3D" parent="CanvasLayer/PanelContainer/SubViewportContainer/SubViewport"]
+
+[node name="RearCamera" type="Camera3D" parent="CanvasLayer/PanelContainer/SubViewportContainer/SubViewport/RefAnchor"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, -2.13162e-14, 0, 1, 0, 2.13162e-14, 0, 1, 0, 0, 4.56)
+cull_mask = 1048543
+attributes = SubResource("CameraAttributesPractical_2v38f")
+fov = 100.0
+near = 0.5
+far = 15000.0
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="."]
+remote_path = NodePath("../CanvasLayer/PanelContainer/SubViewportContainer/SubViewport/RefAnchor")
+update_scale = false
