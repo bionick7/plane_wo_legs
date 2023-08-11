@@ -1,40 +1,109 @@
 {
- "action_map": {
-  "Gun": [
-   "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"button_index\":0,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n"
-  ],
-  "airbrake": [
-   "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"button_index\":3,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n"
-  ],
-  "camera_reset": [],
-  "camera_toggle": [
-   "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"button_index\":14,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n"
-  ],
-  "camera_track_plane": [
-   "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"button_index\":2,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n"
-  ],
-  "lock": [
-   "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"button_index\":1,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n"
-  ],
-  "throttle_set": [],
-  "toggle_control_help": [
-   "Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194332,\"key_label\":0,\"unicode\":0,\"echo\":false,\"script\":null)\n"
-  ],
-  "toggle_hud": [
-   "Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194333,\"key_label\":0,\"unicode\":0,\"echo\":false,\"script\":null)\n"
-  ],
-  "yaw_left": [
-   "Object(InputEventJoypadMotion,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"axis\":4,\"axis_value\":1.0,\"script\":null)\n"
-  ],
-  "yaw_right": [
-   "Object(InputEventJoypadMotion,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"axis\":5,\"axis_value\":1.0,\"script\":null)\n"
-  ]
- },
- "device_info": {
-	"030000004f04000006b1000000000000": {
-		"is_flight_stick": true,
-		"axis": {}
-	}
- },
- "allow_mouse_aim": false
+  "action_map": {
+    "Gun": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":0,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 1
+      },
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":10,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 2
+      },
+      {
+        "code": "Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":1,\"position\":Vector2(121, 16),\"global_position\":Vector2(125, 59),\"factor\":1.0,\"button_index\":1,\"pressed\":true,\"double_click\":false,\"script\":null)\n"
+      }
+    ],
+    "airbrake": [],
+    "camera_bottom": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":12,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 2
+      },
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":12,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 1
+      }
+    ],
+    "camera_left": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":13,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 2
+      },
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":13,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 1
+      }
+    ],
+    "camera_reset": [],
+    "camera_right": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":14,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 2
+      },
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":14,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 1
+      }
+    ],
+    "camera_toggle": [],
+    "camera_top": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":11,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 2
+      },
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":11,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 1
+      }
+    ],
+    "camera_track_plane": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"button_index\":2,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 3
+      }
+    ],
+    "lock": [
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":1,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 1
+      },
+      {
+        "code": "Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":9,\"pressure\":0.0,\"pressed\":true,\"script\":null)\n",
+        "filter": 2
+      },
+      {
+        "code": "Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":2,\"position\":Vector2(177, 22),\"global_position\":Vector2(181, 65),\"factor\":1.0,\"button_index\":2,\"pressed\":true,\"double_click\":false,\"script\":null)\n"
+      }
+    ],
+    "mouse_drag": [
+      {
+        "code": "Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":2,\"position\":Vector2(162, 19),\"global_position\":Vector2(166, 62),\"factor\":1.0,\"button_index\":2,\"pressed\":true,\"double_click\":false,\"script\":null)\n"
+      }
+    ],
+    "toggle_control_help": [
+      {
+        "code": "Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194332,\"key_label\":0,\"unicode\":0,\"echo\":false,\"script\":null)\n"
+      }
+    ],
+    "toggle_hud": [
+      {
+        "code": "Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194333,\"key_label\":0,\"unicode\":0,\"echo\":false,\"script\":null)\n"
+      }
+    ]
+  },
+  "allow_mouse_aim": false,
+  "device_info": {
+    "030000004c050000cc09000000000000": {
+      "is_flight_stick": false,
+      "overrides": {
+
+      }
+    },
+    "030000004f04000006b1000000000000": {
+      "is_flight_stick": true,
+      "overrides": {
+
+      }
+    }
+  }
 }

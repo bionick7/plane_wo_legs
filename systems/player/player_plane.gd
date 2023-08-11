@@ -85,7 +85,7 @@ func _input(event: InputEvent):
 			gun.start_fire()
 	elif event.is_action_released("Gun"):
 		gun.cease_fire()
-	
+		
 	if Input.is_action_pressed("lock"):
 		var min_angle = deg_to_rad(min_lock_angle_deg)
 		var lock_candidate: TrackingAnchor = null
@@ -106,6 +106,9 @@ func _input(event: InputEvent):
 			if is_instance_valid(next_missile):
 				var certainty = clamp((next_missile.sim_path(velocity, lock_candidate) - 10.0) / 40.0, 0.0, 1.0)
 				emit_signal("set_missile_certainty", certainty)
+		else:
+			locked_target = null
+			emit_signal("set_missile_certainty", -1)
 	else:
 		emit_signal("set_missile_certainty", -1)
 		

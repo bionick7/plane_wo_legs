@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://systems/missiles/trackingindicator.gd" id="6_q4dbi"]
 [ext_resource type="PackedScene" uid="uid://dqk1m7aeup7yw" path="res://systems/tracking/TrackingAnchor.tscn" id="7_xs5ej"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_5pg7c"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_qfogo"]
 resource_local_to_scene = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bpkp5"]
@@ -23,7 +23,7 @@ shader_parameter/max_index = 1101
 shader_parameter/color = Color(1, 1, 0, 1)
 shader_parameter/fade_time_start = 1.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_wnbdk"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_q5ge0"]
 resource_local_to_scene = true
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 1e-05, 1e-05),
@@ -52,7 +52,7 @@ behaviour = ExtResource("2_1ugiq")
 pathtrace_color = Color(1, 1, 0, 1)
 
 [node name="DebugDrawer" parent="." instance=ExtResource("3_7rhav")]
-mesh = SubResource("ImmediateMesh_5pg7c")
+mesh = SubResource("ImmediateMesh_qfogo")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -63,7 +63,7 @@ material = SubResource("StandardMaterial3D_bpkp5")
 [node name="Trail" parent="." instance=ExtResource("4_q4ly7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.0324)
 material_override = SubResource("ShaderMaterial_ctp0w")
-mesh = SubResource("ArrayMesh_wnbdk")
+mesh = SubResource("ArrayMesh_q5ge0")
 gen_in_editor = false
 emit_velocity = Vector3(0, 0, 0)
 lifetime = 3

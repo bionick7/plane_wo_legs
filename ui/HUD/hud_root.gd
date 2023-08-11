@@ -19,7 +19,6 @@ func _ready():
 	for anchor in get_tree().get_nodes_in_group("TrackingAnchors"):
 		_spawn_tracker(anchor)
 	
-	hud_camera.fov = main_camera.fov
 	#hud_rear_camera.fov = rear_camera.fov
 	if is_instance_valid(player):
 		var flightmodel = player.flight_dynamics.fm
@@ -38,6 +37,8 @@ func _process(dt: float):
 	if not is_instance_valid(player):
 		hide()
 		return
+		
+	hud_camera.fov = main_camera.fov
 	
 	var base_rot: Basis = Basis.from_euler(Vector3.UP * PI)
 	hud_camera.global_transform.basis = main_camera_hinge.global_transform.basis * base_rot

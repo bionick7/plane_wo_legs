@@ -14,6 +14,9 @@ bg_color = Color(0, 0.933333, 0.67451, 1)
 
 [node name="CameraRef" type="Node3D"]
 script = ExtResource("1_rolwp")
+sideview_rotational_rate = 7.85398
+max_fov = 75.0
+min_fov = 45.0
 
 [node name="CameraHinge" type="Node3D" parent="."]
 rotation_order = 3

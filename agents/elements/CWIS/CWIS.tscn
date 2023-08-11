@@ -9,10 +9,10 @@
 [ext_resource type="PackedScene" uid="uid://wmsntcnrj0ro" path="res://support/debug_drawer.tscn" id="6_cai4i"]
 [ext_resource type="PackedScene" uid="uid://c3retmojenbya" path="res://systems/bullets/Hitbox.tscn" id="7_7s73e"]
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_opxo4"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_lgkc2"]
 resource_local_to_scene = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3f38v"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vi1pn"]
 resource_local_to_scene = true
 shader = ExtResource("2_ketao")
 shader_parameter/global_start_velocity = Vector3(333.812, 600.251, 726.821)
@@ -32,7 +32,7 @@ barrel_paths = Array[NodePath]([NodePath("Barrel1")])
 gun = NodePath("Barrel1/Gun")
 
 [node name="DebugDrawer" parent="." instance=ExtResource("6_cai4i")]
-mesh = SubResource("ImmediateMesh_opxo4")
+mesh = SubResource("ImmediateMesh_lgkc2")
 
 [node name="Turret" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47546, 0)
@@ -55,7 +55,7 @@ height = 11.1393
 
 [node name="Gun" parent="Barrel1" node_paths=PackedStringArray("self_area") instance=ExtResource("1_npu4j")]
 transform = Transform3D(1, -1.74846e-07, 7.64276e-15, 0, -4.37114e-08, -1, 1.74846e-07, 1, -4.37114e-08, -3.82138e-14, -0.00173187, 2.18557e-07)
-process_material = SubResource("ShaderMaterial_3f38v")
+process_material = SubResource("ShaderMaterial_vi1pn")
 collision_mask = 9
 self_area = NodePath("../../Hitbox")
 
