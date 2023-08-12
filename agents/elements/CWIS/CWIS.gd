@@ -34,8 +34,9 @@ var _aim_in_editor: bool = false
 @onready var barrels = barrel_paths.map(get_node)
 
 var target: TrackingAnchor
-
 var is_searching: bool = false
+var editor_target_pos = Vector3.ZERO
+var editor_target: Node3D
 
 var velocity = Vector3.ZERO
 var _pos = Vector3.ZERO
@@ -51,9 +52,6 @@ func _ready():
 	if not _is_target_valid():
 		_search_new_target_async()
 
-var editor_target_pos = Vector3.ZERO
-var editor_target: Node3D
-	
 func _process(dt: float):
 	if Engine.is_editor_hint() and aim_in_editor:
 		var editor_target_vel = (editor_target.global_position - editor_target_pos) / dt

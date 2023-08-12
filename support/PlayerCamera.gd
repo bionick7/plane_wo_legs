@@ -62,21 +62,14 @@ func _process(dt):
 func _input(event):
 	if event is InputEventMouseButton:
 		_handle_mousebutton(event)
-	elif event.is_action_pressed("camera_toggle"):
-		joypad_dragging = true
-	elif event.is_action_released("camera_toggle"):
-		joypad_dragging = false
-		euler_null = camera_hinge.rotation
-	elif event.is_action_pressed("camera_reset") and joypad_dragging:
-		camera_hinge.rotation = Vector3.ZERO
-		euler_null = camera_hinge.rotation
-		joypad_dragging = false
 	elif event.is_action_pressed("ui_left"):
 		_cycle_to(1)
 	elif event.is_action_released("ui_right"):
 		_cycle_to(-1)
 
 func _get_target() -> TrackingAnchor:
+	if not is_instance_valid(track_plane):
+		return null
 	if tracking_plane is PlayerPlane:
 		return tracking_plane.locked_target
 	if tracking_plane is NPCPlane:

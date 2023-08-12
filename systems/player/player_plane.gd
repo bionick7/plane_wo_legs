@@ -84,12 +84,12 @@ func _process(dt: float):
 	var next_missile := missile_launcher.get_next_missile()
 
 func _input(event: InputEvent):
-	if event.is_action_pressed("Gun"):
+	if event.is_action_pressed("gun"):
 		if Input.is_action_pressed("lock"):
 			missile_launcher.launch_next_missile()
 		else:
 			gun.start_fire()
-	elif event.is_action_released("Gun"):
+	elif event.is_action_released("gun"):
 		gun.cease_fire()
 		
 	if Input.is_action_pressed("lock"):

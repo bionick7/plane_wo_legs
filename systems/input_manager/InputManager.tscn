@@ -6,36 +6,9 @@
 [sub_resource type="Resource" id="Resource_xxxna"]
 script = ExtResource("2_twpcu")
 save_path = "res://data/saves/control_config.json"
+reset_to_default_on_startup = false
 
 [node name="InputManager" type="Node"]
 process_mode = 3
 script = ExtResource("1_qlpao")
 config = SubResource("Resource_xxxna")
-
-[node name="ControlHelp" type="CanvasLayer" parent="."]
-layer = 20
-visible = false
-
-[node name="PanelContainer" type="PanelContainer" parent="ControlHelp"]
-offset_left = 9.0
-offset_top = 87.0
-offset_right = 309.0
-offset_bottom = 471.0
-
-[node name="RichTextLabel" type="RichTextLabel" parent="ControlHelp/PanelContainer"]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-bbcode_enabled = true
-text = "[img=32]res://ui/menu/GamepadButtons/Keyboard_Black_F1.png[/img]: Open and close this window
-[img=32]res://ui/menu/GamepadButtons/Keyboard_Black_F2.png[/img]: Toggle HUD
-[img=32]res://ui/menu/GamepadButtons/XboxOne_X.png[/img] + [img=32]res://ui/menu/GamepadButtons/XboxOne_Left_Stick.png[/img]: Adjust Thrust
-[img=32]res://ui/menu/GamepadButtons/XboxOne_Dpad_Right.png[/img]  + [img=32]res://ui/menu/GamepadButtons/XboxOne_Right_Stick.png[/img]: Move camera
-[img=32]res://ui/menu/GamepadButtons/XboxOne_Dpad_Right.png[/img]  + [img=32]res://ui/menu/GamepadButtons/XboxOne_X.png[/img]: Reset camera
-[img=32]res://ui/menu/GamepadButtons/XboxOne_RT.png[/img] / [img=32]res://ui/menu/GamepadButtons/XboxOne_LT.png[/img] : Yaw
-[img=32]res://ui/menu/GamepadButtons/XboxOne_RT.png[/img] + [img=32]res://ui/menu/GamepadButtons/XboxOne_LT.png[/img] : Airbrake
-[img=32]res://ui/menu/GamepadButtons/XboxOne_Left_Stick.png[/img] : Give walking direction
-[img=32] [img=32]res://ui/menu/GamepadButtons/XboxOne_Right_Stick.png[/img]: Pitch / Roll
-[img=32]res://ui/menu/GamepadButtons/XboxOne_RB.png[/img] : Step right leg
-[img=32]res://ui/menu/GamepadButtons/XboxOne_LB.png[/img] : Step left leg
-[img=32]res://ui/menu/GamepadButtons/XboxOne_Y.png[/img] : Step legs alternating"
-fit_content = true

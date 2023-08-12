@@ -1,0 +1,203 @@
+[gd_resource type="Resource" script_class="InputAtlas" load_steps=116 format=3 uid="uid://bhol7l2rnuo46"]
+
+[ext_resource type="Texture2D" uid="uid://ikhdgsvt2ae4" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_BracketRight.png" id="1_223sy"]
+[ext_resource type="Texture2D" uid="uid://do8cvxsdy1kv6" path="res://ui/menu/GamepadButtons/XboxOne_A.png" id="1_g35so"]
+[ext_resource type="Texture2D" uid="uid://dwwxidwcdswc1" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F1.png" id="1_gl4ly"]
+[ext_resource type="Texture2D" uid="uid://bbuegli6ab7nc" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Tab.png" id="1_hls3f"]
+[ext_resource type="Script" path="res://ui/menu/input_atlas.gd" id="2_26arw"]
+[ext_resource type="Texture2D" uid="uid://f6ch73dt5tuw" path="res://ui/menu/GamepadButtons/XboxOne_B.png" id="2_awi3p"]
+[ext_resource type="Texture2D" uid="uid://cujj1w8cbm5ys" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Backspace.png" id="2_q4u55"]
+[ext_resource type="Texture2D" uid="uid://doymdijgphmyt" path="res://ui/menu/GamepadButtons/XboxOne_X.png" id="3_7nuik"]
+[ext_resource type="Texture2D" uid="uid://c6oomiog4rtts" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Enter.png" id="3_foqwp"]
+[ext_resource type="Texture2D" uid="uid://dxljknbxif8ku" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Insert.png" id="4_6opov"]
+[ext_resource type="Texture2D" uid="uid://b52l8mpgpkxk" path="res://ui/menu/GamepadButtons/XboxOne_Y.png" id="4_ptqpk"]
+[ext_resource type="Texture2D" uid="uid://wjtx5i6b0cuw" path="res://ui/menu/GamepadButtons/XboxOne_Windows.png" id="5_lgpvy"]
+[ext_resource type="Texture2D" uid="uid://dd8uxiu02wfib" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Delete.png" id="5_m5hrq"]
+[ext_resource type="Texture2D" uid="uid://bo1h0rx36u237" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Home.png" id="6_mevn5"]
+[ext_resource type="Texture2D" uid="uid://dv2osf52m0y0j" path="res://ui/menu/GamepadButtons/XboxOne_Menu.png" id="6_sevbd"]
+[ext_resource type="Texture2D" uid="uid://syrrtyxlst4g" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_End.png" id="7_0r3b1"]
+[ext_resource type="Texture2D" uid="uid://dv4o7kxqbbf48" path="res://ui/menu/GamepadButtons/XboxOne_Left_Stick.png" id="7_1n12i"]
+[ext_resource type="Texture2D" uid="uid://bcsreejmfstgu" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Left.png" id="8_axrvt"]
+[ext_resource type="Texture2D" uid="uid://deio7dlrlloxy" path="res://ui/menu/GamepadButtons/XboxOne_Right_Stick.png" id="8_n4kji"]
+[ext_resource type="Texture2D" uid="uid://0c4pngrhxibp" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Up.png" id="9_4x5px"]
+[ext_resource type="Texture2D" uid="uid://cpjl14ug2gmhk" path="res://ui/menu/GamepadButtons/XboxOne_LB.png" id="9_j5g0i"]
+[ext_resource type="Texture2D" uid="uid://dgo5px4ufcox5" path="res://ui/menu/GamepadButtons/XboxOne_RB.png" id="10_bqyl7"]
+[ext_resource type="Texture2D" uid="uid://dvtfn8qjkf4nq" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Right.png" id="10_np0c2"]
+[ext_resource type="Texture2D" uid="uid://de6ay5pnkhfqo" path="res://ui/menu/GamepadButtons/XboxOne_Dpad_Up.png" id="11_6m23i"]
+[ext_resource type="Texture2D" uid="uid://cq16js56wfcos" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Down.png" id="11_feprw"]
+[ext_resource type="Texture2D" uid="uid://bcstuvo22hgq7" path="res://ui/menu/GamepadButtons/XboxOne_Dpad_Down.png" id="12_mg5yc"]
+[ext_resource type="Texture2D" uid="uid://bay1ubgspw22o" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_PageUp.png" id="12_nwdw1"]
+[ext_resource type="Texture2D" uid="uid://crx3m32tk5vh0" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_PageDown.png" id="13_fdg5v"]
+[ext_resource type="Texture2D" uid="uid://cqndquxq4kdu4" path="res://ui/menu/GamepadButtons/XboxOne_Dpad_Left.png" id="13_ybtjj"]
+[ext_resource type="Texture2D" uid="uid://4g3jpi6slf4c" path="res://ui/menu/GamepadButtons/XboxOne_Dpad_Right.png" id="14_kdqrx"]
+[ext_resource type="Texture2D" uid="uid://btcqitpfo6b3x" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Shift.png" id="14_lfiej"]
+[ext_resource type="Texture2D" uid="uid://2yfpinwb1h1b" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Ctrl.png" id="15_gd3md"]
+[ext_resource type="Texture2D" uid="uid://dg75unv27lrk" path="res://ui/menu/GamepadButtons/XboxOne_LT.png" id="15_hihnp"]
+[ext_resource type="Texture2D" uid="uid://cmm3nhgthlhva" path="res://ui/menu/GamepadButtons/XboxOne_RT.png" id="16_1d7r8"]
+[ext_resource type="Texture2D" uid="uid://ctkx78one1j7b" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Alt.png" id="16_gqw88"]
+[ext_resource type="Texture2D" uid="uid://dlrqgthspadmm" path="res://ui/menu/GamepadButtonsPS/PS4_Cross.png" id="17_6mlkm"]
+[ext_resource type="Texture2D" uid="uid://xo0sn1vytd6v" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_CapsLock.png" id="17_knlqo"]
+[ext_resource type="Texture2D" uid="uid://chemk5n4ny5di" path="res://ui/menu/Placeholder.png" id="17_w65m0"]
+[ext_resource type="Texture2D" uid="uid://c53qaacb2bysp" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_NumLock.png" id="18_7k4g3"]
+[ext_resource type="Texture2D" uid="uid://ccn6d1i6hf4p5" path="res://ui/menu/GamepadButtonsPS/PS4_Circle.png" id="18_g7k41"]
+[ext_resource type="Texture2D" uid="uid://chuyk4omqt875" path="res://ui/menu/GamepadButtonsPS/PS4_Square.png" id="19_gvd7s"]
+[ext_resource type="Texture2D" uid="uid://twx1ee44hcgm" path="res://ui/menu/GamepadButtonsPS/PS4_Triangle.png" id="20_huw7l"]
+[ext_resource type="Texture2D" uid="uid://b1hj0lfc0w10q" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F2.png" id="20_kt5uk"]
+[ext_resource type="Texture2D" uid="uid://bohc73pdojgk" path="res://ui/menu/GamepadButtonsPS/PS4_Share.png" id="21_j4emq"]
+[ext_resource type="Texture2D" uid="uid://cb0ppondrlwgl" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F3.png" id="21_qgwec"]
+[ext_resource type="Texture2D" uid="uid://vjyl1alculit" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F4.png" id="22_byymt"]
+[ext_resource type="Texture2D" uid="uid://biwlbk7xuih66" path="res://ui/menu/GamepadButtonsPS/PS4_Options.png" id="22_gyl7h"]
+[ext_resource type="Texture2D" uid="uid://clnw7ygftmpj1" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F5.png" id="23_bf3jh"]
+[ext_resource type="Texture2D" uid="uid://b1eqnfvguvunj" path="res://ui/menu/GamepadButtonsPS/PS4_Left_Stick.png" id="23_xwunw"]
+[ext_resource type="Texture2D" uid="uid://dby6bwidqou8d" path="res://ui/menu/GamepadButtonsPS/PS4_Right_Stick.png" id="24_1kx1s"]
+[ext_resource type="Texture2D" uid="uid://buns747hf0ah3" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F6.png" id="24_m6f0e"]
+[ext_resource type="Texture2D" uid="uid://civvnbcih4a77" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F7.png" id="25_8trd5"]
+[ext_resource type="Texture2D" uid="uid://dvd4qyoewr6r6" path="res://ui/menu/GamepadButtonsPS/PS4_L1.png" id="25_k40kb"]
+[ext_resource type="Texture2D" uid="uid://cwmstokljpedh" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F8.png" id="26_ghi70"]
+[ext_resource type="Texture2D" uid="uid://bqtr2phk7jypw" path="res://ui/menu/GamepadButtonsPS/PS4_R1.png" id="26_hhbgm"]
+[ext_resource type="Texture2D" uid="uid://c0fbcthdrct46" path="res://ui/menu/GamepadButtonsPS/PS4_Dpad_Up.png" id="27_gtj5l"]
+[ext_resource type="Texture2D" uid="uid://boatnykvpiysy" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F9.png" id="27_uabjg"]
+[ext_resource type="Texture2D" uid="uid://kej3wxam4ob" path="res://ui/menu/GamepadButtonsPS/PS4_Dpad_Down.png" id="28_paaa3"]
+[ext_resource type="Texture2D" uid="uid://d1jk3ysg18of5" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F10.png" id="28_q7wkp"]
+[ext_resource type="Texture2D" uid="uid://b0720svxvrgn6" path="res://ui/menu/GamepadButtonsPS/PS4_Dpad_Left.png" id="29_0x7hw"]
+[ext_resource type="Texture2D" uid="uid://bk5scqkpe0a0p" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F11.png" id="29_eset7"]
+[ext_resource type="Texture2D" uid="uid://cifbja73ranca" path="res://ui/menu/GamepadButtonsPS/PS4_Dpad_Right.png" id="30_hr5yu"]
+[ext_resource type="Texture2D" uid="uid://d2guueh3oulqx" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F12.png" id="30_q4rru"]
+[ext_resource type="Texture2D" uid="uid://c1p3d0hcfedpj" path="res://ui/menu/GamepadButtonsPS/PS4_L2.png" id="31_d1dh0"]
+[ext_resource type="Texture2D" uid="uid://c330c3c7meg2t" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Space.png" id="31_tv17o"]
+[ext_resource type="Texture2D" uid="uid://d1d2d4trh2btt" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Asterisk.png" id="32_3sqe8"]
+[ext_resource type="Texture2D" uid="uid://di6ob104tcasb" path="res://ui/menu/GamepadButtonsPS/PS4_R2.png" id="32_c3exf"]
+[ext_resource type="Texture2D" uid="uid://cr88a4qahdvol" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Plus.png" id="33_jxbmi"]
+[ext_resource type="Texture2D" uid="uid://nb6ak25v5phv" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Minus.png" id="34_a6ql3"]
+[ext_resource type="Texture2D" uid="uid://bc7qv7keceem0" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Slash.png" id="35_5eymt"]
+[ext_resource type="Texture2D" uid="uid://bha2h2m6ld8b8" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_0.png" id="36_rff7w"]
+[ext_resource type="Texture2D" uid="uid://b42mkqcn2oxw6" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_1.png" id="37_tp2ku"]
+[ext_resource type="Texture2D" uid="uid://btnn77xvlhca1" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_2.png" id="38_2cgbg"]
+[ext_resource type="Texture2D" uid="uid://dtcnmxf2i43j2" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_3.png" id="39_1kdva"]
+[ext_resource type="Texture2D" uid="uid://lwmidfm7w2p6" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_4.png" id="40_jqv1l"]
+[ext_resource type="Texture2D" uid="uid://y10ggmm70dvi" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_5.png" id="41_di3sd"]
+[ext_resource type="Texture2D" uid="uid://qgle4131oa8w" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_6.png" id="42_iueoi"]
+[ext_resource type="Texture2D" uid="uid://dxp6aoflue542" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_7.png" id="43_roi1w"]
+[ext_resource type="Texture2D" uid="uid://cdl5vjct16p7b" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_8.png" id="44_1708m"]
+[ext_resource type="Texture2D" uid="uid://dh3oo7aks4qp8" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_9.png" id="45_vl4uv"]
+[ext_resource type="Texture2D" uid="uid://ymfoiorm6twg" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Semicolon.png" id="46_xwf52"]
+[ext_resource type="Texture2D" uid="uid://ch6y7aav0tc3d" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Less.png" id="47_f5bmg"]
+[ext_resource type="Texture2D" uid="uid://dis8wd034oh81" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Greater.png" id="48_s5tvf"]
+[ext_resource type="Texture2D" uid="uid://dbhahumfqeh3j" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Question.png" id="49_bp5jg"]
+[ext_resource type="Texture2D" uid="uid://bx60q76c65jbb" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_A.png" id="50_qxvmk"]
+[ext_resource type="Texture2D" uid="uid://8v02fiat7o6v" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_B.png" id="51_dby0q"]
+[ext_resource type="Texture2D" uid="uid://cu32b7pl78dpb" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_C.png" id="52_oso0f"]
+[ext_resource type="Texture2D" uid="uid://chae1s2wgfy7o" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_D.png" id="53_tfopa"]
+[ext_resource type="Texture2D" uid="uid://cbofaacwp7he2" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_E.png" id="54_luxu3"]
+[ext_resource type="Texture2D" uid="uid://c5qpmusyvlo2m" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_F.png" id="55_al83c"]
+[ext_resource type="Texture2D" uid="uid://nri665ncj7bh" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_G.png" id="56_e5ut8"]
+[ext_resource type="Texture2D" uid="uid://cmcgjmjuqff26" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_H.png" id="57_2know"]
+[ext_resource type="Texture2D" uid="uid://ck3p8ovmpxjvu" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_I.png" id="58_1qcpe"]
+[ext_resource type="Texture2D" uid="uid://c5che0hlft307" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_J.png" id="59_wt7ek"]
+[ext_resource type="Texture2D" uid="uid://c2rrgef02dynd" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_K.png" id="60_vteqx"]
+[ext_resource type="Texture2D" uid="uid://dlhuqjai1qny0" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_L.png" id="61_0syx1"]
+[ext_resource type="Texture2D" uid="uid://b771c618hycde" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_M.png" id="62_xfobp"]
+[ext_resource type="Texture2D" uid="uid://bn5rqbrnuk103" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_N.png" id="63_cy5fg"]
+[ext_resource type="Texture2D" uid="uid://dvpdcqt16cvr3" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_O.png" id="64_yipba"]
+[ext_resource type="Texture2D" uid="uid://cybiyppsjcss0" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_P.png" id="65_wdek4"]
+[ext_resource type="Texture2D" uid="uid://b4lcbe8yqmv1q" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Q.png" id="66_q3b2a"]
+[ext_resource type="Texture2D" uid="uid://cnrnleq7yle7q" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_R.png" id="67_mi1wc"]
+[ext_resource type="Texture2D" uid="uid://dnwiq673wu6n0" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_S.png" id="68_kdsih"]
+[ext_resource type="Texture2D" uid="uid://6xg88bbf0yh1" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_T.png" id="69_cxxud"]
+[ext_resource type="Texture2D" uid="uid://cyf2oehinkgcl" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_U.png" id="70_tb031"]
+[ext_resource type="Texture2D" uid="uid://ce5fccrl5r5fb" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_V.png" id="71_isnp4"]
+[ext_resource type="Texture2D" uid="uid://biriobt8nl7to" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_W.png" id="72_u0vjx"]
+[ext_resource type="Texture2D" uid="uid://pt0i50nftd7b" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_X.png" id="73_o4jea"]
+[ext_resource type="Texture2D" uid="uid://bavy36uaym1ye" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Y.png" id="74_542db"]
+[ext_resource type="Texture2D" uid="uid://b3gg5gmbi6oh1" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Z.png" id="75_13p3p"]
+[ext_resource type="Texture2D" uid="uid://bj4b6m41o0602" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_BracketLeft.png" id="76_4vqgc"]
+[ext_resource type="Texture2D" uid="uid://cvi6vj3qe28dh" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Mouse_Simple.png" id="95_2t4es"]
+[ext_resource type="Texture2D" uid="uid://caigqx6gup7jw" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Mouse_Left.png" id="96_1xy5g"]
+[ext_resource type="Texture2D" uid="uid://decsyw0glsevp" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Mouse_Right.png" id="97_jpq05"]
+[ext_resource type="Texture2D" uid="uid://dlx48ooa8ns6d" path="res://ui/menu/Keyboard & Mouse/Keyboard_Black_Mouse_Middle.png" id="98_aionn"]
+
+[resource]
+script = ExtResource("2_26arw")
+key_map = {
+"0": ExtResource("36_rff7w"),
+"1": ExtResource("37_tp2ku"),
+"2": ExtResource("38_2cgbg"),
+"3": ExtResource("39_1kdva"),
+"4": ExtResource("40_jqv1l"),
+"5": ExtResource("41_di3sd"),
+"6": ExtResource("42_iueoi"),
+"7": ExtResource("43_roi1w"),
+"8": ExtResource("44_1708m"),
+"9": ExtResource("45_vl4uv"),
+"A": ExtResource("50_qxvmk"),
+"Alt": ExtResource("16_gqw88"),
+"Asterisk": ExtResource("32_3sqe8"),
+"B": ExtResource("51_dby0q"),
+"Backspace": ExtResource("2_q4u55"),
+"BracketLeft": ExtResource("76_4vqgc"),
+"BracketRight": ExtResource("1_223sy"),
+"C": ExtResource("52_oso0f"),
+"CapsLock": ExtResource("17_knlqo"),
+"Ctrl": ExtResource("15_gd3md"),
+"D": ExtResource("53_tfopa"),
+"Delete": ExtResource("5_m5hrq"),
+"Down": ExtResource("11_feprw"),
+"E": ExtResource("54_luxu3"),
+"End": ExtResource("7_0r3b1"),
+"Enter": ExtResource("3_foqwp"),
+"F": ExtResource("55_al83c"),
+"F1": ExtResource("1_gl4ly"),
+"F10": ExtResource("28_q7wkp"),
+"F11": ExtResource("29_eset7"),
+"F12": ExtResource("30_q4rru"),
+"F2": ExtResource("20_kt5uk"),
+"F3": ExtResource("21_qgwec"),
+"F4": ExtResource("22_byymt"),
+"F5": ExtResource("23_bf3jh"),
+"F6": ExtResource("24_m6f0e"),
+"F7": ExtResource("25_8trd5"),
+"F8": ExtResource("26_ghi70"),
+"F9": ExtResource("27_uabjg"),
+"G": ExtResource("56_e5ut8"),
+"Greater": ExtResource("48_s5tvf"),
+"H": ExtResource("57_2know"),
+"Home": ExtResource("6_mevn5"),
+"I": ExtResource("58_1qcpe"),
+"Insert": ExtResource("4_6opov"),
+"J": ExtResource("59_wt7ek"),
+"K": ExtResource("60_vteqx"),
+"L": ExtResource("61_0syx1"),
+"Left": ExtResource("8_axrvt"),
+"Less": ExtResource("47_f5bmg"),
+"M": ExtResource("62_xfobp"),
+"Minus": ExtResource("34_a6ql3"),
+"N": ExtResource("63_cy5fg"),
+"NumLock": ExtResource("18_7k4g3"),
+"O": ExtResource("64_yipba"),
+"P": ExtResource("65_wdek4"),
+"PageDown": ExtResource("13_fdg5v"),
+"PageUp": ExtResource("12_nwdw1"),
+"Plus": ExtResource("33_jxbmi"),
+"Q": ExtResource("66_q3b2a"),
+"Question": ExtResource("49_bp5jg"),
+"R": ExtResource("67_mi1wc"),
+"Right": ExtResource("10_np0c2"),
+"S": ExtResource("68_kdsih"),
+"Semicolon": ExtResource("46_xwf52"),
+"Shift": ExtResource("14_lfiej"),
+"Slash": ExtResource("35_5eymt"),
+"Space": ExtResource("31_tv17o"),
+"T": ExtResource("69_cxxud"),
+"Tab": ExtResource("1_hls3f"),
+"U": ExtResource("70_tb031"),
+"Up": ExtResource("9_4x5px"),
+"V": ExtResource("71_isnp4"),
+"W": ExtResource("72_u0vjx"),
+"X": ExtResource("73_o4jea"),
+"Y": ExtResource("74_542db"),
+"Z": ExtResource("75_13p3p")
+}
+button_map = Array[Texture2D]([ExtResource("1_g35so"), ExtResource("2_awi3p"), ExtResource("3_7nuik"), ExtResource("4_ptqpk"), ExtResource("5_lgpvy"), ExtResource("6_sevbd"), null, ExtResource("7_1n12i"), ExtResource("8_n4kji"), ExtResource("9_j5g0i"), ExtResource("10_bqyl7"), ExtResource("11_6m23i"), ExtResource("12_mg5yc"), ExtResource("13_ybtjj"), ExtResource("14_kdqrx"), null, ExtResource("15_hihnp"), ExtResource("16_1d7r8"), null, null, null])
+button_map_playstation = Array[Texture2D]([ExtResource("17_6mlkm"), ExtResource("18_g7k41"), ExtResource("19_gvd7s"), ExtResource("20_huw7l"), ExtResource("21_j4emq"), null, ExtResource("22_gyl7h"), ExtResource("23_xwunw"), ExtResource("24_1kx1s"), ExtResource("25_k40kb"), ExtResource("26_hhbgm"), ExtResource("27_gtj5l"), ExtResource("28_paaa3"), ExtResource("29_0x7hw"), ExtResource("30_hr5yu"), null, ExtResource("31_d1dh0"), ExtResource("32_c3exf"), null, null, null])
+mousebutton_map = Array[Texture2D]([ExtResource("95_2t4es"), ExtResource("96_1xy5g"), ExtResource("97_jpq05"), ExtResource("98_aionn"), ExtResource("98_aionn"), ExtResource("98_aionn"), ExtResource("98_aionn"), ExtResource("98_aionn"), ExtResource("95_2t4es"), ExtResource("95_2t4es")])
+default = ExtResource("17_w65m0")

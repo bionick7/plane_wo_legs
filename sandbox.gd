@@ -2,4 +2,4 @@
 extends EditorScript
 
 func _run():
-	print(Basis.looking_at(Vector3.FORWARD, Vector3.UP))
+	print(Input.get_joy_name(1))

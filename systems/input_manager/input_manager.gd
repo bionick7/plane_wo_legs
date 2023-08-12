@@ -10,8 +10,8 @@ const FLIGHTSTICK_DEFAULTS = {
 const GAMEPAD_DEFAULTS = {
 	pitch = JOY_AXIS_RIGHT_Y,
 	roll = JOY_AXIS_RIGHT_X,
-	r_pedal = JOY_AXIS_TRIGGER_LEFT,
-	l_pedal = JOY_AXIS_TRIGGER_RIGHT,
+	r_pedal = JOY_AXIS_TRIGGER_RIGHT,
+	l_pedal = JOY_AXIS_TRIGGER_LEFT,
 	throttle = JOY_AXIS_LEFT_Y,
 }
 
@@ -45,9 +45,6 @@ func _process(dt: float):
 	controls.airbrake = brake_gamepad + brake_flightstick + Input.get_action_strength("airbrake")
 	
 func _input(event: InputEvent):
-	if event.is_action_pressed("toggle_control_help"):
-		$ControlHelp/PanelContainer.visible = not $ControlHelp/PanelContainer.visible
-		
 	if event is InputEventJoypadMotion and event.device in config.flightstick_devices:
 		var info: Dictionary = config.device_info[config.flightstick_devices[event.device]]
 		if info.is_flight_stick and event.axis == info.overrides.get("throttle", FLIGHTSTICK_DEFAULTS.throttle):
@@ -63,46 +60,19 @@ func _input(event: InputEvent):
 			
 	if Input.is_action_just_pressed("mouse_drag") and fly_by_mouse():
 		mouse_drage_ref = get_viewport().get_mouse_position()
-		
-	if event.device >= 0 and not config.device_known(event.device):
-		return
-		
 
-func _handle_throttle(dt: float) -> void:
-	if true: #Input.is_action_pressed("throttle_set"):
-		var axis_read := accumulate_virtual_axis_gp("throttle")
-		if abs(axis_read) < 0.1: axis_read = 0.0
-		axis_read = signf(axis_read) * absf(axis_read) ** 3.0
-		gamepad_throttle = gamepad_throttle - axis_read * dt * 5
-		gamepad_throttle = clampf(gamepad_throttle, -flightstick_throttle-mouse_throttle, 1-flightstick_throttle-mouse_throttle)
-	
-	controls.throttle = clampf(lerp(controls.throttle, flightstick_throttle + gamepad_throttle + mouse_throttle, smoothstep(0., .5, control_multiplier)), 0.0, 1.0)
+func get_default_axis_mapping(device: int, v_axis_name: String) -> JoyAxis:
+	if device in config.flightstick_devices:
+		return FLIGHTSTICK_DEFAULTS.get(v_axis_name, -1)
+	return GAMEPAD_DEFAULTS.get(v_axis_name, -1)
 
-func _handle_ypr(dt: float) -> void:
-	var flightstick_ypr := Vector3(
-		accumulate_virtual_axis_fs("yaw"),
-		-accumulate_virtual_axis_fs("pitch"),
-		accumulate_virtual_axis_fs("roll")
-	)
-	var gamepad_ypr := Vector3.ZERO if Input.is_action_pressed("camera_toggle") else Vector3(
-		accumulate_virtual_axis_gp("l_pedal") - accumulate_virtual_axis_gp("r_pedal"),
-		-accumulate_virtual_axis_gp("pitch"),
-		accumulate_virtual_axis_gp("roll")
-	)
-	gamepad_ypr.y = signf(gamepad_ypr.y) * absf(gamepad_ypr.y) ** 1.3
-	gamepad_ypr.x = signf(gamepad_ypr.x) * absf(gamepad_ypr.x) ** 2.5
-	var mouse_ypr := Vector3.ZERO
-	#if not Input.is_key_pressed(KEY_CTRL) and Input.is_action_pressed("mouse_drag"):
-	if fly_by_mouse():
-		var mouse_delta = get_viewport().get_mouse_position() - get_viewport().size * 0.5
-		mouse_delta /= 200
-		mouse_ypr = Vector3(
-			0,
-			clamp(-mouse_delta.y, -1, 1), 
-			clamp( mouse_delta.x, -1, 1)
-		)
-	controls.ypr = (flightstick_ypr + gamepad_ypr + mouse_ypr) * control_multiplier
-	
+func get_axis_mapping(device: int, v_axis_name: String) -> JoyAxis:
+	var guid = Input.get_joy_guid(device)
+	var map: Dictionary = config.device_info.get(guid, {overrides={}}).overrides
+	var res: int = map.get(v_axis_name, -1)
+	if res < 0:
+		res = get_default_axis_mapping(device, v_axis_name)
+	return res
 	
 func fly_by_mouse() -> bool:
 	return config.allow_mouse_aim and not Input.is_key_pressed(KEY_CTRL)
@@ -170,5 +140,40 @@ func set_vibration(certainty: float) -> void:
 		for gamepad in config.gamepad_devices:
 			Input.stop_joy_vibration(gamepad)
 
+func _handle_throttle(dt: float) -> void:
+	if true: #Input.is_action_pressed("throttle_set"):
+		var axis_read := accumulate_virtual_axis_gp("throttle")
+		if abs(axis_read) < 0.1: axis_read = 0.0
+		axis_read = signf(axis_read) * absf(axis_read) ** 3.0
+		gamepad_throttle = gamepad_throttle - axis_read * dt * 5
+		gamepad_throttle = clampf(gamepad_throttle, -flightstick_throttle-mouse_throttle, 1-flightstick_throttle-mouse_throttle)
+	
+	controls.throttle = clampf(lerp(controls.throttle, flightstick_throttle + gamepad_throttle + mouse_throttle, smoothstep(0., .5, control_multiplier)), 0.0, 1.0)
+
+func _handle_ypr(dt: float) -> void:
+	var flightstick_ypr := Vector3(
+		accumulate_virtual_axis_fs("yaw"),
+		-accumulate_virtual_axis_fs("pitch"),
+		accumulate_virtual_axis_fs("roll")
+	)
+	var gamepad_ypr := Vector3(
+		accumulate_virtual_axis_gp("r_pedal") - accumulate_virtual_axis_gp("l_pedal"),
+		-accumulate_virtual_axis_gp("pitch"),
+		accumulate_virtual_axis_gp("roll")
+	)
+	gamepad_ypr.y = signf(gamepad_ypr.y) * absf(gamepad_ypr.y) ** 1.3
+	gamepad_ypr.x = signf(gamepad_ypr.x) * absf(gamepad_ypr.x) ** 2.5
+	var mouse_ypr := Vector3.ZERO
+	#if not Input.is_key_pressed(KEY_CTRL) and Input.is_action_pressed("mouse_drag"):
+	if fly_by_mouse():
+		var mouse_delta = get_viewport().get_mouse_position() - get_viewport().size * 0.5
+		mouse_delta /= 200
+		mouse_ypr = Vector3(
+			0,
+			clamp(-mouse_delta.y, -1, 1), 
+			clamp( mouse_delta.x, -1, 1)
+		)
+	controls.ypr = (flightstick_ypr + gamepad_ypr + mouse_ypr) * control_multiplier
+	
 func _peer_acc(key: String) -> Variant:
 	return controls[key]

@@ -1,8 +1,6 @@
 class_name TrackingAnchor
 extends Node3D
 
-signal dammage_taken(dmg: int)
-
 enum TGT_FLAGS {
 	PLAYER_CAN_TARGET = 	0x01,
 	NPC_CAN_TARGET = 		0x02,
@@ -11,11 +9,14 @@ enum TGT_FLAGS {
 
 @export var show_on_hud = true
 @export var show_on_rwr = true
+## The TrackingAnchor can be tracked by the following agents
 @export_flags("Player", "NPC Planes", "CWIS") var target_flags: int
+## The hitbox associated with the same parent agent. null if not applicable
 @export var hitbox: Hitbox
+## Will get targeted by NPC if allegency_flags overlap with NPCs hostility flags
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var allegency_flags: int
 
-
+## The object, the tracking anchor is attached to / refers to
 var ref: Node3D
 var _pos = Vector3.ZERO
 var _calc_velocity = Vector3.ZERO
@@ -74,6 +75,8 @@ func get_velocity() -> Vector3:
 		return ref.velocity
 	return _calc_velocity
 
+## Will return true if the object is within the cloud layer
+## Only implemented for planes right now
 func is_hidden() -> bool:
 	if refers_plane():
 		return ref.is_hidden()

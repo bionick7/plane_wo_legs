@@ -1,0 +1,86 @@
+[gd_scene load_steps=5 format=3 uid="uid://nnsts57nahyl"]
+
+[ext_resource type="Script" path="res://ui/menu/input_action_ui.gd" id="1_v7yrl"]
+[ext_resource type="Resource" uid="uid://bhol7l2rnuo46" path="res://ui/menu/input_atlas.tres" id="2_0268u"]
+[ext_resource type="Texture2D" uid="uid://chemk5n4ny5di" path="res://ui/menu/Placeholder.png" id="3_go0lq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mou8x"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.231373, 0.231373, 0.231373, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="InputActionUI" type="PanelContainer"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_mou8x")
+script = ExtResource("1_v7yrl")
+input_atlas = ExtResource("2_0268u")
+
+[node name="V" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ActionName" type="Label" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fire Gun"
+horizontal_alignment = 1
+
+[node name="InputListen" type="LineEdit" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "focus to change"
+alignment = 1
+editable = false
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="GridContainer" type="GridContainer" parent="V"]
+layout_mode = 2
+columns = 3
+
+[node name="Keyboard" type="Label" parent="V/GridContainer"]
+visible = false
+layout_mode = 2
+text = "Keyboard"
+
+[node name="KeyboardIcon" type="TextureRect" parent="V/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+tooltip_text = "Keyboard or mouse mapping"
+texture = ExtResource("3_go0lq")
+expand_mode = 2
+
+[node name="FlightStick" type="Label" parent="V/GridContainer"]
+visible = false
+layout_mode = 2
+text = "Flightstick"
+
+[node name="FlightStickIcon" type="TextureRect" parent="V/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+tooltip_text = "Flightstick mapping"
+texture = ExtResource("3_go0lq")
+expand_mode = 2
+
+[node name="Gamepad" type="Label" parent="V/GridContainer"]
+visible = false
+layout_mode = 2
+text = "Gamepad"
+
+[node name="GamepadIcon" type="TextureRect" parent="V/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+tooltip_text = "Gamepad mapping"
+texture = ExtResource("3_go0lq")
+expand_mode = 2

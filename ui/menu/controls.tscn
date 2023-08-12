@@ -1,107 +1,122 @@
 [gd_scene load_steps=3 format=3 uid="uid://cnomcsihcgfmi"]
 
 [ext_resource type="Script" path="res://ui/menu/controls_optionpanel.gd" id="1_shbqp"]
-[ext_resource type="Script" path="res://ui/menu/axis_configure.gd" id="2_ham53"]
+[ext_resource type="Script" path="res://ui/menu/axis_listener.gd" id="2_enhmo"]
 
 [node name="Controls" type="PanelContainer"]
+offset_right = 335.0
+offset_bottom = 592.0
 script = ExtResource("1_shbqp")
 
 [node name="HSplit" type="HSplitContainer" parent="."]
 layout_mode = 2
+dragger_visibility = 1
 
 [node name="Actions" type="ScrollContainer" parent="HSplit"]
 custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="V" type="VBoxContainer" parent="HSplit/Actions"]
+[node name="InputActionUIParent" type="VBoxContainer" parent="HSplit/Actions"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="HSplit/Actions/V"]
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
-color = Color(1, 0.0156863, 0, 1)
-
-[node name="VSplit" type="VSplitContainer" parent="HSplit"]
-layout_mode = 2
-split_offset = 200
-
-[node name="V" type="VBoxContainer" parent="HSplit/VSplit"]
+[node name="General" type="VBoxContainer" parent="HSplit"]
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="HSplit/VSplit/V"]
+[node name="Devices" type="VBoxContainer" parent="HSplit/General"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="HSplit/General/Devices"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
-[node name="DeviceSelector" type="OptionButton" parent="HSplit/VSplit/V"]
+[node name="DeviceSelector" type="OptionButton" parent="HSplit/General/Devices"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
+focus_neighbor_bottom = NodePath("../DeviceOptionTabs")
 
-[node name="Spacer2" type="Control" parent="HSplit/VSplit/V"]
+[node name="Spacer2" type="Control" parent="HSplit/General/Devices"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="DeviceOptionTabs" type="TabContainer" parent="HSplit/VSplit/V"]
+[node name="DeviceOptionTabs" type="TabContainer" parent="HSplit/General/Devices"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_top = NodePath("../DeviceSelector")
+tab_alignment = 1
 
-[node name="FlightStick" type="MarginContainer" parent="HSplit/VSplit/V/DeviceOptionTabs"]
+[node name="Is Flightstick" type="MarginContainer" parent="HSplit/General/Devices/DeviceOptionTabs"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="Grid" type="GridContainer" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick"]
+[node name="Grid" type="GridContainer" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick"]
 layout_mode = 2
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 6
 columns = 2
 
-[node name="Yaw" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="Yaw" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Yaw"
 
-[node name="YawAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="YawAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid" groups=["AxisListener"]]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "RIGHT_BLALA"
+text = "AXIS"
+placeholder_text = "Actuate axis to replace"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "yaw"
 
-[node name="Pitch" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="Pitch" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid"]
 layout_mode = 2
 text = "Pitch"
 
-[node name="PitchAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="PitchAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "pitch"
 
-[node name="Roll" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="Roll" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid"]
 layout_mode = 2
 text = "Roll"
 
-[node name="RollAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="RollAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "roll"
 
-[node name="Thrust" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="Thrust" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid"]
 layout_mode = 2
-text = "Thrust
-"
+text = "Throttle"
 
-[node name="ThrustAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/FlightStick/Grid"]
+[node name="ThrustAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Flightstick/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "throttle"
 
-[node name="Gamepad" type="MarginContainer" parent="HSplit/VSplit/V/DeviceOptionTabs"]
+[node name="Is Gamepad" type="MarginContainer" parent="HSplit/General/Devices/DeviceOptionTabs"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -109,175 +124,107 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="Grid" type="GridContainer" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad"]
+[node name="Grid" type="GridContainer" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad"]
 layout_mode = 2
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 6
 columns = 2
 
-[node name="Pitch" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="Pitch" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Pitch"
 
-[node name="PitchAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="PitchAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid" groups=["AxisListener"]]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "pitch"
 
-[node name="Roll" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="Roll" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid"]
 layout_mode = 2
 text = "Roll"
 
-[node name="RollAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="RollAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "roll"
 
-[node name="Thrust" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="Thrust" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid"]
 layout_mode = 2
-text = "Thrust
-"
+text = "Throttle"
 
-[node name="ThrustAxis" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="ThrustAxis" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "throttle"
 
-[node name="LeftPedalAxis" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="LeftPedalAxis" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid"]
 layout_mode = 2
 text = "Left Pedal"
 
-[node name="LeftPedal" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="LeftPedal" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "l_pedal"
 
-[node name="RightPedalAxis" type="Label" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="RightPedalAxis" type="Label" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid"]
 layout_mode = 2
 text = "Right Pedal"
 
-[node name="RightPedal" type="LineEdit" parent="HSplit/VSplit/V/DeviceOptionTabs/Gamepad/Grid"]
+[node name="RightPedal" type="LineEdit" parent="HSplit/General/Devices/DeviceOptionTabs/Is Gamepad/Grid" groups=["AxisListener"]]
 layout_mode = 2
 text = "RIGHT_BLALA"
 editable = false
 expand_to_text_length = true
+context_menu_enabled = false
+script = ExtResource("2_enhmo")
+axis_id = "r_pedal"
 
-[node name="Other" type="ScrollContainer" parent="HSplit/VSplit"]
+[node name="Other" type="ScrollContainer" parent="HSplit/General"]
 layout_mode = 2
+size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="V" type="VBoxContainer" parent="HSplit/VSplit/Other"]
+[node name="V" type="VBoxContainer" parent="HSplit/General/Other"]
 layout_mode = 2
 
-[node name="CheckButton" type="CheckBox" parent="HSplit/VSplit/Other/V"]
+[node name="MouseAim" type="CheckBox" parent="HSplit/General/Other/V"]
 layout_mode = 2
 text = "Allow mouse aim"
 
-[node name="Devices" type="ScrollContainer" parent="HSplit/VSplit"]
-visible = false
-custom_minimum_size = Vector2(200, 0)
+[node name="H" type="HBoxContainer" parent="HSplit/General"]
 layout_mode = 2
-horizontal_scroll_mode = 0
+size_flags_vertical = 10
 
-[node name="H" type="GridContainer" parent="HSplit/VSplit/Devices"]
+[node name="Margin" type="MarginContainer" parent="HSplit/General/H"]
 layout_mode = 2
-columns = 3
+size_flags_horizontal = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
-[node name="DeviceLabel0" type="Label" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
+[node name="Save" type="Button" parent="HSplit/General/H/Margin"]
 layout_mode = 2
-text = "Label 1"
+text = "Save"
 
-[node name="DeviceSwitch0" type="OptionButton" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-item_count = 2
-popup/item_0/text = "Flightstick"
-popup/item_0/id = 0
-popup/item_1/text = "Gamepad"
-popup/item_1/id = 1
-
-[node name="DeviceAxis0" type="Button" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "x"
-
-[node name="DeviceLabel1" type="Label" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Label 1"
-
-[node name="DeviceSwitch1" type="OptionButton" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-item_count = 2
-popup/item_0/text = "Flightstick"
-popup/item_0/id = 0
-popup/item_1/text = "Gamepad"
-popup/item_1/id = 1
-
-[node name="DeviceAxis1" type="Button" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "x"
-
-[node name="DeviceLabel2" type="Label" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Esceedingly large label"
-
-[node name="DeviceSwitch2" type="OptionButton" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-item_count = 2
-popup/item_0/text = "Flightstick"
-popup/item_0/id = 0
-popup/item_1/text = "Gamepad"
-popup/item_1/id = 1
-
-[node name="DeviceAxis2" type="Button" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "x"
-
-[node name="DeviceLabel3" type="Label" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Label 1"
-
-[node name="DeviceSwitch3" type="OptionButton" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-item_count = 2
-popup/item_0/text = "Flightstick"
-popup/item_0/id = 0
-popup/item_1/text = "Gamepad"
-popup/item_1/id = 1
-
-[node name="DeviceAxis3" type="Button" parent="HSplit/VSplit/Devices/H"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "x"
-
-[node name="AxisConfigure" type="Window" parent="."]
-title = "AxisConfigure"
-size = Vector2i(217, 193)
-visible = false
-wrap_controls = true
-always_on_top = true
-script = ExtResource("2_ham53")
-
-[connection signal="item_selected" from="HSplit/VSplit/V/DeviceSelector" to="." method="_on_selected_device_changed"]
-[connection signal="item_selected" from="HSplit/VSplit/Devices/H/DeviceSwitch0" to="." method="_on_device_switched" binds= [0]]
-[connection signal="pressed" from="HSplit/VSplit/Devices/H/DeviceAxis0" to="AxisConfigure" method="setup" binds= [0]]
-[connection signal="item_selected" from="HSplit/VSplit/Devices/H/DeviceSwitch1" to="." method="_on_device_switched" binds= [1]]
-[connection signal="pressed" from="HSplit/VSplit/Devices/H/DeviceAxis1" to="AxisConfigure" method="setup" binds= [1]]
-[connection signal="item_selected" from="HSplit/VSplit/Devices/H/DeviceSwitch2" to="." method="_on_device_switched" binds= [2]]
-[connection signal="pressed" from="HSplit/VSplit/Devices/H/DeviceAxis2" to="AxisConfigure" method="setup" binds= [2]]
-[connection signal="item_selected" from="HSplit/VSplit/Devices/H/DeviceSwitch3" to="." method="_on_device_switched" binds= [3]]
-[connection signal="pressed" from="HSplit/VSplit/Devices/H/DeviceAxis3" to="AxisConfigure" method="setup" binds= [3]]
-[connection signal="close_requested" from="AxisConfigure" to="AxisConfigure" method="_on_close_requested"]
+[connection signal="item_selected" from="HSplit/General/Devices/DeviceSelector" to="." method="_on_selected_device_changed"]
+[connection signal="toggled" from="HSplit/General/Other/V/MouseAim" to="." method="_on_mouseaim_toggled"]
+[connection signal="pressed" from="HSplit/General/H/Margin/Save" to="." method="_on_save"]

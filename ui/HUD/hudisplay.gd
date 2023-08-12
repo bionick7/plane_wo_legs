@@ -89,17 +89,13 @@ func _process(dt: float):
 
 
 func _update_display():
-	if "get_air_velocity" in player:
-		var tas = V.length()
-		var ias = tas
-		if speed_units == 0:
-			$Heading2/IAS.text = "%5.1f m/s" % ias
-		else:
-			$Heading2/IAS.text = "%5.1f kts" % (ias / KTS_TO_MS)
-		$Heading2/Mach.text = "M = %5.3f" % (tas / CommonPhysics.get_soundspeed(player.global_position))
+	var tas = V.length()
+	var ias = tas
+	if speed_units == 0:
+		$Heading2/IAS.text = "%5.1f m/s" % ias
 	else:
-		$Heading2/IAS.hide()
-		$Heading2/Mach.hide()
+		$Heading2/IAS.text = "%5.1f kts" % (ias / KTS_TO_MS)
+	$Heading2/Mach.text = "M = %5.3f" % (tas / CommonPhysics.get_soundspeed(player.global_position))
 		
 	
 	$Heading2/Altitude.text = "%5.1f m" % CommonPhysics.get_altitude(player.global_position)
