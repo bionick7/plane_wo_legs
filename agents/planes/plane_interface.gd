@@ -2,6 +2,8 @@
 class_name PlaneInterface
 extends CharacterBody3D
 
+signal update_ypr(ypr: Vector3, throttle: float)
+
 @export_range(0, 100, 0.001, "or_greater", "hide_slider", "suffix:m/s") var crash_tolerance: float
 
 @export_group("Initial")
@@ -30,13 +32,11 @@ var _is_hidden = false
 
 @onready var debug_drawer = get_node_or_null("DebugDrawer")
 
-signal on_death
-signal on_take_dammage(ammount: int)
-signal update_ypr(ypr: Vector3, throttle: float)
-
 func _ready():
 	add_to_group("Planes")  # Set automatically for consistency
 	velocity = basis * initial_velocity_local
+	if is_instance_valid(hitbox):
+		hitbox.died.connect(die)
 
 func _process(dt: float):
 	_is_hidden = CloudManager.is_in_cloud(global_position)
@@ -67,6 +67,10 @@ func update_velocity_rotation(dt: float, manual: bool) -> void:
 func is_hidden() -> bool:
 	return _is_hidden
 
+func die(cause: String) -> void:
+	print("%s Has died because of %s" % [name, cause])
+	queue_free()
+
 func _handle_pathtrace():
 	if debug_drawer == null:
 		return
@@ -79,8 +83,3 @@ func _handle_pathtrace():
 		if trace_index >= 0:
 			debug_drawer.stop_trace(trace_index)
 			trace_index = -1
-
-func die(cause: String) -> void:
-	emit_signal("on_death")
-	print("%s Has died because of %s" % [name, cause])
-	queue_free()

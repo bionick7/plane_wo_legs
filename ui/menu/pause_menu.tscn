@@ -1,13 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://b8r7y7fynwkvr"]
+[gd_scene load_steps=4 format=3 uid="uid://b8r7y7fynwkvr"]
 
 [ext_resource type="Script" path="res://ui/menu/pause_menu.gd" id="1_2e5c6"]
+[ext_resource type="PackedScene" uid="uid://cnomcsihcgfmi" path="res://ui/menu/controls.tscn" id="2_m2ppb"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_dy7im"]
 resource_name = "button_group"
 
 [node name="PauseUI" type="CanvasLayer"]
 process_mode = 3
-layer = 10
+layer = 100
 script = ExtResource("1_2e5c6")
 tab_button_group = SubResource("ButtonGroup_dy7im")
 
@@ -61,22 +62,12 @@ hide_root = true
 scroll_horizontal_enabled = false
 scroll_vertical_enabled = false
 
-[node name="V" type="VBoxContainer" parent="PauseMenu/PauseMenu"]
+[node name="Controls" parent="PauseMenu/PauseMenu" instance=ExtResource("2_m2ppb")]
 visible = false
 layout_mode = 2
-
-[node name="Gamepad" type="Button" parent="PauseMenu/PauseMenu/V"]
-visible = false
-layout_mode = 2
-text = "Rediscover Gamepad"
-
-[node name="Flightstick" type="Button" parent="PauseMenu/PauseMenu/V"]
-visible = false
-layout_mode = 2
-text = "Rediscover FlightStick"
 
 [connection signal="pressed" from="PauseMenu/V/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PauseMenu/V/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="PauseMenu/V/Controls" to="." method="_on_controls_pressed"]
 [connection signal="pressed" from="PauseMenu/V/Quit" to="." method="_on_quit_pressed"]
 [connection signal="item_edited" from="PauseMenu/PauseMenu/Options" to="." method="_on_options_item_edited"]
-[connection signal="pressed" from="PauseMenu/PauseMenu/V/Gamepad" to="." method="_on_gamepad_pressed"]
-[connection signal="pressed" from="PauseMenu/PauseMenu/V/Flightstick" to="." method="_on_flightstick_pressed"]

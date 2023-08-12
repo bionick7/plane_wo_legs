@@ -66,6 +66,12 @@ func _on_resume_pressed():
 	get_tree().paused = false
 	hide()
 
+func _on_options_pressed():
+	$PauseMenu/PauseMenu.current_tab = 0
+
+func _on_controls_pressed():
+	$PauseMenu/PauseMenu.current_tab = 1
+
 func _on_quit_pressed():
 	get_tree().quit()
 
@@ -88,9 +94,3 @@ func _on_options_item_edited():
 			"check":
 				settings[key] = item.is_checked(1)
 	save_settings()
-
-func _on_gamepad_pressed():
-	pass # Replace with function body.
-
-func _on_flightstick_pressed():
-	pass # Replace with function body.

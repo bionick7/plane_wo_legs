@@ -1,6 +1,13 @@
 class_name PlayerPlane
 extends PlaneInterface
 
+## The Plane controlled by the player
+##
+## Acts msotly as a bridge between PlayerInterface, the HUD and its various components
+
+## Emitted every frame while the plane searches a target with the certainty to hit said target
+signal missile_certainty_calculated(x: float)
+
 const BODY_TO_LOCAL_TRANSF = Basis(
 	Vector3( 0,-1, 0), 
 	Vector3( 1, 0, 0), 
@@ -13,7 +20,9 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 	Vector3( 0, 0, 1)
 )
 
+## The ratio between thrust of all the engines and weight (assumung 9.81 m/s²) of the plane
 @export var thrust_to_weight = .8
+
 @export_range(0, 1, 0.01, "or_greater", "hide_slider", "suffix:kg") var mass: float = 1
 @export var inertia_tensor: Basis = Basis.IDENTITY
 @export var min_lock_angle_deg: float
@@ -23,9 +32,7 @@ const LOCAL_TO_BODY_TRANSF = Basis(
 @export var flight_dynamics: Node
 @export var engine_transform: Node3D
 @export var missile_launcher: MissileLauncher
-@export var missile_paths: Array[NodePath]
 
-@onready var missile_stack = missile_paths.map(get_node)
 @onready var center_of_mass = $COG.position
 @onready var inverse_mass = 1 / mass
 @onready var inverse_inertia_tensor = inertia_tensor.inverse()
@@ -41,7 +48,6 @@ var fealt_acceleration: Vector3
 
 var angular_velocity: Vector3
 
-signal set_missile_certainty(x: float)
 
 func _ready():
 	super._ready()
@@ -105,12 +111,12 @@ func _input(event: InputEvent):
 			var next_missile := missile_launcher.get_next_missile()
 			if is_instance_valid(next_missile):
 				var certainty = clamp((next_missile.sim_path(velocity, lock_candidate) - 10.0) / 40.0, 0.0, 1.0)
-				emit_signal("set_missile_certainty", certainty)
+				emit_signal("missile_certainty_calculated", certainty)
 		else:
 			locked_target = null
-			emit_signal("set_missile_certainty", -1)
+			emit_signal("missile_certainty_calculated", -1)
 	else:
-		emit_signal("set_missile_certainty", -1)
+		emit_signal("missile_certainty_calculated", -1)
 		
 
 func update_velocity_rotation(dt: float, manual: bool):
@@ -161,8 +167,3 @@ func update_velocity_rotation(dt: float, manual: bool):
 	#$DebugDrawer.draw_line_global(global_position, global_position + force_moment[0] * 0.001, Color.RED)
 	#$DebugDrawer.draw_line_global(global_position, global_position + force_moment[1] * 0.001, Color.YELLOW)
 	
-func get_air_velocity() -> Vector3:
-	#if pause_menu.get_setting("coreolis force", true):
-	#	return linear_velocity - global_position.cross(Vector3.FORWARD).normalized() * 5
-	return velocity
-

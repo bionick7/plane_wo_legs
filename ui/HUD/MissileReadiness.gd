@@ -2,7 +2,7 @@ class_name MissileReadiness
 extends MeshInstance3D
 
 func set_player(p_player_plane: PlayerPlane) -> void:
-	p_player_plane.connect("set_missile_certainty", _set_certainty)
+	p_player_plane.missile_certainty_calculated.connect(_set_certainty)
 	p_player_plane = p_player_plane
 
 func _set_certainty(weight: float) -> void:

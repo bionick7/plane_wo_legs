@@ -1,6 +1,8 @@
 class_name TrackingAnchor
 extends Node3D
 
+signal dammage_taken(dmg: int)
+
 enum TGT_FLAGS {
 	PLAYER_CAN_TARGET = 	0x01,
 	NPC_CAN_TARGET = 		0x02,
@@ -13,7 +15,6 @@ enum TGT_FLAGS {
 @export var hitbox: Hitbox
 @export_flags("Good Guys", "Bad Guys", "3rd Party") var allegency_flags: int
 
-signal on_take_dammage(dmg: int)
 
 var ref: Node3D
 var _pos = Vector3.ZERO
